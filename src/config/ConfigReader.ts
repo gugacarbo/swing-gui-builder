@@ -102,7 +102,8 @@ function readProjectConfig(): Partial<SwingBuilderConfig> {
     const content = fs.readFileSync(configPath, "utf-8");
     const parsed = JSON.parse(content);
     return normalizeProjectConfig(parsed);
-  } catch {
+  } catch (error) {
+    console.error(`Failed to read .swingbuilder.json: ${error}`);
     return {};
   }
 }
