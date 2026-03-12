@@ -1,0 +1,547 @@
+{
+  "project": "swing-gui-builder",
+  "branchName": "ralph/migrate-webview-react-vite",
+  "description": "Migrate the vanilla JS webview to Vite 7 + React 19 + TypeScript + Tailwind CSS v4 + Shadcn UI with 100% feature parity",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Bootstrap Vite 7 project with React + TypeScript",
+      "description": "As a developer, I need a properly configured Vite project so I can start building React components.",
+      "acceptanceCriteria": [
+        "webview-app/ directory created with Vite 7 + React 19 + TypeScript template",
+        "pnpm install completes successfully in webview-app/",
+        "pnpm dev starts Vite dev server without errors",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Configure Tailwind CSS v4 with Vite",
+      "description": "As a developer, I need Tailwind CSS configured so I can use utility-first styling.",
+      "acceptanceCriteria": [
+        "Tailwind CSS v4 installed with Vite plugin",
+        "tailwind.config.ts configured with content paths for src/**/*.{ts,tsx}",
+        "@import \"tailwindcss\" works in main CSS file",
+        "Test class (e.g., text-red-500) renders correctly in browser",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Configure Vite for VS Code webview context",
+      "description": "As a developer, I need Vite output compatible with VS Code webview restrictions (CSP, nonce, inline assets).",
+      "acceptanceCriteria": [
+        "Output directory configured as out/webview/",
+        "build.modulePreload: false set to simplify loading",
+        "Assets inlined or properly hashed for single-file compatibility",
+        "Base path configured for webview.asWebviewUri() handling",
+        "Build produces valid HTML + JS bundle in out/webview/",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003.5",
+      "title": "Configure Vite dev server with HMR for development",
+      "description": "As a developer, I need HMR (Hot Module Replacement) during development to speed up iteration without full reloads.",
+      "acceptanceCriteria": [
+        "Vite dev server configured with HMR enabled",
+        "Dev server accessible from VS Code webview context",
+        "CSS changes reflect immediately without page reload",
+        "React component changes hot-reload preserving state",
+        "Dev/production mode switching works correctly",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Install and configure Shadcn UI",
+      "description": "As a developer, I need Shadcn UI configured so I can use accessible, pre-built components.",
+      "acceptanceCriteria": [
+        "Shadcn UI installed and initialized with components.json",
+        "Button component scaffolded successfully",
+        "Default theme configured to match VS Code CSS variables",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Map VS Code CSS variables to Tailwind theme",
+      "description": "As a developer, I need VS Code colors available in Tailwind so the webview matches editor theming.",
+      "acceptanceCriteria": [
+        "--vscode-* CSS variables preserved in Tailwind config",
+        "Custom colors defined: vscode-foreground, vscode-background, vscode-panel-background, etc.",
+        "Theme tokens usable as bg-vscode-background, text-vscode-foreground",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Create App.tsx main layout component",
+      "description": "As a developer, I need the main 3-panel layout as a React component.",
+      "acceptanceCriteria": [
+        "App.tsx renders 3-panel layout: left (palette), center (canvas), right (properties)",
+        "Panels resize correctly with window",
+        "Uses Tailwind flex/grid layout",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Create Palette.tsx component",
+      "description": "As a developer, I need a React component for the component palette (left panel).",
+      "acceptanceCriteria": [
+        "Palette.tsx renders list of draggable components (JPanel, JButton, JLabel, JTextField, etc.)",
+        "Each component item shows icon and name",
+        "Drag initiation works (drag data set correctly)",
+        "Styling matches VS Code panel aesthetic",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Create Canvas.tsx component with drag-drop",
+      "description": "As a developer, I need a React canvas component that accepts dropped components.",
+      "acceptanceCriteria": [
+        "Canvas.tsx renders main canvas area",
+        "Drop zone highlights when dragging over",
+        "Dropped components appear at drop coordinates",
+        "Canvas handles zoom and pan state",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Create CanvasComponent.tsx with resize handles",
+      "description": "As a developer, I need individual canvas components with resize functionality.",
+      "acceptanceCriteria": [
+        "CanvasComponent.tsx renders component with position and dimensions",
+        "Selection state shows resize handles on all corners/edges",
+        "Drag to reposition works",
+        "Drag resize handles updates component dimensions",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Create PropertiesPanel.tsx component",
+      "description": "As a developer, I need a properties editor panel as a React component.",
+      "acceptanceCriteria": [
+        "PropertiesPanel.tsx displays selected component properties",
+        "Text inputs update properties (text, font, bounds)",
+        "Color inputs for background/foreground",
+        "Changes reflect immediately in canvas",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Create Toolbar.tsx component",
+      "description": "As a developer, I need a toolbar with action buttons as a React component.",
+      "acceptanceCriteria": [
+        "Toolbar.tsx renders action buttons (undo, redo, delete, generate)",
+        "Buttons disabled when action unavailable",
+        "Click handlers invoke correct actions",
+        "Uses Shadcn Button component",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Create useCanvasState hook",
+      "description": "As a developer, I need a React hook for managing canvas component state.",
+      "acceptanceCriteria": [
+        "useCanvasState.ts provides components array state",
+        "Exposes: addComponent, updateComponent, removeComponent, selectComponent",
+        "State updates trigger re-renders correctly",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Create useUndoRedo hook",
+      "description": "As a developer, I need undo/redo functionality as a React hook.",
+      "acceptanceCriteria": [
+        "useUndoRedo.ts maintains history stack",
+        "undo() reverts to previous state",
+        "redo() restores next state",
+        "canUndo and canRedo boolean flags exposed",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Create usePostMessage hook for extension communication",
+      "description": "As a developer, I need a hook to communicate with the VS Code extension.",
+      "acceptanceCriteria": [
+        "usePostMessage.ts sends messages to extension",
+        "Message types preserved: stateChanged, toolbarCommand",
+        "postMessage() function typed with message interface",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Create useExtensionListener hook",
+      "description": "As a developer, I need a hook to receive messages from the extension.",
+      "acceptanceCriteria": [
+        "useExtensionListener.ts registers message event listener",
+        "Handles loadState, configDefaults message types",
+        "Cleanup on unmount",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Install Zod for runtime validation",
+      "description": "As a developer, I need Zod installed so I can define schemas for runtime type validation.",
+      "acceptanceCriteria": [
+        "zod package installed in webview-app/",
+        "Import z from zod works without errors",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Define Zod schemas for canvas components",
+      "description": "As a developer, I need Zod schemas to validate canvas state at runtime and prevent invalid data.",
+      "acceptanceCriteria": [
+        "schemas/canvas.ts created with Zod schemas",
+        "BoundsSchema: x, y, width, height (all numbers, min constraints)",
+        "ComponentPropertiesSchema: text, font, background, foreground (optional strings)",
+        "CanvasComponentSchema: id (uuid), type (enum), bounds, properties",
+        "CanvasStateSchema: components array, selectedId (nullable), zoom, pan",
+        "Export inferred types: type CanvasComponent = z.infer<typeof CanvasComponentSchema>",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Define Zod schemas for extension messages",
+      "description": "As a developer, I need schemas for all postMessage communication to ensure type safety.",
+      "acceptanceCriteria": [
+        "MessageSchema created as discriminated union by type field",
+        "StateChangeMessage: type='stateChanged', state (CanvasStateSchema)",
+        "ToolbarCommandMessage: type='toolbarCommand', command (enum: undo/redo/delete/generate)",
+        "LoadStateMessage: type='loadState', state (CanvasStateSchema)",
+        "ConfigDefaultsMessage: type='configDefaults', defaults (object schema)",
+        "Typecheck passes"
+      ],
+      "priority": 19,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Parse all extension messages with Zod",
+      "description": "As a developer, I need all incoming messages validated before use to prevent runtime errors.",
+      "acceptanceCriteria": [
+        "useExtensionListener parses messages with MessageSchema.safeParse()",
+        "Invalid messages logged with error details, not crashing app",
+        "Valid messages typed correctly via schema inference",
+        "Unknown message types handled gracefully (ignored with warning)",
+        "Typecheck passes"
+      ],
+      "priority": 20,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-020",
+      "title": "Parse all user inputs in properties panel",
+      "description": "As a developer, I need all property inputs validated to prevent invalid state updates.",
+      "acceptanceCriteria": [
+        "Numeric inputs (x, y, width, height) parsed and clamped to valid ranges",
+        "Color inputs validated as hex format (#RRGGBB or #RGB)",
+        "Empty/invalid inputs show visual feedback but don't crash",
+        "safeParse() used to handle validation errors gracefully",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Create type guards and parsing utilities",
+      "description": "As a developer, I need utility functions for common parsing operations.",
+      "acceptanceCriteria": [
+        "parseCanvasComponent(data: unknown): CanvasComponent | null created",
+        "parseCanvasState(data: unknown): CanvasState | null created",
+        "parseMessage(data: unknown): Message | null created",
+        "All utilities use Zod safeParse and log errors on failure",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-022",
+      "title": "Migrate all event handlers to React patterns",
+      "description": "As a developer, I need all main.js event handlers converted to React.",
+      "acceptanceCriteria": [
+        "No direct DOM event listeners (use React onEvent props)",
+        "useEffect used for lifecycle and cleanup",
+        "useCallback for memoized handlers where needed",
+        "No memory leaks on component unmount",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-023",
+      "title": "Convert style.css to Tailwind utilities",
+      "description": "As a developer, I need all custom CSS converted to Tailwind classes.",
+      "acceptanceCriteria": [
+        "style.css converted to Tailwind utilities in components",
+        "Custom utilities added for canvas-specific styles (handles, selection)",
+        "No inline styles (use Tailwind classes or CSS variables)",
+        "Original style.css can be removed",
+        "Typecheck passes"
+      ],
+      "priority": 24,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Update CanvasPanel.ts to load Vite bundle",
+      "description": "As a developer, I need the extension to load the new React bundle.",
+      "acceptanceCriteria": [
+        "CanvasPanel.ts reads HTML from out/webview/index.html",
+        "localResourceRoots includes out/webview/",
+        "Nonce injected into bundled script tags",
+        "CSP updated to allow React bundle scripts",
+        "Typecheck passes"
+      ],
+      "priority": 25,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-025",
+      "title": "Update package.json build scripts",
+      "description": "As a developer, I need build scripts updated to include webview build.",
+      "acceptanceCriteria": [
+        "build:webview script added: cd webview-app && pnpm build",
+        "vscode:prepublish includes webview build step",
+        "compile script remains functional",
+        "Build order correct (webview first, then extension)"
+      ],
+      "priority": 26,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-026",
+      "title": "Update CSP for nonce-compatible output",
+      "description": "As a developer, I need Content Security Policy updated for React bundle.",
+      "acceptanceCriteria": [
+        "CSP allows scripts with nonce",
+        "Inline styles handled (nonce or Tailwind approach)",
+        "No external resources loaded",
+        "No CSP violations in console"
+      ],
+      "priority": 27,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-027",
+      "title": "Verify production build and packaging",
+      "description": "As a developer, I need the extension to package correctly with webview assets.",
+      "acceptanceCriteria": [
+        "pnpm build:webview produces valid bundle",
+        "pnpm compile succeeds",
+        "vsce package includes out/webview/ assets",
+        "Installed extension loads webview correctly"
+      ],
+      "priority": 28,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-028",
+      "title": "Functional verification - drag and drop",
+      "description": "As a user, I want to drag components from palette to canvas so I can build my UI.",
+      "acceptanceCriteria": [
+        "Components appear in palette panel",
+        "Drag from palette initiates correctly",
+        "Drop on canvas adds component at cursor position",
+        "Component renders with default size",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 29,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-029",
+      "title": "Functional verification - resize components",
+      "description": "As a user, I want to resize components on canvas so I can adjust their dimensions.",
+      "acceptanceCriteria": [
+        "Click component shows selection handles",
+        "Drag corner handles resizes both width/height",
+        "Drag edge handles resizes one dimension",
+        "Minimum size enforced (prevents too-small components)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 30,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-030",
+      "title": "Functional verification - zoom and pan",
+      "description": "As a user, I want to zoom (Ctrl+scroll) and pan (middle-click drag) the canvas.",
+      "acceptanceCriteria": [
+        "Ctrl+scroll zooms canvas in/out",
+        "Zoom level clamped (min/max limits)",
+        "Middle-click drag pans canvas",
+        "Zoom/pan state persists during session",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 31,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-031",
+      "title": "Functional verification - undo/redo",
+      "description": "As a user, I want to undo (Ctrl+Z) and redo (Ctrl+Y) my actions.",
+      "acceptanceCriteria": [
+        "Ctrl+Z reverts last action",
+        "Ctrl+Y restores undone action",
+        "Toolbar buttons reflect canUndo/canRedo state",
+        "History depth reasonable (limit prevents memory issues)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 32,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-032",
+      "title": "Functional verification - properties panel",
+      "description": "As a user, I want to edit component properties and see changes immediately.",
+      "acceptanceCriteria": [
+        "Selecting component shows its properties",
+        "Editing text updates canvas in real-time",
+        "Changing color updates component background/foreground",
+        "Bounds inputs reflect and update position/size",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 33,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-033",
+      "title": "Functional verification - Java generation",
+      "description": "As a user, I want to generate Java code from my canvas design.",
+      "acceptanceCriteria": [
+        "Generate button triggers code generation",
+        "Generated Java code matches canvas state",
+        "No errors during generation",
+        "Output file created/updated correctly",
+        "Typecheck passes"
+      ],
+      "priority": 34,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-034",
+      "title": "Remove old webview/ folder",
+      "description": "As a developer, I need the old webview removed to complete migration.",
+      "acceptanceCriteria": [
+        "webview/main.js deleted",
+        "webview/style.css deleted",
+        "webview/ folder removed",
+        "No references to old webview in codebase",
+        "Typecheck passes"
+      ],
+      "priority": 35,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-035",
+      "title": "Update documentation",
+      "description": "As a developer, I need updated docs for React + Vite development workflow.",
+      "acceptanceCriteria": [
+        "README updated with webview development instructions",
+        "webview-app/README.md documents component architecture",
+        "Build commands documented",
+        "Dev workflow (if applicable) explained"
+      ],
+      "priority": 36,
+      "passes": true,
+      "notes": ""
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --vscode-editor-background: #1e1e1e;
+  --vscode-editor-foreground: #d4d4d4;
+  --vscode-sideBar-background: #252526;
+  --vscode-panel-border: #3c3c3c;
+  --vscode-input-background: #3c3c3c;
+  --vscode-input-foreground: #cccccc;
+  --vscode-button-background: #0e639c;
+  --vscode-button-foreground: #ffffff;
+
+  --background: var(--vscode-editor-background);
+  --foreground: var(--vscode-editor-foreground);
+  --card: var(--vscode-sideBar-background);
+  --card-foreground: var(--vscode-editor-foreground);
+  --popover: var(--vscode-sideBar-background);
+  --popover-foreground: var(--vscode-editor-foreground);
+  --primary: var(--vscode-button-background);
+  --primary-foreground: var(--vscode-button-foreground);
+  --secondary: color-mix(in srgb, var(--vscode-sideBar-background) 80%, white 20%);
+  --secondary-foreground: var(--vscode-editor-foreground);
+  --muted: color-mix(in srgb, var(--vscode-editor-background) 90%, white 10%);
+  --muted-foreground: color-mix(in srgb, var(--vscode-editor-foreground) 70%, black 30%);
+  --accent: color-mix(in srgb, var(--vscode-sideBar-background) 75%, white 25%);
+  --accent-foreground: var(--vscode-editor-foreground);
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: var(--vscode-panel-border);
+  --input: var(--vscode-input-background);
+  --ring: var(--vscode-button-background);
+
+  --canvas-selection: var(--vscode-focusBorder, #3794ff);
+  --canvas-selection-fill: color-mix(in srgb, var(--canvas-selection) 45%, white 55%);
+  --canvas-drop-target: color-mix(in srgb, var(--canvas-selection) 16%, transparent);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--vscode-font-family, "Segoe WPC", "Segoe UI", sans-serif);
+}
+
+@layer components {
+  .canvas-component-base {
+    @apply absolute flex select-none items-center justify-center rounded border text-xs shadow-sm;
+  }
+
+  .canvas-selection-handle {
+    @apply absolute size-2 rounded-sm border;
+    border-color: var(--canvas-selection);
+    background-color: var(--canvas-selection-fill);
+  }
+}

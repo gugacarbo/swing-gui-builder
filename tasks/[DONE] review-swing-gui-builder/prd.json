@@ -1,0 +1,260 @@
+{
+  "project": "swing-gui-builder-vscode",
+  "branchName": "ralph/swing-gui-builder-v0.0.2",
+  "description": "Swing GUI Builder v0.0.2 — Stabilize and enrich the VS Code extension: fix code generation bugs, respect project config, detect Java project structure, improve canvas UX, and prepare for Marketplace release.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Fix hexToRgb color validation in JavaGenerator",
+      "description": "As a developer, I need hexToRgb to validate its input so that generated Java code never contains NaN in Color constructors.",
+      "acceptanceCriteria": [
+        "hexToRgb() validates that input matches #RRGGBB format before converting",
+        "Invalid color strings throw an explicit error or return a documented fallback (e.g. Color.BLACK)",
+        "Generated .java files never contain `new Color(NaN, NaN, NaN)` for any input",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Enforce unique generated class names in JavaGenerator",
+      "description": "As a developer, I need the code generator to ensure custom class names are unique so that generated Java code compiles without naming conflicts.",
+      "acceptanceCriteria": [
+        "Generated class names for custom components are deterministically unique per canvas",
+        "Class names are decoupled from user-editable fields to prevent accidental collisions",
+        "A canvas with 10+ components of the same type produces compilable Java with unique class names",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Enforce unique variableName per component in canvas",
+      "description": "As a developer, I need each component on the canvas to receive a unique variableName on creation so the generator never produces duplicate identifiers.",
+      "acceptanceCriteria": [
+        "When a component is added to the canvas its variableName is auto-generated to be unique within that canvas",
+        "No two components on the same canvas share the same variableName",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Send project config defaults to webview on builder open",
+      "description": "As a developer, I need the extension to read project and user settings and post them to the WebView when the builder opens so the canvas always knows the active configuration.",
+      "acceptanceCriteria": [
+        "On builder open, CanvasPanel reads settings from .swingbuilder.json and VS Code settings",
+        "Config defaults (color, font, size) are posted to the WebView via a message before the first render",
+        "Precedence is respected: .swingbuilder.json > VS Code settings > internal defaults",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Apply config defaults when dropping components onto canvas",
+      "description": "As a user, I want new components to be initialized with the configured defaults so I don't have to manually set color, font and size every time.",
+      "acceptanceCriteria": [
+        "WebView stores the received config defaults from the extension",
+        "On component drop, new component properties (color, font, size) are initialized from the stored config defaults",
+        "Behavior is consistent between a new session and a reopened session",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Add Java project structure detection service",
+      "description": "As a developer, I need the extension to detect common Java project structures (Maven/Gradle, plain src/) so it can suggest a sensible default output folder.",
+      "acceptanceCriteria": [
+        "Detection checks for src/main/java (Maven/Gradle standard) and a root-level src/ folder as Java source roots",
+        "Detected source root is exposed via ConfigReader or a dedicated utility function",
+        "For Maven/Gradle projects the suggested output folder is <java-root>/components",
+        "Function returns undefined/null when no known structure is found",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Infer package from output path and add folder picker fallback",
+      "description": "As a user, I want the generated Java file to declare the correct package based on the output folder, and be prompted to choose a folder when the project structure is unrecognized.",
+      "acceptanceCriteria": [
+        "package declaration is derived from the relative path of the output folder to the detected Java source root",
+        "For Maven/Gradle projects the package is 'components' (or matching sub-package) by default",
+        "When no project structure is detected a folder picker dialog is shown",
+        ".swingbuilder.json outputFolder setting suppresses the picker when set",
+        "Generated Java compiles with the correct package in both detected and manually-chosen scenarios",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Fix JSON schema contribution for .swingbuilder.json in package.json",
+      "description": "As a user, I want autocomplete and inline validation when editing .swingbuilder.json in VS Code so I don't have to memorize all configuration options.",
+      "acceptanceCriteria": [
+        "package.json jsonValidation entry correctly maps the .swingbuilder.json glob to the bundled schema file",
+        "Autocomplete and error markers appear when editing .swingbuilder.json with the installed extension",
+        "Schema validation works when loading the extension from a .vsix (not just in development mode)",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Write README.md with full usage documentation",
+      "description": "As a new user, I want a complete README so I can install, configure and use the extension without needing additional resources.",
+      "acceptanceCriteria": [
+        "README.md contains: extension description, requirements (Java, VS Code version), installation steps, how-to-use guide, available commands list, and supported settings reference",
+        "A new Java developer can install the extension and generate valid Java code in under 5 minutes following only the README",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Complete CHANGELOG, LICENSE and package.json marketplace metadata",
+      "description": "As a publisher, I need all marketplace metadata and release files to be complete so vsce package succeeds without warnings.",
+      "acceptanceCriteria": [
+        "CHANGELOG.md is created with a 0.0.2 entry describing all changes",
+        "LICENSE has the correct year and holder with no placeholders",
+        "package.json has publisher, categories, icon, repository, homepage and keywords filled in coherently",
+        "vsce package generates a .vsix without errors or critical warnings",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Add command toolbar to builder UI",
+      "description": "As a user, I want a toolbar inside the builder with buttons for New, Open, Save, Generate and Init Config so I can access all main actions without the Command Palette.",
+      "acceptanceCriteria": [
+        "Toolbar is visible in the builder with buttons: New, Open, Save, Generate, Init Config",
+        "Each button posts a message to the extension that triggers the same handler as the corresponding VS Code command",
+        "Buttons render in a disabled state when the action is unavailable in the current context",
+        "Generate button shows a spinner or temporary feedback text while generation is in progress",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Implement component deletion via Delete and properties panel",
+      "description": "As a user, I want to remove a selected component by pressing Delete (or via a button) so I can quickly clean up my canvas.",
+      "acceptanceCriteria": [
+        "Pressing Delete while a component is selected removes it from the canvas",
+        "A delete button in the properties panel also removes the currently selected component",
+        "Deleting a component updates the persisted canvas state",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Add variable name validation with visual feedback in properties panel",
+      "description": "As a user, I want to be warned immediately when I enter an invalid or duplicate variable name so I can fix it before generating code.",
+      "acceptanceCriteria": [
+        "variableName field validates: no spaces, starts with a letter or underscore, no Java reserved words",
+        "A duplicate variableName across canvas components triggers a red border or inline error on the field",
+        "The Generate action is blocked (button disabled or error notification shown) while any name is invalid or duplicated",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Implement canvas zoom and pan",
+      "description": "As a user, I want to zoom in/out and pan the canvas viewport so I can work comfortably with large layouts.",
+      "acceptanceCriteria": [
+        "Ctrl+scroll zooms the canvas in and out",
+        "Zoom-in and zoom-out buttons in the toolbar or canvas UI also control zoom level",
+        "Middle-click drag or a dedicated pan mode allows moving the viewport",
+        "Component selection and drag-and-drop work correctly at any zoom level",
+        "Component x, y, width, height values are stored as absolute coordinates independent of zoom",
+        "Generated Java uses absolute coordinates unaffected by the current zoom level",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Add resize handles to canvas components",
+      "description": "As a user, I want to drag edge/corner handles on selected components to resize them visually so I don't have to type width and height manually.",
+      "acceptanceCriteria": [
+        "Selecting a component shows resize handles on its borders and corners",
+        "Dragging a handle updates width and height in real time on the canvas",
+        "The properties panel reflects the new dimensions immediately during drag",
+        "Resized dimensions are persisted correctly when saving the layout",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Implement undo/redo history for canvas actions",
+      "description": "As a user, I want to undo and redo canvas actions (add, delete, move, resize, property change) so I can recover from mistakes.",
+      "acceptanceCriteria": [
+        "Ctrl+Z undoes the last action (add, delete, move, resize, property change)",
+        "Ctrl+Shift+Z and Ctrl+Y redo the last undone action",
+        "History covers at least the last 50 actions to avoid unbounded memory growth",
+        "History is not required to persist between sessions",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Improve error handling — replace silent catch blocks in extension.ts",
+      "description": "As a developer, I want all errors to be logged or surfaced with actionable messages so no failure is silently swallowed.",
+      "acceptanceCriteria": [
+        "All silent catch blocks in extension.ts are replaced with error logging to the Output Channel or a VS Code notification",
+        "Critical generation errors appear as VS Code notifications with a descriptive message indicating what failed",
+        "Non-critical errors are written to the extension Output Channel without showing popups",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": ""
+    }
+  ]
+}

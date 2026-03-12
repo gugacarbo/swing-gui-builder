@@ -1,5 +1,7 @@
+import * as fs from "node:fs";
 import * as vscode from "vscode";
 import type { CanvasState } from "../components/ComponentModel";
+import { getConfig } from "../config/ConfigReader";
 
 export class CanvasPanel {
   public static currentPanel: CanvasPanel | undefined;
@@ -11,6 +13,7 @@ export class CanvasPanel {
 
   public static createOrShow(extensionUri: vscode.Uri, className: string) {
     const column = vscode.window.activeTextEditor?.viewColumn ?? vscode.ViewColumn.One;
+    const webviewRoot = vscode.Uri.joinPath(extensionUri, "out", "webview");
 
     if (CanvasPanel.currentPanel) {
       CanvasPanel.currentPanel.panel.reveal(column);
@@ -23,10 +26,7 @@ export class CanvasPanel {
       column,
       {
         enableScripts: true,
-        localResourceRoots: [
-          vscode.Uri.joinPath(extensionUri, "webview"),
-          vscode.Uri.joinPath(extensionUri, "media"),
-        ],
+        localResourceRoots: [webviewRoot, vscode.Uri.joinPath(extensionUri, "media")],
         retainContextWhenHidden: true,
       },
     );
@@ -46,6 +46,7 @@ export class CanvasPanel {
     };
 
     this.update();
+    this.sendConfigDefaults();
 
     this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
     this.panel.webview.onDidReceiveMessage(
@@ -55,11 +56,16 @@ export class CanvasPanel {
     );
   }
 
-  private handleMessage(message: { type: string; state?: CanvasState }) {
+  private handleMessage(message: { type: string; state?: CanvasState; command?: string }) {
     switch (message.type) {
       case "stateChanged":
         if (message.state) {
           this.canvasState = message.state;
+        }
+        break;
+      case "toolbarCommand":
+        if (message.command) {
+          vscode.commands.executeCommand(`swingGuiBuilder.${message.command}`);
         }
         break;
     }
@@ -72,6 +78,21 @@ export class CanvasPanel {
   public loadState(state: CanvasState) {
     this.canvasState = state;
     this.panel.webview.postMessage({ type: "loadState", state });
+    this.sendConfigDefaults();
+  }
+
+  private sendConfigDefaults() {
+    const config = getConfig();
+    this.panel.webview.postMessage({
+      type: "configDefaults",
+      config: {
+        defaultBackgroundColor: config.defaultBackgroundColor,
+        defaultTextColor: config.defaultTextColor,
+        defaultFontFamily: config.defaultFontFamily,
+        defaultFontSize: config.defaultFontSize,
+        components: config.components,
+      },
+    });
   }
 
   private update() {
@@ -88,49 +109,106 @@ export class CanvasPanel {
   }
 
   private getHtmlForWebview(): string {
-    const webview = this.panel.webview;
-    const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, "webview", "style.css"),
-    );
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, "webview", "main.js"),
-    );
+    const webviewRoot = vscode.Uri.joinPath(this.extensionUri, "out", "webview");
+    const indexHtmlUri = vscode.Uri.joinPath(webviewRoot, "index.html");
     const nonce = getNonce();
 
+    try {
+      const bundledHtml = fs.readFileSync(indexHtmlUri.fsPath, "utf8");
+      return this.rewriteBundledHtml(bundledHtml, webviewRoot, nonce);
+    } catch (error) {
+      const details = error instanceof Error ? error.message : "Unknown error";
+      return this.getMissingBuildHtml(details, nonce);
+    }
+  }
+
+  private rewriteBundledHtml(html: string, webviewRoot: vscode.Uri, nonce: string): string {
+    const csp = this.getContentSecurityPolicy(nonce);
+    const htmlWithLocalUris = html.replace(
+      /\b(src|href)="([^"]+)"/g,
+      (match, attribute, resourcePath: string) => {
+        if (!this.isLocalResourcePath(resourcePath)) {
+          return match;
+        }
+
+        const resourceUri = this.toWebviewResourceUri(webviewRoot, resourcePath);
+        return `${attribute}="${resourceUri}"`;
+      },
+    );
+
+    const htmlWithNonces = htmlWithLocalUris
+      .replace(/<script\b(?![^>]*\bnonce=)([^>]*)>/gi, `<script nonce="${nonce}"$1>`)
+      .replace(/<style\b(?![^>]*\bnonce=)([^>]*)>/gi, `<style nonce="${nonce}"$1>`);
+
+    if (/<meta\s+http-equiv=["']Content-Security-Policy["'][^>]*>/i.test(htmlWithNonces)) {
+      return htmlWithNonces.replace(
+        /<meta\s+http-equiv=["']Content-Security-Policy["'][^>]*>/i,
+        `<meta http-equiv="Content-Security-Policy" content="${csp}">`,
+      );
+    }
+
+    return htmlWithNonces.replace(
+      /<head>/i,
+      `<head>
+  <meta http-equiv="Content-Security-Policy" content="${csp}">`,
+    );
+  }
+
+  private getContentSecurityPolicy(nonce: string): string {
+    const { cspSource } = this.panel.webview;
+    return [
+      "default-src 'none'",
+      `img-src ${cspSource} data:`,
+      `font-src ${cspSource}`,
+      `style-src ${cspSource} 'nonce-${nonce}'`,
+      `script-src ${cspSource} 'nonce-${nonce}'`,
+    ].join("; ");
+  }
+
+  private isLocalResourcePath(resourcePath: string): boolean {
+    return !/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(resourcePath);
+  }
+
+  private toWebviewResourceUri(webviewRoot: vscode.Uri, resourcePath: string): string {
+    const pathMatch = resourcePath.match(/^([^?#]+)(.*)$/);
+    const cleanPath = (pathMatch?.[1] ?? resourcePath).replace(/^\.?\//, "");
+    const suffix = pathMatch?.[2] ?? "";
+    const resourceUri = this.panel.webview.asWebviewUri(
+      vscode.Uri.joinPath(webviewRoot, ...cleanPath.split("/").filter(Boolean)),
+    );
+    return `${resourceUri}${suffix}`;
+  }
+
+  private getMissingBuildHtml(details: string, nonce: string): string {
+    const safeDetails = escapeHtml(details);
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
+  <meta http-equiv="Content-Security-Policy" content="${this.getContentSecurityPolicy(nonce)}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="${styleUri}" rel="stylesheet">
-  <title>Swing GUI Builder - ${this.className}</title>
+  <title>Swing GUI Builder</title>
+  <style nonce="${nonce}">
+    body { font-family: sans-serif; padding: 16px; color: #cccccc; background: #1e1e1e; }
+    code { font-family: monospace; }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <div id="palette">
-      <h3>Components</h3>
-      <div class="palette-item" draggable="true" data-type="Button">Button</div>
-      <div class="palette-item" draggable="true" data-type="Label">Label</div>
-      <div class="palette-item" draggable="true" data-type="TextField">TextField</div>
-      <div class="palette-item" draggable="true" data-type="PasswordField">PasswordField</div>
-      <div class="palette-item" draggable="true" data-type="TextArea">TextArea</div>
-    </div>
-    <div id="canvas-container">
-      <div id="canvas" style="width: 800px; height: 600px;" data-class-name="${this.className}">
-      </div>
-    </div>
-    <div id="properties-panel">
-      <h3>Properties</h3>
-      <div id="properties-content">
-        <p class="placeholder-text">Select a component to edit its properties</p>
-      </div>
-    </div>
-  </div>
-  <script nonce="${nonce}" src="${scriptUri}"></script>
+  <h2>Webview build not found</h2>
+  <p>Run <code>pnpm run build:webview</code> and reopen the panel.</p>
+  <p>Details: <code>${safeDetails}</code></p>
 </body>
 </html>`;
   }
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function getNonce(): string {

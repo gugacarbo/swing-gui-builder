@@ -1,4 +1,0 @@
-# Ralph Progress — swing-gui-builder-v0.0.2
-# Branch: ralph/swing-gui-builder-v0.0.2
-# Started: (not yet started)
-

@@ -13,7 +13,10 @@ const DEFAULT_TEXT_COLOR = "#000000";
 const DEFAULT_FONT_FAMILY = "Arial";
 const DEFAULT_FONT_SIZE = 12;
 
-function hexToRgb(hex: string): { r: number; g: number; b: number } {
+export function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) {
+    return { r: 0, g: 0, b: 0 };
+  }
   const clean = hex.replace("#", "");
   return {
     r: Number.parseInt(clean.substring(0, 2), 16),
@@ -83,7 +86,7 @@ export interface GeneratedFile {
   content: string;
 }
 
-export function generateJavaFiles(state: CanvasState): GeneratedFile[] {
+export function generateJavaFiles(state: CanvasState, packageName?: string): GeneratedFile[] {
   const files: GeneratedFile[] = [];
   const methodNames = deduplicateMethodNames(state.components);
 
@@ -99,22 +102,49 @@ export function generateJavaFiles(state: CanvasState): GeneratedFile[] {
     }
   }
 
-  // Generate custom component classes
+  // Generate custom component classes with deterministic unique names
   const customComponents = state.components.filter(isCustomComponent);
+  const customClassNames = new Map<string, string>();
+  const typeCounters = new Map<string, number>();
+
   for (const comp of customComponents) {
-    files.push(generateCustomComponentFile(comp));
+    const count = (typeCounters.get(comp.type) || 0) + 1;
+    typeCounters.set(comp.type, count);
+    customClassNames.set(comp.id, `Custom${comp.type}${count}`);
+  }
+
+  for (const comp of customComponents) {
+    const className = customClassNames.get(comp.id) as string;
+    files.push(generateCustomComponentFile(comp, className, packageName));
   }
 
   // Generate main JFrame class
-  files.push(generateMainFrameFile(state, methodNames, methodStubs, customComponents));
+  files.push(
+    generateMainFrameFile(
+      state,
+      methodNames,
+      methodStubs,
+      customComponents,
+      customClassNames,
+      packageName,
+    ),
+  );
 
   return files;
 }
 
-function generateCustomComponentFile(comp: ComponentModel): GeneratedFile {
+function generateCustomComponentFile(
+  comp: ComponentModel,
+  customClassName: string,
+  packageName?: string,
+): GeneratedFile {
   const swingClass = SWING_CLASS_MAP[comp.type];
-  const customClassName = capitalize(comp.variableName);
   const lines: string[] = [];
+
+  if (packageName) {
+    lines.push(`package ${packageName};`);
+    lines.push("");
+  }
 
   lines.push("import javax.swing.*;");
   lines.push("import java.awt.*;");
@@ -160,9 +190,16 @@ function generateMainFrameFile(
   methodNames: Map<string, string>,
   methodStubs: string[],
   customComponents: ComponentModel[],
+  customClassNames: Map<string, string>,
+  packageName?: string,
 ): GeneratedFile {
   const customIds = new Set(customComponents.map((c) => c.id));
   const lines: string[] = [];
+
+  if (packageName) {
+    lines.push(`package ${packageName};`);
+    lines.push("");
+  }
 
   lines.push("import javax.swing.*;");
   lines.push("import java.awt.*;");
@@ -173,7 +210,9 @@ function generateMainFrameFile(
   // Field declarations
   for (const comp of state.components) {
     const isCustom = customIds.has(comp.id);
-    const typeName = isCustom ? capitalize(comp.variableName) : SWING_CLASS_MAP[comp.type];
+    const typeName = isCustom
+      ? (customClassNames.get(comp.id) as string)
+      : SWING_CLASS_MAP[comp.type];
     lines.push(`  private ${typeName} ${comp.variableName};`);
   }
 
@@ -190,7 +229,7 @@ function generateMainFrameFile(
     const isCustom = customIds.has(comp.id);
 
     if (isCustom) {
-      const customClassName = capitalize(comp.variableName);
+      const customClassName = customClassNames.get(comp.id) as string;
       lines.push(`    ${comp.variableName} = new ${customClassName}();`);
     } else {
       const swingClass = SWING_CLASS_MAP[comp.type];

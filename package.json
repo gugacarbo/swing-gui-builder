@@ -1,10 +1,12 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "name": "swing-gui-builder",
   "displayName": "Swing GUI Builder",
   "description": "Visual drag-and-drop GUI builder for Java Swing in VS Code",
   "publisher": "gugacarbo",
-  "main": "./out/extension.js",
+  "homepage": "https://github.com/gugacarbo/swing-gui-builder#readme",
+  "icon": "media/icon.png",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/gugacarbo/swing-gui-builder.git"
@@ -14,25 +16,43 @@
     "vscode": "^1.85.0"
   },
   "categories": [
+    "Programming Languages",
+    "Visualization",
     "Other",
-    "Extension Packs",
-    "Snippets",
-    "Visualization"
+    "Snippets"
   ],
+  "keywords": [
+    "java",
+    "swing",
+    "gui",
+    "builder",
+    "drag-and-drop",
+    "visual",
+    "code-generator",
+    "ui-designer",
+    "vscode-extension",
+    "ui",
+    "ui-builder"
+  ],
+  "main": "./out/extension.js",
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "build:webview": "pnpm --dir webview-app build",
     "package": "vsce package",
     "lint": "biome check src/",
     "lint:fix": "biome format --write src/ && biome check --write src/ &&  biome lint --write src/",
-    "vscode:prepublish": "pnpm run compile"
+    "vscode:prepublish": "pnpm run build:webview && pnpm run compile",
+    "vsc:pkg": "vsce package",
+    "vsc:push": "vsce publish"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^3.0.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vitest": "^4.0.18"
   },
   "contributes": {
     "commands": [
@@ -189,7 +209,7 @@
     },
     "jsonValidation": [
       {
-        "fileMatch": ".swingbuilder.json",
+        "fileMatch": "**/.swingbuilder.json",
         "url": "./schemas/swingbuilder.schema.json"
       }
     ]

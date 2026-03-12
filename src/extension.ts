@@ -1,11 +1,15 @@
+import * as path from "node:path";
 import * as vscode from "vscode";
 import { CanvasPanel } from "./canvas/CanvasPanel";
 import type { CanvasState } from "./components/ComponentModel";
 import { getOutputDirectory } from "./config/ConfigReader";
 import { initProjectConfig } from "./config/initConfigCommand";
 import { generateJavaFiles } from "./generator/JavaGenerator";
+import { detectJavaProject } from "./utils/JavaProjectDetector";
 
 export function activate(context: vscode.ExtensionContext) {
+  const outputChannel = vscode.window.createOutputChannel("Swing GUI Builder");
+
   const newWindowCmd = vscode.commands.registerCommand("swingGuiBuilder.newWindow", async () => {
     const className = await vscode.window.showInputBox({
       prompt: "Enter the Java class name for the window",
@@ -43,12 +47,41 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    // Ask for output directory
-    const defaultDir = getOutputDirectory();
-    const outputDir = await vscode.window.showInputBox({
-      prompt: "Output directory for generated Java files (relative to workspace)",
-      value: defaultDir,
-    });
+    // Determine smart default directory
+    const workspaceRoot = workspaceFolders[0].uri.fsPath;
+    const projectStructure = detectJavaProject(workspaceRoot);
+    const configuredDir = getOutputDirectory();
+
+    // Use configured dir if non-default, otherwise use detected project structure
+    const defaultDir =
+      configuredDir !== "swing/components/"
+        ? configuredDir
+        : (projectStructure?.suggestedOutputFolder ?? configuredDir);
+
+    let outputDir: string | undefined;
+
+    if (!projectStructure && configuredDir === "swing/components/") {
+      // No structure detected, no config override — show folder picker
+      const pickerResult = await vscode.window.showOpenDialog({
+        canSelectFolders: true,
+        canSelectFiles: false,
+        canSelectMany: false,
+        openLabel: "Select output folder for Java files",
+        defaultUri: workspaceFolders[0].uri,
+      });
+
+      if (!pickerResult || pickerResult.length === 0) return;
+
+      // Calculate relative path from workspace root
+      const selectedPath = pickerResult[0].fsPath;
+      const workspacePath = workspaceFolders[0].uri.fsPath;
+      outputDir = path.relative(workspacePath, selectedPath);
+    } else {
+      outputDir = await vscode.window.showInputBox({
+        prompt: "Output directory for generated Java files (relative to workspace)",
+        value: defaultDir,
+      });
+    }
 
     if (!outputDir) return;
 
@@ -57,11 +90,20 @@ export function activate(context: vscode.ExtensionContext) {
     // Ensure output directory exists
     try {
       await vscode.workspace.fs.createDirectory(outputUri);
-    } catch {
-      // Directory may already exist
+    } catch (error) {
+      outputChannel.appendLine(`Note: Directory may already exist: ${outputDir}`);
     }
 
-    const generatedFiles = generateJavaFiles(state);
+    // Derive Java package from output path relative to source root
+    let javaPackage: string | undefined;
+    if (projectStructure) {
+      const relativePath = path.relative(projectStructure.sourceRoot, outputDir);
+      if (!relativePath.startsWith("..")) {
+        javaPackage = relativePath.replace(/[/\\]/g, ".");
+      }
+    }
+
+    const generatedFiles = generateJavaFiles(state, javaPackage);
     let overwriteAll = false;
 
     for (const file of generatedFiles) {
@@ -72,8 +114,9 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await vscode.workspace.fs.stat(fileUri);
         fileExists = true;
-      } catch {
+      } catch (error) {
         fileExists = false;
+        outputChannel.appendLine(`Debug: File does not exist yet: ${file.fileName}`);
       }
 
       if (fileExists && !overwriteAll) {
@@ -100,8 +143,13 @@ export function activate(context: vscode.ExtensionContext) {
           try {
             const existingContent = await vscode.workspace.fs.readFile(fileUri);
             await vscode.workspace.fs.writeFile(backupUri, existingContent);
-          } catch {
-            // Ignore backup errors
+          } catch (error) {
+            outputChannel.appendLine(
+              `Warning: Could not create backup for ${file.fileName}: ${error}`,
+            );
+            vscode.window.showWarningMessage(
+              `Could not create backup for ${file.fileName}. Proceeding without backup.`,
+            );
           }
         }
 
@@ -115,8 +163,13 @@ export function activate(context: vscode.ExtensionContext) {
         try {
           const existingContent = await vscode.workspace.fs.readFile(fileUri);
           await vscode.workspace.fs.writeFile(backupUri, existingContent);
-        } catch {
-          // Ignore backup errors
+        } catch (error) {
+          outputChannel.appendLine(
+            `Warning: Could not create backup for ${file.fileName}: ${error}`,
+          );
+          vscode.window.showWarningMessage(
+            `Could not create backup for ${file.fileName}. Proceeding without backup.`,
+          );
         }
       }
 
@@ -155,6 +208,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const filePath = vscode.Uri.joinPath(workspaceFolders[0].uri, ".swingbuilder-layout.json");
+
     try {
       const fileContent = await vscode.workspace.fs.readFile(filePath);
       const state = JSON.parse(Buffer.from(fileContent).toString("utf-8")) as CanvasState;
@@ -163,7 +217,8 @@ export function activate(context: vscode.ExtensionContext) {
         CanvasPanel.currentPanel.loadState(state);
       }
       vscode.window.showInformationMessage("Canvas loaded from .swingbuilder-layout.json");
-    } catch {
+    } catch (error) {
+      outputChannel.appendLine(`Error opening layout file: ${error}`);
       vscode.window.showErrorMessage(
         "Could not read .swingbuilder-layout.json. File may not exist.",
       );

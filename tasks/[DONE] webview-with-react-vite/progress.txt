@@ -1,0 +1,133 @@
+# Ralph Progress: Migrate Webview to React + Vite
+
+**Branch:** ralph/migrate-webview-react-vite
+**Started:** 2026-03-12
+**Status:** Not Started
+
+---
+
+## User Stories Progress
+
+| ID       | Title                                                  | Status        | Notes |
+| -------- | ------------------------------------------------------ | ------------- | ----- |
+| US-001   | Bootstrap Vite 7 project with React + TypeScript       | ⬜ Not Started |       |
+| US-002   | Configure Tailwind CSS v4 with Vite                    | ⬜ Not Started |       |
+| US-003   | Configure Vite for VS Code webview context             | ⬜ Not Started |       |
+| US-003.5 | Configure Vite dev server with HMR for development     | ⬜ Not Started |       |
+| US-004   | Install and configure Shadcn UI                        | ⬜ Not Started |       |
+| US-005   | Map VS Code CSS variables to Tailwind theme            | ⬜ Not Started |       |
+| US-006   | Create App.tsx main layout component                   | ⬜ Not Started |       |
+| US-007   | Create Palette.tsx component                           | ⬜ Not Started |       |
+| US-008   | Create Canvas.tsx component with drag-drop             | ⬜ Not Started |       |
+| US-009   | Create CanvasComponent.tsx with resize handles         | ⬜ Not Started |       |
+| US-010   | Create PropertiesPanel.tsx component                   | ⬜ Not Started |       |
+| US-011   | Create Toolbar.tsx component                           | ⬜ Not Started |       |
+| US-012   | Create useCanvasState hook                             | ⬜ Not Started |       |
+| US-013   | Create useUndoRedo hook                                | ⬜ Not Started |       |
+| US-014   | Create usePostMessage hook for extension communication | ⬜ Not Started |       |
+| US-015   | Create useExtensionListener hook                       | ⬜ Not Started |       |
+| US-016   | Install Zod for runtime validation                     | ⬜ Not Started |       |
+| US-017   | Define Zod schemas for canvas components               | ⬜ Not Started |       |
+| US-018   | Define Zod schemas for extension messages              | ⬜ Not Started |       |
+| US-019   | Parse all extension messages with Zod                  | ⬜ Not Started |       |
+| US-020   | Parse all user inputs in properties panel              | ⬜ Not Started |       |
+| US-021   | Create type guards and parsing utilities               | ⬜ Not Started |       |
+| US-022   | Migrate all event handlers to React patterns           | ⬜ Not Started |       |
+| US-023   | Convert style.css to Tailwind utilities                | ⬜ Not Started |       |
+| US-024   | Update CanvasPanel.ts to load Vite bundle              | ⬜ Not Started |       |
+| US-025   | Update package.json build scripts                      | ⬜ Not Started |       |
+| US-026   | Update CSP for nonce-compatible output                 | ⬜ Not Started |       |
+| US-027   | Verify production build and packaging                  | ⬜ Not Started |       |
+| US-028   | Functional verification - drag and drop                | ⬜ Not Started |       |
+| US-029   | Functional verification - resize components            | ⬜ Not Started |       |
+| US-030   | Functional verification - zoom and pan                 | ⬜ Not Started |       |
+| US-031   | Functional verification - undo/redo                    | ⬜ Not Started |       |
+| US-032   | Functional verification - properties panel             | ⬜ Not Started |       |
+| US-033   | Functional verification - Java generation              | ⬜ Not Started |       |
+| US-034   | Remove old webview/ folder                             | ⬜ Not Started |       |
+| US-035   | Update documentation                                   | ⬜ Not Started |       |
+
+---
+
+## Summary
+
+- **Total Stories:** 36
+- **Completed:** 0
+- **In Progress:** 0
+- **Not Started:** 36
+
+## Session Log
+
+### Session 1 - 2026-03-12
+- PRD converted to prd.json format
+- Ready for Ralph execution
+
+## Codebase Patterns
+- New frontend workspace packages should be explicitly listed in pnpm-workspace.yaml "packages" to ensure pnpm install creates local node_modules and scripts resolve correctly.
+
+## [2026-03-12 18:46] - US-001 to US-005
+- Implemented webview-app/ with Vite 7 + React 19 + TypeScript bootstrap and baseline app shell.
+- Configured Tailwind CSS v4 via @tailwindcss/vite, added 	ailwind.config.ts, and imported 	ailwindcss in src/index.css.
+- Added Vite build settings for VS Code webview compatibility (outDir: ../out/webview, ase: ./, modulePreload: false, inline-friendly asset settings).
+- Installed/configured Shadcn UI basics: components.json, src/lib/utils.ts, and scaffolded src/components/ui/button.tsx.
+- Mapped VS Code CSS variables to Tailwind/Shadcn tokens in 	ailwind.config.ts and src/index.css (e.g., g-vscode-background, 	ext-vscode-foreground).
+- Updated root 	sconfig.json include/exclude so extension compile is scoped to src/**/*.ts and unaffected by new webview TSX files.
+- Updated pnpm-workspace.yaml to include webview-app as a workspace package.
+- Updated 	asks/webview-with-react-vite/prd.json passes flags to true for US-001..US-005.
+- Files changed: webview-app/*, pnpm-workspace.yaml, 	sconfig.json, 	asks/webview-with-react-vite/prd.json, 	asks/webview-with-react-vite/progress.txt.
+---
+## [2026-03-12 18:48] - US-001 to US-005 (format correction)
+- Corrected prior log formatting and confirmed completed scope.
+- Implemented `webview-app/` with Vite 7 + React 19 + TypeScript bootstrap and baseline app shell.
+- Configured Tailwind CSS v4 via `@tailwindcss/vite`, added `tailwind.config.ts`, and imported `tailwindcss` in `src/index.css`.
+- Added Vite build settings for VS Code webview compatibility (`outDir: ../out/webview`, `base: ./`, `modulePreload: false`, inline-friendly asset settings).
+- Installed/configured Shadcn UI basics: `components.json`, `src/lib/utils.ts`, and scaffolded `src/components/ui/button.tsx`.
+- Mapped VS Code CSS variables to Tailwind/Shadcn tokens in `tailwind.config.ts` and `src/index.css` (e.g., `bg-vscode-background`, `text-vscode-foreground`).
+- Updated root `tsconfig.json` include/exclude so extension compile is scoped to `src/**/*.ts` and unaffected by new webview TSX files.
+- Updated `pnpm-workspace.yaml` to include `webview-app` as a workspace package.
+- Updated `tasks/webview-with-react-vite/prd.json` passes flags to true for US-001..US-005.
+- Files changed: `webview-app/*`, `pnpm-workspace.yaml`, `tsconfig.json`, `tasks/webview-with-react-vite/prd.json`, `tasks/webview-with-react-vite/progress.txt`, `pnpm-lock.yaml`.
+---
+
+## [2026-03-12 22:19 UTC] - Story completion sync (US-006 to US-023)
+- Finished and validated stories: US-006, US-007, US-008, US-009, US-010, US-011, US-012, US-013, US-014, US-015, US-016, US-017, US-018, US-019, US-020, US-021, US-022, US-023.
+- Updated prd.json passes: true for completed stories in scope.
+- Completed checks: pnpm --dir webview-app typecheck, pnpm --dir webview-app build, pnpm run compile, pnpm run lint.
+- Remaining pending story flow starts at US-024 (plus US-003.5).
+---
+
+## [2026-03-12 22:20 UTC] - START US-024 to US-027
+- Starting integration wave for extension loading/build flow (CanvasPanel, CSP, package scripts, packaging verification).
+---
+
+## [2026-03-12 22:28 UTC] - FINISH US-024 to US-027
+- Finished and validated stories: US-024, US-025, US-026, US-027.
+- Updated extension webview loading to read `out/webview/index.html`, include `out/webview` in `localResourceRoots`, rewrite bundled asset URIs via `asWebviewUri`, inject nonce attributes into bundled script/style tags, and enforce local-resource CSP with nonce compatibility.
+- Added `build:webview` script and updated `vscode:prepublish` to run webview build before extension compile.
+- Packaging now succeeds with existing command (`pnpm run package`), and VSIX verification confirms `extension/out/webview/*` assets are included.
+- Added `.vscodeignore` exclusion for `webview-app/**` to prevent packaging failures from workspace dependency paths.
+- Completed checks: `pnpm --dir webview-app typecheck`, `pnpm --dir webview-app build`, `pnpm run compile`, `pnpm run lint`, `pnpm run package`.
+---
+
+## [2026-03-12 22:31 UTC] - START US-028 to US-033
+- Starting functional verification wave for drag/drop, resize, zoom/pan, undo/redo, properties, and Java generation behavior.
+---
+## [2026-03-12 22:51 UTC] - FINISH US-028 to US-033
+- Verified in browser with Playwright automation (dev-browser equivalent) for drag/drop, resize, zoom/pan, undo/redo, properties live updates, and generate action messaging.
+- Fixed middle-click pan handling by allowing viewport panning across transform-layer hits, tracking panning state via ref, and capturing/releasing pointer events.
+- Fixed undo/redo keyboard shortcuts by adding global Ctrl/Cmd+Z and Ctrl/Cmd+Y (plus Cmd/Ctrl+Shift+Z redo) handling while ignoring focused input/textarea/contenteditable fields.
+- Confirmed generate action posts toolbarCommand: generate and latest stateChanged payload matches edited canvas state.
+- Completed checks: pnpm --dir webview-app typecheck, pnpm --dir webview-app build, pnpm run compile, pnpm run lint.
+---
+
+## [2026-03-12 22:54 UTC] - START US-034 to US-035
+- Starting final cleanup/documentation wave (remove legacy webview assets and document React+Vite workflow).
+---
+## [2026-03-12 22:57 UTC] - FINISH US-034 to US-035
+- Removed legacy `webview/main.js` and `webview/style.css`, then removed the now-empty `webview/` folder.
+- Confirmed runtime code no longer references legacy webview assets (`src/` has no `webview/main.js` or `webview/style.css` references).
+- Updated docs for the new workflow:
+  - Root `README.md` now documents React+Vite webview development/build flow.
+  - Added `webview-app/README.md` with architecture and command reference.
+- Completed checks: `pnpm --dir webview-app typecheck`, `pnpm --dir webview-app build`, `pnpm run compile`, `pnpm run lint`, `pnpm run package`.
+---

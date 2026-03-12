@@ -1,4 +1,8 @@
+packages:
+  - "webview-app"
+
 onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@vscode/vsce-sign'
+  - esbuild
   - keytar
