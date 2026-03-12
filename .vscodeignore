@@ -9,3 +9,7 @@ node_modules/**
 tasks/**
 .agents/**
 .devcontainer/**
+.pnpm-store/**
+*.log
+package-lock.json
+pnpm-lock.yaml

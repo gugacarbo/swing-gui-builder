@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@vscode/vsce-sign'
+  - keytar

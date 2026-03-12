@@ -3,8 +3,12 @@
   "name": "swing-gui-builder",
   "displayName": "Swing GUI Builder",
   "description": "Visual drag-and-drop GUI builder for Java Swing in VS Code",
-  "publisher": "swing-gui-builder",
+  "publisher": "gugacarbo",
   "main": "./out/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gugacarbo/swing-gui-builder.git"
+  },
   "activationEvents": [],
   "engines": {
     "vscode": "^1.85.0"
