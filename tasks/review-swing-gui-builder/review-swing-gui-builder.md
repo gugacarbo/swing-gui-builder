@@ -13,9 +13,27 @@ O objetivo principal e deixar a extensao segura para um primeiro release publico
 Entregar uma versao mais estavel e publicavel da extensao, com foco em:
 
 - corrigir bugs que podem gerar codigo Java invalido
+- gerar arquivos Java em locais e packages coerentes com a estrutura do projeto
 - aplicar corretamente configuracoes de projeto e de usuario
 - melhorar a usabilidade basica do editor visual
+- enriquecer o canvas com interacoes mais fluidas
 - preparar a extensao para distribuicao e manutencao
+
+### Subtasks
+
+- `subtasks\01-validate-hex-color-generation.md` - impedir geracao de `NaN` em cores
+- `subtasks\02-enforce-unique-generated-names.md` - garantir nomes unicos e validos no editor e no gerador
+- `subtasks\03-apply-config-defaults-to-new-components.md` - aplicar defaults configurados na criacao de componentes
+- `subtasks\04-fix-project-config-schema-wiring.md` - revisar e corrigir integracao do schema
+- `subtasks\05-release-readiness-docs-and-metadata.md` - fechar lacunas de release e documentacao
+- `subtasks\06-component-deletion-and-shortcuts.md` - adicionar remocao de componentes e atalhos basicos
+- `subtasks\07-undo-redo-canvas-history.md` - implementar historico de desfazer/refazer
+- `subtasks\08-error-handling-hardening.md` - melhorar tratamento de erros e observabilidade
+- `subtasks\09-minimal-automated-tests.md` - adicionar cobertura minima para fluxos criticos
+- `subtasks\10-detect-project-structure-and-package.md` - detectar estrutura Java do projeto e inferir package/pasta padrao
+- `subtasks\11-builder-command-toolbar.md` - expor acoes principais da extensao dentro do builder
+- `subtasks\12-canvas-zoom-and-pan.md` - adicionar zoom e movimentacao do viewport do canvas
+- `subtasks\13-drag-resize-components.md` - permitir redimensionamento por arraste no canvas
 
 ---
 
@@ -103,6 +121,25 @@ Entregar uma versao mais estavel e publicavel da extensao, com foco em:
 - a extensao consegue ser empacotada com metadados coerentes
 - um usuario novo entende como instalar e usar a extensao
 
+### 3.6 Detectar estrutura de projeto e package automaticamente
+
+**Arquivos principais:** `src\extension.ts`, `src\generator\JavaGenerator.ts`, `src\config\ConfigReader.ts`
+
+**Problema:** a extensao ainda nao usa a estrutura do projeto Java para sugerir a pasta de saida ideal nem para derivar corretamente o `package` dos arquivos gerados.
+
+**Plano:**
+
+- detectar estruturas comuns de projeto Java, como `src\main\java`
+- sugerir por padrao uma pasta `components` dentro da raiz principal do codigo-fonte quando um projeto for detectado
+- inferir o `package` a partir da pasta de saida escolhida pelo usuario
+- garantir que o `package` gerado seja coerente com o caminho salvo
+
+**Criterio de pronto:**
+
+- quando houver um projeto Java reconhecivel, a sugestao de pasta deixa de ser generica
+- os arquivos gerados usam `package` compativel com a estrutura de pastas
+- o fluxo continua funcionando tambem para workspaces sem estrutura Java padrao
+
 ---
 
 ## 4. Prioridade media - melhorar UX e confianca
@@ -154,6 +191,36 @@ Entregar uma versao mais estavel e publicavel da extensao, com foco em:
 - cobrir `hexToRgb`, deduplicacao de nomes e defaults de configuracao
 - garantir ao menos um fluxo feliz e cenarios invalidos principais
 
+### 4.6 Barra de acoes do builder
+
+**Arquivos principais:** `src\canvas\CanvasPanel.ts`, `webview\main.js`, `webview\style.css`, `src\extension.ts`
+
+**Plano:**
+
+- adicionar botoes no builder para comandos como novo, abrir, salvar, gerar e inicializar configuracao
+- reutilizar os mesmos comandos da extensao para evitar logica duplicada
+- dar feedback visual de acao em andamento ou indisponivel
+
+### 4.7 Zoom e pan do canvas
+
+**Arquivos principais:** `webview\main.js`, `webview\style.css`
+
+**Plano:**
+
+- permitir zoom in/out do canvas com controles claros
+- permitir mover o viewport do builder sem quebrar selecao e drag-and-drop
+- manter coordenadas coerentes entre renderizacao e estado interno
+
+### 4.8 Redimensionamento por arraste
+
+**Arquivos principais:** `webview\main.js`, `webview\style.css`
+
+**Plano:**
+
+- adicionar handles visuais para resize dos componentes selecionados
+- atualizar largura e altura em tempo real ao arrastar
+- sincronizar o resultado com o painel de propriedades e com o estado salvo
+
 ---
 
 ## 5. Prioridade baixa - roadmap de produto
@@ -162,7 +229,6 @@ Itens que aumentam bastante o valor da extensao, mas podem entrar depois da esta
 
 - suporte a mais componentes Swing (`JCheckBox`, `JRadioButton`, `JComboBox`, `JPanel`, `JTable`, etc.)
 - suporte a layout managers (`BorderLayout`, `FlowLayout`, `GridLayout`)
-- redimensionamento com mouse
 - duplicacao e copy/paste de componentes
 - preview/run da janela gerada
 - importacao de codigo Swing existente
@@ -178,11 +244,15 @@ Itens que aumentam bastante o valor da extensao, mas podem entrar depois da esta
 1. Corrigir `hexToRgb`
 2. Resolver unicidade de nomes
 3. Aplicar defaults configurados na criacao
-4. Revisar schema/config
-5. Fechar documentacao e metadados de release
-6. Implementar delete + validacao de nomes
-7. Adicionar undo/redo
-8. Criar testes minimos
+4. Detectar estrutura de projeto e `package`
+5. Revisar schema/config
+6. Fechar documentacao e metadados de release
+7. Adicionar botoes de comando no builder
+8. Implementar delete + validacao de nomes
+9. Implementar zoom e pan
+10. Implementar resize por arraste
+11. Adicionar undo/redo
+12. Criar testes minimos
 
 ---
 
@@ -191,7 +261,8 @@ Itens que aumentam bastante o valor da extensao, mas podem entrar depois da esta
 Ao final desta task, a extensao deve:
 
 - gerar codigo Java mais confiavel
+- gerar `package` e pasta de saida mais coerentes com projetos Java reais
 - respeitar a configuracao esperada pelo usuario
-- oferecer uma UX basica mais completa no canvas
+- oferecer uma UX mais completa no canvas, com comandos, zoom e resize
 - estar mais proxima de um release publico com documentacao adequada
 
