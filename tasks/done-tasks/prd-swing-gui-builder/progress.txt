@@ -1,0 +1,11 @@
+[DONE] US-001: Inicializar projeto da extensão VS Code — 2026-03-12T00:39:13Z
+[DONE] US-002: Abrir editor visual Swing (WebView canvas) — 2026-03-12T00:43:54Z
+[DONE] US-010: Configurações padrão globais via VS Code Settings — 2026-03-12T00:45:13Z
+[DONE] US-011: Override de configurações por projeto via .swingbuilder.json — 2026-03-12T00:45:13Z
+[DONE] US-003: Adicionar componentes ao canvas por drag-and-drop — 2026-03-12T00:49:20Z
+[DONE] US-004: Definir tamanho da janela JFrame — 2026-03-12T00:49:20Z
+[DONE] US-005: Editar posição e tamanho via painel de propriedades — 2026-03-12T00:49:20Z
+[DONE] US-006: Configurar propriedades visuais dos componentes — 2026-03-12T00:52:17Z
+[DONE] US-007: Configurar nome do método de evento por componente — 2026-03-12T00:52:17Z
+[DONE] US-008: Salvar e reabrir o estado do canvas — 2026-03-12T00:52:29Z
+[DONE] US-009: Gerar arquivos Java a partir do canvas — 2026-03-12T00:56:00Z

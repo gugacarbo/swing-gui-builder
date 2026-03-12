@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Swing GUI Builder Configuration",
+  "description": "Project-level configuration for the Swing GUI Builder extension",
+  "type": "object",
+  "properties": {
+    "defaultBackgroundColor": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$",
+      "description": "Default background color (hex format #RRGGBB)"
+    },
+    "defaultTextColor": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$",
+      "description": "Default text color (hex format #RRGGBB)"
+    },
+    "defaultFontFamily": {
+      "type": "string",
+      "description": "Default font family"
+    },
+    "defaultFontSize": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 200,
+      "description": "Default font size in points"
+    },
+    "outputDirectory": {
+      "type": "string",
+      "description": "Default output directory for generated Java files"
+    },
+    "components": {
+      "type": "object",
+      "description": "Per-component-type default settings",
+      "properties": {
+        "Button": { "$ref": "#/definitions/componentDefaults" },
+        "Label": { "$ref": "#/definitions/componentDefaults" },
+        "TextField": { "$ref": "#/definitions/componentDefaults" },
+        "PasswordField": { "$ref": "#/definitions/componentDefaults" },
+        "TextArea": { "$ref": "#/definitions/componentDefaults" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "componentDefaults": {
+      "type": "object",
+      "properties": {
+        "backgroundColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Background color (hex format #RRGGBB)"
+        },
+        "textColor": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Text color (hex format #RRGGBB)"
+        },
+        "fontFamily": {
+          "type": "string",
+          "description": "Font family"
+        },
+        "fontSize": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 200,
+          "description": "Font size in points"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,11 @@
+.vscode/**
+.vscode-test/**
+out/test/**
+src/**
+.gitignore
+tsconfig.json
+biome.json
+node_modules/**
+tasks/**
+.agents/**
+.devcontainer/**

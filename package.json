@@ -1,0 +1,193 @@
+{
+  "version": "0.0.1",
+  "name": "swing-gui-builder",
+  "displayName": "Swing GUI Builder",
+  "description": "Visual drag-and-drop GUI builder for Java Swing in VS Code",
+  "publisher": "swing-gui-builder",
+  "main": "./out/extension.js",
+  "activationEvents": [],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Extension Packs",
+    "Snippets",
+    "Visualization"
+  ],
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "lint": "biome check src/",
+    "lint:fix": "biome format --write src/ && biome check --write src/ &&  biome lint --write src/",
+    "vscode:prepublish": "pnpm run compile"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.4.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "swingGuiBuilder.newWindow",
+        "title": "Swing GUI Builder: New Window"
+      },
+      {
+        "command": "swingGuiBuilder.generate",
+        "title": "Swing GUI Builder: Generate"
+      },
+      {
+        "command": "swingGuiBuilder.save",
+        "title": "Swing GUI Builder: Save"
+      },
+      {
+        "command": "swingGuiBuilder.open",
+        "title": "Swing GUI Builder: Open"
+      },
+      {
+        "command": "swingGuiBuilder.initConfig",
+        "title": "Swing GUI Builder: Init Project Config"
+      }
+    ],
+    "configuration": {
+      "title": "Swing GUI Builder",
+      "properties": {
+        "swingGuiBuilder.defaultBackgroundColor": {
+          "type": "string",
+          "default": "#FFFFFF",
+          "description": "Default background color for new components"
+        },
+        "swingGuiBuilder.defaultTextColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Default text color for new components"
+        },
+        "swingGuiBuilder.defaultFontFamily": {
+          "type": "string",
+          "default": "Arial",
+          "description": "Default font family for new components"
+        },
+        "swingGuiBuilder.defaultFontSize": {
+          "type": "number",
+          "default": 12,
+          "description": "Default font size for new components"
+        },
+        "swingGuiBuilder.outputDirectory": {
+          "type": "string",
+          "default": "swing/components/",
+          "description": "Default output directory for generated Java files"
+        },
+        "swingGuiBuilder.components.Button.defaultBackgroundColor": {
+          "type": "string",
+          "default": "#FFFFFF",
+          "description": "Default background color for Button components"
+        },
+        "swingGuiBuilder.components.Button.defaultTextColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Default text color for Button components"
+        },
+        "swingGuiBuilder.components.Button.defaultFontFamily": {
+          "type": "string",
+          "default": "Arial",
+          "description": "Default font family for Button components"
+        },
+        "swingGuiBuilder.components.Button.defaultFontSize": {
+          "type": "number",
+          "default": 12,
+          "description": "Default font size for Button components"
+        },
+        "swingGuiBuilder.components.Label.defaultBackgroundColor": {
+          "type": "string",
+          "default": "#FFFFFF",
+          "description": "Default background color for Label components"
+        },
+        "swingGuiBuilder.components.Label.defaultTextColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Default text color for Label components"
+        },
+        "swingGuiBuilder.components.Label.defaultFontFamily": {
+          "type": "string",
+          "default": "Arial",
+          "description": "Default font family for Label components"
+        },
+        "swingGuiBuilder.components.Label.defaultFontSize": {
+          "type": "number",
+          "default": 12,
+          "description": "Default font size for Label components"
+        },
+        "swingGuiBuilder.components.TextField.defaultBackgroundColor": {
+          "type": "string",
+          "default": "#FFFFFF",
+          "description": "Default background color for TextField components"
+        },
+        "swingGuiBuilder.components.TextField.defaultTextColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Default text color for TextField components"
+        },
+        "swingGuiBuilder.components.TextField.defaultFontFamily": {
+          "type": "string",
+          "default": "Arial",
+          "description": "Default font family for TextField components"
+        },
+        "swingGuiBuilder.components.TextField.defaultFontSize": {
+          "type": "number",
+          "default": 12,
+          "description": "Default font size for TextField components"
+        },
+        "swingGuiBuilder.components.PasswordField.defaultBackgroundColor": {
+          "type": "string",
+          "default": "#FFFFFF",
+          "description": "Default background color for PasswordField components"
+        },
+        "swingGuiBuilder.components.PasswordField.defaultTextColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Default text color for PasswordField components"
+        },
+        "swingGuiBuilder.components.PasswordField.defaultFontFamily": {
+          "type": "string",
+          "default": "Arial",
+          "description": "Default font family for PasswordField components"
+        },
+        "swingGuiBuilder.components.PasswordField.defaultFontSize": {
+          "type": "number",
+          "default": 12,
+          "description": "Default font size for PasswordField components"
+        },
+        "swingGuiBuilder.components.TextArea.defaultBackgroundColor": {
+          "type": "string",
+          "default": "#FFFFFF",
+          "description": "Default background color for TextArea components"
+        },
+        "swingGuiBuilder.components.TextArea.defaultTextColor": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Default text color for TextArea components"
+        },
+        "swingGuiBuilder.components.TextArea.defaultFontFamily": {
+          "type": "string",
+          "default": "Arial",
+          "description": "Default font family for TextArea components"
+        },
+        "swingGuiBuilder.components.TextArea.defaultFontSize": {
+          "type": "number",
+          "default": 12,
+          "description": "Default font size for TextArea components"
+        }
+      }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": ".swingbuilder.json",
+        "url": "./schemas/swingbuilder.schema.json"
+      }
+    ]
+  }
+}

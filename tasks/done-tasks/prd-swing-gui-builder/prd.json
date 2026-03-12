@@ -1,0 +1,186 @@
+{
+    "project": "swing-gui-builder",
+    "branchName": "ralph/swing-gui-builder",
+    "description": "Extensão VS Code que oferece um GUI Builder visual para Java Swing — drag-and-drop de componentes, painel de propriedades e geração automática de arquivos .java",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Inicializar projeto da extensão VS Code",
+            "description": "Como desenvolvedor, preciso inicializar o projeto da extensão VS Code com estrutura de pastas, dependências e configurações de build para começar o desenvolvimento.",
+            "acceptanceCriteria": [
+                "Criar package.json com metadados: name='swing-gui-builder', publisher, versão '0.0.1', engines '^1.85.0', activationEvents, contributes",
+                "Configurar tsconfig.json com target ES2020, module commonjs, strict mode, outDir 'out/'",
+                "Configurar scripts no package.json: compile, watch, package, lint",
+                "Instalar dependências de dev: typescript, @types/vscode, @types/node, @vscode/vsce, esbuild, @biomejs/biome",
+                "Criar biome.json com configurações de lint e formatação",
+                "Criar estrutura de pastas: src/extension.ts, src/canvas/, src/components/, src/generator/, src/config/, media/, schemas/, webview/",
+                "Criar .vscode/launch.json para debug com F5",
+                "Criar .vscodeignore e .gitignore",
+                "pnpm run compile executa sem erros",
+                "pnpm run lint passa sem erros",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-002",
+            "title": "Abrir editor visual Swing (WebView canvas)",
+            "description": "Como desenvolvedor Java, quero executar um comando para abrir um canvas WebView dentro do VS Code onde montarei visualmente minha interface Swing.",
+            "acceptanceCriteria": [
+                "Comando de paleta 'Swing GUI Builder: New Window' exibe um input box pedindo o nome da classe Java (padrão: 'MainWindow', validado como identificador Java válido)",
+                "Após confirmar, uma nova aba WebView é aberta no VS Code",
+                "A aba exibe um canvas em branco com dimensões padrão 800×600",
+                "A aba exibe a paleta de componentes (lateral) e o painel de propriedades",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-003",
+            "title": "Adicionar componentes ao canvas por drag-and-drop",
+            "description": "Como desenvolvedor, quero arrastar componentes da paleta e soltá-los no canvas para montar o layout visualmente.",
+            "acceptanceCriteria": [
+                "A paleta exibe os componentes: Button, Label, TextField, PasswordField, TextArea",
+                "O usuário pode arrastar qualquer componente da paleta para o canvas",
+                "O componente é renderizado no canvas na posição onde foi solto",
+                "O componente pode ser reposicionado após ser colocado (drag no canvas)",
+                "Cada componente recebe um variableName único gerado automaticamente (ex: button1, label1)",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 3,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Definir tamanho da janela JFrame",
+            "description": "Como desenvolvedor, quero configurar as dimensões do JFrame para que o canvas e o código gerado reflitam o tamanho desejado.",
+            "acceptanceCriteria": [
+                "Existe no painel de propriedades da janela campos numéricos de largura e altura",
+                "Alterar os valores redimensiona o canvas visualmente em tempo real",
+                "O tamanho é refletido no código gerado como frame.setSize(width, height)",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 4,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Editar posição e tamanho via painel de propriedades",
+            "description": "Como desenvolvedor, quero ajustar com precisão a posição e o tamanho de um componente via campos numéricos no painel de propriedades.",
+            "acceptanceCriteria": [
+                "Ao selecionar um componente no canvas, o painel de propriedades exibe campos: X, Y, Largura, Altura",
+                "Alterar os valores atualiza a posição/tamanho do componente no canvas em tempo real",
+                "Os valores são refletidos no código gerado como component.setBounds(x, y, w, h)",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 5,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-006",
+            "title": "Configurar propriedades visuais dos componentes",
+            "description": "Como desenvolvedor, quero personalizar texto, cores e fonte de cada componente para refletir o design da minha aplicação.",
+            "acceptanceCriteria": [
+                "O painel de propriedades expõe: texto/placeholder, cor de fundo (color picker hex), cor do texto (color picker hex), família e tamanho da fonte",
+                "As alterações são refletidas visualmente no canvas em tempo real",
+                "Na geração, hex é convertido para RGB: button.setBackground(new Color(r, g, b)) — ex: #FF0000 → new Color(255, 0, 0)",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 6,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Configurar nome do método de evento por componente",
+            "description": "Como desenvolvedor, quero definir o nome do método Java que será chamado no evento de cada componente para que o código gerado inclua o stub do handler.",
+            "acceptanceCriteria": [
+                "O painel de JButton exibe campo 'onClick Method Name'",
+                "O painel de JTextField e JPasswordField exibe campo 'onSubmit Method Name'",
+                "O painel de JTextArea exibe campo 'onChange Method Name'",
+                "O código gerado inclui o listener chamando o método: button.addActionListener(e -> onMethod())",
+                "A classe principal gerada inclui stub: private void onMethod() { /* TODO: implement */ }",
+                "Nomes de método duplicados recebem sufixo incremental: onAction, onAction2, onAction3",
+                "Campo em branco não gera nenhum listener para o componente",
+                "Typecheck passes"
+            ],
+            "priority": 7,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Salvar e reabrir o estado do canvas",
+            "description": "Como desenvolvedor, quero salvar o estado do canvas em um arquivo para continuar editando o layout em outra sessão.",
+            "acceptanceCriteria": [
+                "Comando 'Swing GUI Builder: Save' salva o estado do canvas em .swingbuilder-layout.json na raiz do workspace",
+                "Comando 'Swing GUI Builder: Open' (ou abrir o .swingbuilder-layout.json) restaura o canvas com todos os componentes, posições e propriedades",
+                "O arquivo .swingbuilder-layout.json é JSON puro e legível para controle de versão",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 8,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Gerar arquivos Java a partir do canvas",
+            "description": "Como desenvolvedor, quero gerar os arquivos .java do meu layout Swing com um único comando a partir do canvas montado.",
+            "acceptanceCriteria": [
+                "Botão 'Generate Code' (ou comando 'Swing GUI Builder: Generate') dispara a geração",
+                "É gerado um arquivo <NomeDaClasse>.java com a classe JFrame principal usando setLayout(null) e setBounds para cada componente",
+                "Para cada componente com propriedades além do padrão é gerado um .java separado que estende o componente base (ex: MyButton.java extends JButton)",
+                "O usuário é solicitado a confirmar ou escolher o diretório de saída",
+                "Se arquivos já existem: exibir diálogo com opções 'Sobrescrever', 'Sobrescrever todos', 'Cancelar'",
+                "Antes de sobrescrever, o existente é renomeado para <nome>_backup.java no mesmo diretório",
+                "O código gerado é Java válido compatível com Java 8+",
+                "Typecheck passes"
+            ],
+            "priority": 9,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-010",
+            "title": "Configurações padrão globais via VS Code Settings",
+            "description": "Como desenvolvedor, quero definir valores padrão para componentes nas configurações globais do VS Code para não precisar reconfigurar a cada novo projeto.",
+            "acceptanceCriteria": [
+                "A extensão registra entradas em contributes.configuration no package.json",
+                "Configurações disponíveis: cor de fundo padrão, cor de texto padrão, fonte padrão, tamanho de fonte padrão por tipo de componente; diretório de saída padrão (default: 'swing/components/')",
+                "Novos componentes adicionados ao canvas herdam os valores das configurações globais como valores iniciais",
+                "Typecheck passes"
+            ],
+            "priority": 10,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-011",
+            "title": "Override de configurações por projeto via .swingbuilder.json",
+            "description": "Como desenvolvedor, quero que um arquivo de configuração local sobrescreva os padrões globais para ter diferentes estilos por repositório.",
+            "acceptanceCriteria": [
+                "A extensão detecta e lê .swingbuilder.json na raiz do workspace aberto",
+                "Configurações do arquivo local têm precedência sobre as configurações globais do VS Code (ordem: .swingbuilder.json > settings.json > valores internos)",
+                "Comando 'Swing GUI Builder: Init Project Config' cria um .swingbuilder.json template na raiz do projeto",
+                "A extensão disponibiliza um JSON Schema para .swingbuilder.json via jsonValidation no package.json, habilitando autocomplete no VS Code",
+                "Typecheck passes"
+            ],
+            "priority": 11,
+            "passes": true,
+            "notes": ""
+        }
+    ]
+}
