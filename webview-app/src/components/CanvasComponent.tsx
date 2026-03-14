@@ -10,30 +10,61 @@ interface CanvasComponentProps {
   isSelected: boolean;
   onSelect: (id: string) => void;
   onMove: (id: string, nextX: number, nextY: number) => void;
-  onResize: (id: string, updates: Pick<CanvasComponentModel, "x" | "y" | "width" | "height">) => void;
+  onResize: (
+    id: string,
+    updates: Pick<CanvasComponentModel, "x" | "y" | "width" | "height">,
+  ) => void;
 }
 
-const RESIZE_HANDLES: ReadonlyArray<{ handle: ResizeHandle; className: string; cursorClassName: string }> = [
+const RESIZE_HANDLES: ReadonlyArray<{
+  handle: ResizeHandle;
+  className: string;
+  cursorClassName: string;
+}> = [
   { handle: "nw", className: "-left-1 -top-1", cursorClassName: "cursor-nwse-resize" },
-  { handle: "n", className: "left-1/2 -top-1 -translate-x-1/2", cursorClassName: "cursor-ns-resize" },
+  {
+    handle: "n",
+    className: "left-1/2 -top-1 -translate-x-1/2",
+    cursorClassName: "cursor-ns-resize",
+  },
   { handle: "ne", className: "-right-1 -top-1", cursorClassName: "cursor-nesw-resize" },
-  { handle: "e", className: "-right-1 top-1/2 -translate-y-1/2", cursorClassName: "cursor-ew-resize" },
+  {
+    handle: "e",
+    className: "-right-1 top-1/2 -translate-y-1/2",
+    cursorClassName: "cursor-ew-resize",
+  },
   { handle: "se", className: "-bottom-1 -right-1", cursorClassName: "cursor-nwse-resize" },
-  { handle: "s", className: "-bottom-1 left-1/2 -translate-x-1/2", cursorClassName: "cursor-ns-resize" },
+  {
+    handle: "s",
+    className: "-bottom-1 left-1/2 -translate-x-1/2",
+    cursorClassName: "cursor-ns-resize",
+  },
   { handle: "sw", className: "-bottom-1 -left-1", cursorClassName: "cursor-nesw-resize" },
-  { handle: "w", className: "-left-1 top-1/2 -translate-y-1/2", cursorClassName: "cursor-ew-resize" },
+  {
+    handle: "w",
+    className: "-left-1 top-1/2 -translate-y-1/2",
+    cursorClassName: "cursor-ew-resize",
+  },
 ];
 
-export function CanvasComponent({ component, zoom, isSelected, onSelect, onMove, onResize }: CanvasComponentProps) {
-  const rootRef = useRef<HTMLDivElement | null>(null);
+export function CanvasComponent({
+  component,
+  zoom,
+  isSelected,
+  onSelect,
+  onMove,
+  onResize,
+}: CanvasComponentProps) {
+  const rootRef = useRef<HTMLButtonElement | null>(null);
 
-  const { isDragging, isResizing, handleMouseDown, handleMouseMove, handleMouseUp } = useDragInteraction({
-    component,
-    zoom,
-    onSelect,
-    onMove,
-    onResize,
-  });
+  const { isDragging, isResizing, handleMouseDown, handleMouseMove, handleMouseUp } =
+    useDragInteraction({
+      component,
+      zoom,
+      onSelect,
+      onMove,
+      onResize,
+    });
 
   const capturePointer = (pointerId: number) => {
     rootRef.current?.setPointerCapture(pointerId);
@@ -46,10 +77,9 @@ export function CanvasComponent({ component, zoom, isSelected, onSelect, onMove,
   };
 
   return (
-    <div
+    <button
       ref={rootRef}
-      role="button"
-      tabIndex={0}
+      type="button"
       data-canvas-component="true"
       data-dragging={isDragging ? "true" : "false"}
       data-resizing={isResizing ? "true" : "false"}
@@ -71,8 +101,15 @@ export function CanvasComponent({ component, zoom, isSelected, onSelect, onMove,
         }
       }}
       onClick={() => onSelect(component.id)}
+      onKeyUp={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          onSelect(component.id);
+        }
+      }}
       className={`canvas-component-base ${
-        isSelected ? "border-[var(--canvas-selection)] ring-1 ring-[var(--canvas-selection)]" : "border-vscode-panel-border"
+        isSelected
+          ? "border-(--canvas-selection) ring-1 ring-(--canvas-selection)"
+          : "border-vscode-panel-border"
       }`}
       style={{
         left: component.x,
@@ -101,6 +138,6 @@ export function CanvasComponent({ component, zoom, isSelected, onSelect, onMove,
             className={`canvas-selection-handle ${className} ${cursorClassName}`}
           />
         ))}
-    </div>
+    </button>
   );
 }

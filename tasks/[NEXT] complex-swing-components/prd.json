@@ -1,0 +1,224 @@
+{
+	"project": "Swing GUI Builder",
+	"branchName": "ralph/complex-swing-components",
+	"description": "Adicionar Componentes Swing Hierárquicos (JMenuBar, JMenu, JMenuItem, JToolBar) ao GUI Builder",
+	"userStories": [
+		{
+			"id": "US-001",
+			"title": "Adicionar campos hierárquicos ao ComponentModel",
+			"description": "Como desenvolvedor, preciso adicionar campos children e parentId ao modelo de componentes para suportar estrutura parent-child.",
+			"acceptanceCriteria": [
+				"Adicionar campo children?: string[] ao ComponentModel",
+				"Adicionar campo parentId?: string ao ComponentModel",
+				"Adicionar campo position?: 'top'|'bottom'|'left'|'right' ao ComponentModel",
+				"Typecheck passa"
+			],
+			"priority": 1,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-002",
+			"title": "Atualizar tipos TypeScript do canvas",
+			"description": "Como desenvolvedor, preciso sincronizar os tipos hierárquicos com o estado do canvas.",
+			"acceptanceCriteria": [
+				"Sincronizar tipos em webview-app/src/types/canvas.ts com as novas propriedades",
+				"Typecheck passa"
+			],
+			"priority": 2,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-003",
+			"title": "Atualizar schema JSON para componentes hierárquicos",
+			"description": "Como desenvolvedor, preciso adicionar children, parentId e position ao schema JSON.",
+			"acceptanceCriteria": [
+				"Adicionar propriedade children ao schema",
+				"Adicionar propriedade parentId ao schema",
+				"Adicionar propriedade position ao schema",
+				"Typecheck passa"
+			],
+			"priority": 3,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-004",
+			"title": "Adicionar JMenuBar ao schema de componentes",
+			"description": "Como desenvolvedor, preciso adicionar JMenuBar ao schema de componentes disponíveis.",
+			"acceptanceCriteria": [
+				"Adicionar tipo 'MenuBar' ao schema",
+				"Propriedades: type='MenuBar', name='menuBar1', children=[], position='top'",
+				"Typecheck passa"
+			],
+			"priority": 4,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-005",
+			"title": "Adicionar JMenu ao schema de componentes",
+			"description": "Como desenvolvedor, preciso adicionar JMenu ao schema de componentes disponíveis.",
+			"acceptanceCriteria": [
+				"Adicionar tipo 'Menu' ao schema",
+				"Propriedades: type='Menu', name, text, parentId, children=[]",
+				"Typecheck passa"
+			],
+			"priority": 5,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-006",
+			"title": "Adicionar JMenuItem ao schema de componentes",
+			"description": "Como desenvolvedor, preciso adicionar JMenuItem ao schema de componentes disponíveis.",
+			"acceptanceCriteria": [
+				"Adicionar tipo 'MenuItem' ao schema",
+				"Propriedades: type='MenuItem', name, text, parentId, eventMethodName",
+				"Typecheck passa"
+			],
+			"priority": 6,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-007",
+			"title": "Adicionar JToolBar ao schema de componentes",
+			"description": "Como desenvolvedor, preciso adicionar JToolBar ao schema de componentes disponíveis.",
+			"acceptanceCriteria": [
+				"Adicionar tipo 'ToolBar' ao schema",
+				"Propriedades: type='ToolBar', name, position, children=[]",
+				"Typecheck passa"
+			],
+			"priority": 7,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-008",
+			"title": "Atualizar useCanvasState para suportar hierarquia",
+			"description": "Como desenvolvedor, preciso atualizar o hook de estado do canvas para gerenciar estrutura parent-child.",
+			"acceptanceCriteria": [
+				"Adicionar métodos para adicionar/remover filhos (children)",
+				"Adicionar métodos para mover componentes na hierarquia",
+				"Manter compatibilidade com componentes planos existentes",
+				"Typecheck passa"
+			],
+			"priority": 8,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-009",
+			"title": "Criar componente HierarchyPanel (tree view)",
+			"description": "Como usuário, quero editar a estrutura hierárquica de menus via tree view.",
+			"acceptanceCriteria": [
+				"Criar componente HierarchyPanel.tsx",
+				"Mostrar estrutura em árvore de JMenuBar > JMenu > JMenuItem",
+				"Suportar adicionar e remover itens da árvore",
+				"Typecheck passa"
+			],
+			"priority": 9,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-010",
+			"title": "Atualizar Palette com seção de Containers",
+			"description": "Como usuário, quero encontrar JMenuBar e JToolBar na paleta de componentes.",
+			"acceptanceCriteria": [
+				"Adicionar seção 'Container Components' na Palette",
+				"Arrastar JMenuBar cria estrutura padrão (1 menu + 1 item)",
+				"Arrastar JToolBar cria toolbar vazia",
+				"Typecheck passa",
+				"Verificar no browser usando dev-browser skill"
+			],
+			"priority": 10,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-011",
+			"title": "Atualizar Canvas para renderizar JMenuBar fixo",
+			"description": "Como usuário, quero ver a JMenuBar no topo do canvas durante o design.",
+			"acceptanceCriteria": [
+				"JMenuBar renderizada no topo do frame (não arrastável)",
+				"Visual simples representando a barra de menu",
+				"Typecheck passa",
+				"Verificar no browser usando dev-browser skill"
+			],
+			"priority": 11,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-012",
+			"title": "Atualizar JavaGenerator para gerar JMenuBar",
+			"description": "Como desenvolvedor, preciso gerar código Java correto para JMenuBar.",
+			"acceptanceCriteria": [
+				"Gerar: JMenuBar menuBar = new JMenuBar();",
+				"Adicionar filhos via menuBar.add(menu)",
+				"Chamar frame.setJMenuBar(menuBar)",
+				"Typecheck passa"
+			],
+			"priority": 12,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-013",
+			"title": "Atualizar JavaGenerator para gerar JMenu",
+			"description": "Como desenvolvedor, preciso gerar código Java correto para JMenu.",
+			"acceptanceCriteria": [
+				"Gerar: JMenu fileMenu = new JMenu(\"File\");",
+				"Adicionar filhos via menu.add(item)",
+				"Typecheck passa"
+			],
+			"priority": 13,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-014",
+			"title": "Atualizar JavaGenerator para gerar JMenuItem",
+			"description": "Como desenvolvedor, preciso gerar código Java correto para JMenuItem.",
+			"acceptanceCriteria": [
+				"Gerar: JMenuItem newItem = new JMenuItem(\"New\");",
+				"Gerar ActionListener se eventMethodName definido",
+				"Typecheck passa"
+			],
+			"priority": 14,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-015",
+			"title": "Atualizar JavaGenerator para gerar JToolBar",
+			"description": "Como desenvolvedor, preciso gerar código Java correto para JToolBar.",
+			"acceptanceCriteria": [
+				"Gerar: JToolBar toolBar = new JToolBar();",
+				"Posicionar conforme property position (north/south/east/west)",
+				"Adicionar filhos ao toolbar",
+				"Typecheck passa"
+			],
+			"priority": 15,
+			"passes": false,
+			"notes": ""
+		},
+		{
+			"id": "US-016",
+			"title": "Atualizar config com templates para componentes hierárquicos",
+			"description": "Como desenvolvedor, preciso adicionar templates padrão para JMenuBar e JToolBar no config.",
+			"acceptanceCriteria": [
+				"Template padrão para JMenuBar com 1 JMenu e 1 JMenuItem",
+				"Template padrão para JToolBar vazia",
+				"Validação de tipos hierárquicos no ConfigReader",
+				"Typecheck passa"
+			],
+			"priority": 16,
+			"passes": false,
+			"notes": ""
+		}
+	]
+}

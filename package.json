@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "swing-gui-builder",
   "displayName": "Swing GUI Builder",
   "description": "Visual drag-and-drop GUI builder for Java Swing in VS Code",
@@ -36,7 +36,7 @@
   ],
   "main": "./out/extension.js",
   "scripts": {
-    "compile": "tsc -p ./",
+    "compile": "pnpm --dir webview-app build && tsc -p ./",
     "watch": "tsc -watch -p ./",
     "build:webview": "pnpm --dir webview-app build",
     "package": "vsce package",
