@@ -16,6 +16,11 @@ export interface CanvasComponent {
   eventMethodName: string;
 }
 
+export type ComponentProps = Pick<
+  CanvasComponent,
+  "text" | "backgroundColor" | "textColor" | "fontFamily" | "fontSize" | "eventMethodName"
+>;
+
 /**
  * Serializable layout state shared with the VS Code extension.
  */

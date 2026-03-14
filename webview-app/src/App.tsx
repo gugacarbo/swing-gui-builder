@@ -6,6 +6,7 @@ import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { Toolbar } from "@/components/Toolbar";
 import { useCanvasState } from "@/hooks/useCanvasState";
 import { useExtensionListener } from "@/hooks/useExtensionListener";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { usePostMessage } from "@/hooks/usePostMessage";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import type { CanvasComponent, CanvasState } from "@/types/canvas";
@@ -21,7 +22,7 @@ function App() {
   const { components, selectedComponent, selectedComponentId, setComponents, selectComponent } = useCanvasState([]);
 
   const {
-    state: componentHistoryState,
+    state: historyComponents,
     set: setComponentHistory,
     reset: resetComponentHistory,
     undo,
@@ -33,44 +34,46 @@ function App() {
 
   const { postStateChanged, postToolbarCommand } = usePostMessage();
 
-  const commitComponents = useCallback(
+  const updateComponents = useCallback(
     (updater: (current: CanvasComponent[]) => CanvasComponent[]) => {
-      const nextComponents = updater(components);
-      setComponents(nextComponents);
-      setComponentHistory(nextComponents);
+      setComponentHistory((current) => {
+        const next = updater(current);
+        setComponents(next);
+        return next;
+      });
     },
-    [components, setComponentHistory, setComponents],
+    [setComponentHistory, setComponents],
   );
 
   const handleAddComponent = useCallback(
     (component: CanvasComponent) => {
-      commitComponents((current) => [...current, component]);
+      updateComponents((current) => [...current, component]);
       selectComponent(component.id);
     },
-    [commitComponents, selectComponent],
+    [selectComponent, updateComponents],
   );
 
   const handleMoveComponent = useCallback(
     (id: string, x: number, y: number) => {
-      commitComponents((current) =>
+      updateComponents((current) =>
         current.map((component) => (component.id === id ? { ...component, x: Math.round(x), y: Math.round(y) } : component)),
       );
     },
-    [commitComponents],
+    [updateComponents],
   );
 
   const handleResizeComponent = useCallback(
     (id: string, updates: Pick<CanvasComponent, "x" | "y" | "width" | "height">) => {
-      commitComponents((current) => current.map((component) => (component.id === id ? { ...component, ...updates } : component)));
+      updateComponents((current) => current.map((component) => (component.id === id ? { ...component, ...updates } : component)));
     },
-    [commitComponents],
+    [updateComponents],
   );
 
   const handleUpdateComponent = useCallback(
     (id: string, updates: Partial<CanvasComponent>) => {
-      commitComponents((current) => current.map((component) => (component.id === id ? { ...component, ...updates } : component)));
+      updateComponents((current) => current.map((component) => (component.id === id ? { ...component, ...updates } : component)));
     },
-    [commitComponents],
+    [updateComponents],
   );
 
   const handleDelete = useCallback(() => {
@@ -78,9 +81,9 @@ function App() {
       return;
     }
 
-    commitComponents((current) => current.filter((component) => component.id !== selectedComponentId));
+    updateComponents((current) => current.filter((component) => component.id !== selectedComponentId));
     selectComponent(null);
-  }, [commitComponents, selectComponent, selectedComponentId]);
+  }, [selectComponent, selectedComponentId, updateComponents]);
 
   const handleUndo = useCallback(() => {
     undo();
@@ -96,46 +99,16 @@ function App() {
     postToolbarCommand("generate");
   }, [postToolbarCommand]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (target?.isContentEditable || target?.closest("input, textarea")) {
-        return;
-      }
-
-      if (!event.ctrlKey && !event.metaKey) {
-        return;
-      }
-
-      const key = event.key.toLowerCase();
-      if (key === "z" && !event.shiftKey) {
-        event.preventDefault();
-        handleUndo();
-        return;
-      }
-
-      if (key === "y" || (key === "z" && event.shiftKey)) {
-        event.preventDefault();
-        handleRedo();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleRedo, handleUndo]);
+  useKeyboardShortcuts({
+    onUndo: handleUndo,
+    onRedo: handleRedo,
+    canUndo,
+    canRedo,
+  });
 
   useEffect(() => {
-    setComponents(componentHistoryState);
-  }, [componentHistoryState, setComponents]);
-
-  useEffect(() => {
-    if (selectedComponentId && !components.some((component) => component.id === selectedComponentId)) {
-      selectComponent(null);
-    }
-  }, [components, selectComponent, selectedComponentId]);
+    setComponents(historyComponents);
+  }, [historyComponents, setComponents]);
 
   useEffect(() => {
     postStateChanged({
@@ -198,3 +171,4 @@ function App() {
 }
 
 export default App;
+

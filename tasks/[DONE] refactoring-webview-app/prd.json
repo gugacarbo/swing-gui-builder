@@ -1,0 +1,212 @@
+{
+    "project": "Swing GUI Builder",
+    "branchName": "ralph/refactoring-webview-app",
+    "description": "Refatoração WebView-App - Reorganizar codebase extraindo lógica duplicada, dividindo arquivos grandes em módulos coesos e criando utilitários reutilizáveis",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Criar constants.ts com limites e constraints",
+            "description": "Como desenvolvedor, quero constantes centralizadas para valores hardcoded (zoom limits, size constraints) para facilitar ajustes futuros.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/lib/constants.ts com ~20 linhas",
+                "Exportar: ZOOM_MIN, ZOOM_MAX, ZOOM_DEFAULT, MIN_COMPONENT_SIZE, GRID_SIZE",
+                "Tipos TypeScript adequados para todas as constantes",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-002",
+            "title": "Criar componentDefaults.ts com mapeamentos",
+            "description": "Como desenvolvedor, quero mapeamentos de defaults de componentes extraídos em arquivo dedicado para evitar duplicação.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/lib/componentDefaults.ts com ~60 linhas",
+                "Exportar função getDefaultProps(type: ComponentType): ComponentProps",
+                "Exportar função getDefaultSize(type: ComponentType): { width, height }",
+                "Mapeamentos extraídos de Canvas.tsx",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-003",
+            "title": "Criar geometry.ts com funções puras",
+            "description": "Como desenvolvedor, quero funções puras de cálculo geométrico em arquivo dedicado para reutilização e testabilidade.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/lib/geometry.ts com ~50 linhas",
+                "Exportar: clamp(), snapToGrid(), calculateResize(), isPointInRect()",
+                "Funções puras sem side effects",
+                "JSDoc em cada função explicando propósito",
+                "Typecheck passes"
+            ],
+            "priority": 3,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Criar hook useCanvasDragDrop",
+            "description": "Como desenvolvedor, quero lógica de drag&drop do canvas extraída em hook dedicado para reduzir complexidade de Canvas.tsx.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/hooks/useCanvasDragDrop.ts com ~60 linhas",
+                "Exportar: { handleDrop, handleDragOver, isDragging }",
+                "Usar lib/componentDefaults.ts para defaults",
+                "Hook testável isoladamente",
+                "Typecheck passes"
+            ],
+            "priority": 4,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Criar hook useCanvasZoomPan",
+            "description": "Como desenvolvedor, quero lógica de zoom e pan do canvas extraída em hook dedicado para separação de responsabilidades.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/hooks/useCanvasZoomPan.ts com ~80 linhas",
+                "Exportar: { zoom, pan, handleWheel, handleZoomIn, handleZoomOut, handleResetView }",
+                "Usar lib/constants.ts para ZOOM_MIN, ZOOM_MAX",
+                "Usar lib/geometry.ts para clamp",
+                "Typecheck passes"
+            ],
+            "priority": 5,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-006",
+            "title": "Criar hook useDragInteraction",
+            "description": "Como desenvolvedor, quero estado de move/resize extraído em hook dedicado para simplificar CanvasComponent.tsx.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/hooks/useDragInteraction.ts com ~70 linhas",
+                "Exportar: { isDragging, isResizing, handleMouseDown, handleMouseMove, handleMouseUp }",
+                "Usar lib/geometry.ts para calculateResize e snapToGrid",
+                "Suportar ambos: move e resize (8 handles)",
+                "Typecheck passes"
+            ],
+            "priority": 6,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Criar hook useKeyboardShortcuts",
+            "description": "Como desenvolvedor, quero atalhos de teclado extraídos em hook dedicado para simplificar App.tsx.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/hooks/useKeyboardShortcuts.ts com ~30 linhas",
+                "Exportar: hook que registra listeners de Ctrl+Z (undo) e Ctrl+Y/Ctrl+Shift+Z (redo)",
+                "Reutilizar useUndoRedo.ts existente",
+                "Cleanup de listeners no unmount",
+                "Typecheck passes"
+            ],
+            "priority": 7,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Refatorar Canvas.tsx",
+            "description": "Como desenvolvedor, quero Canvas.tsx simplificado usando os novos hooks para facilitar leitura e manutenção.",
+            "acceptanceCriteria": [
+                "Reduzir de 264 linhas para ~80 linhas (~70% de redução)",
+                "Usar useCanvasDragDrop para drag&drop",
+                "Usar useCanvasZoomPan para zoom/pan",
+                "Importar constantes de lib/constants.ts",
+                "Remover código duplicado movido para hooks/libs",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 8,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Refatorar CanvasComponent.tsx",
+            "description": "Como desenvolvedor, quero CanvasComponent.tsx simplificado usando useDragInteraction para reduzir complexidade.",
+            "acceptanceCriteria": [
+                "Reduzir de 193 linhas para ~100 linhas (~48% de redução)",
+                "Usar useDragInteraction para estado de move/resize",
+                "Usar lib/geometry.ts para cálculos",
+                "Manter comportamento de 8 resize handles",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: mover componente e redimensionar"
+            ],
+            "priority": 9,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-010",
+            "title": "Criar FormField e field components",
+            "description": "Como desenvolvedor, quero componentes de formulário reutilizáveis para eliminar duplicação em PropertiesPanel.tsx.",
+            "acceptanceCriteria": [
+                "Criar pasta webview-app/src/components/PropertiesPanel/",
+                "Criar FormField.tsx genérico (~40 linhas) com label + wrapper",
+                "Criar NumberField.tsx (~25 linhas) usando shadcn input",
+                "Criar ColorField.tsx (~25 linhas) com picker",
+                "Exportar barrel de index.ts",
+                "Typecheck passes"
+            ],
+            "priority": 10,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-011",
+            "title": "Refatorar PropertiesPanel.tsx",
+            "description": "Como desenvolvedor, quero PropertiesPanel.tsx simplificado usando os novos field components para eliminar código repetitivo.",
+            "acceptanceCriteria": [
+                "Transformar PropertiesPanel.tsx em pasta com index.tsx",
+                "Reduzir de 184 linhas para ~80 linhas (~57% de redução)",
+                "Usar FormField, NumberField, ColorField criados",
+                "Eliminar mapeamentos duplicados de propriedades",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: editar propriedades de componente selecionado"
+            ],
+            "priority": 11,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-012",
+            "title": "Refatorar App.tsx",
+            "description": "Como desenvolvedor, quero App.tsx simplificado usando useKeyboardShortcuts para reduzir código de efeitos.",
+            "acceptanceCriteria": [
+                "Reduzir de 138 linhas para ~80 linhas (~42% de redução)",
+                "Usar useKeyboardShortcuts para undo/redo",
+                "Remover handlers/effects não necessários",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: testar Ctrl+Z e Ctrl+Y"
+            ],
+            "priority": 12,
+            "passes": true,
+            "notes": ""
+        },
+        {
+            "id": "US-013",
+            "title": "Validação final e cleanup",
+            "description": "Como desenvolvedor, quero validar que toda refatoração está completa e código morto foi removido.",
+            "acceptanceCriteria": [
+                "Atualizar todos os imports nos arquivos modificados",
+                "Remover código morto (exports não utilizados, variáveis não usadas)",
+                "pnpm build compila sem erros nem warnings",
+                "Drag & drop de paleta funciona",
+                "Zoom (scroll + botões) e pan funcionam",
+                "Mover e resize componentes funcionam",
+                "Undo/redo (Ctrl+Z/Y) funciona",
+                "Propriedades sincronizam corretamente",
+                "Geração de código Java funciona",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: fluxo completo de criação de UI"
+            ],
+            "priority": 13,
+            "passes": true,
+            "notes": ""
+        }
+    ]
+}
