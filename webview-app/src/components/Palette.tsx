@@ -1,8 +1,15 @@
 import {
   Braces,
+  ChevronDown,
+  Circle,
   Component,
+  Hash,
   LayoutPanelLeft,
+  List,
+  Loader,
+  Minus,
   PanelTop,
+  SlidersHorizontal,
   Square,
   Type,
 } from "lucide-react";
@@ -20,6 +27,13 @@ const PALETTE_ITEMS: PaletteItem[] = [
   { id: "JTextField", name: "JTextField", icon: Braces },
   { id: "JTextArea", name: "JTextArea", icon: PanelTop },
   { id: "JCheckBox", name: "JCheckBox", icon: Component },
+  { id: "JRadioButton", name: "JRadioButton", icon: Circle },
+  { id: "JComboBox", name: "JComboBox", icon: ChevronDown },
+  { id: "JList", name: "JList", icon: List },
+  { id: "JProgressBar", name: "JProgressBar", icon: Loader },
+  { id: "JSlider", name: "JSlider", icon: SlidersHorizontal },
+  { id: "JSpinner", name: "JSpinner", icon: Hash },
+  { id: "JSeparator", name: "JSeparator", icon: Minus },
 ];
 
 export function Palette() {

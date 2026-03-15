@@ -9,17 +9,19 @@ interface Point {
 }
 
 const PALETTE_TO_COMPONENT_TYPE: Record<string, ComponentType> = {
+  JPanel: "Panel",
   JButton: "Button",
   JLabel: "Label",
-  JPanel: "Label",
   JTextField: "TextField",
   JTextArea: "TextArea",
-  JCheckBox: "Button",
-};
-
-const DEFAULT_TEXT_BY_PALETTE_TYPE: Record<string, string> = {
   JCheckBox: "CheckBox",
-  JPanel: "Panel",
+  JRadioButton: "RadioButton",
+  JComboBox: "ComboBox",
+  JList: "List",
+  JProgressBar: "ProgressBar",
+  JSlider: "Slider",
+  JSpinner: "Spinner",
+  JSeparator: "Separator",
 };
 
 function toComponentType(rawType: string): ComponentType | null {
@@ -128,7 +130,6 @@ export function useCanvasDragDrop({
 
       const size = getDefaultSize(componentType);
       const defaultProps = getDefaultProps(componentType);
-      const text = DEFAULT_TEXT_BY_PALETTE_TYPE[paletteType] ?? defaultProps.text;
 
       const component: CanvasComponent = {
         id: createId(),
@@ -139,7 +140,6 @@ export function useCanvasDragDrop({
         width: size.width,
         height: size.height,
         ...defaultProps,
-        text,
       };
 
       onAddComponent(component);

@@ -1,12 +1,25 @@
 import type { CanvasState, ComponentModel, ComponentType } from "../components/ComponentModel";
 
-const SWING_CLASS_MAP: Record<ComponentType, string> = {
+const SWING_CLASS_MAP: Partial<Record<ComponentType, string>> = {
+  Panel: "JPanel",
   Button: "JButton",
   Label: "JLabel",
   TextField: "JTextField",
   PasswordField: "JPasswordField",
   TextArea: "JTextArea",
+  CheckBox: "JCheckBox",
+  RadioButton: "JRadioButton",
+  ComboBox: "JComboBox<String>",
+  List: "JList<String>",
+  ProgressBar: "JProgressBar",
+  Slider: "JSlider",
+  Spinner: "JSpinner",
+  Separator: "JSeparator",
 };
+
+function getSwingClass(componentType: ComponentType): string {
+  return SWING_CLASS_MAP[componentType] ?? "JButton";
+}
 
 const DEFAULT_BG = "#FFFFFF";
 const DEFAULT_TEXT_COLOR = "#000000";
@@ -38,6 +51,88 @@ function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+function supportsTextConstructor(type: ComponentType): boolean {
+  return (
+    type === "Button" ||
+    type === "Label" ||
+    type === "TextField" ||
+    type === "PasswordField" ||
+    type === "TextArea" ||
+    type === "CheckBox" ||
+    type === "RadioButton"
+  );
+}
+
+function getComponentInitCode(comp: ComponentModel, swingClass: string): string {
+  if (supportsTextConstructor(comp.type) && comp.text) {
+    return `    ${comp.variableName} = new ${swingClass}("${escapeJava(comp.text)}");`;
+  }
+  return `    ${comp.variableName} = new ${swingClass}();`;
+}
+
+function getComponentPropsCode(comp: ComponentModel): string[] {
+  const lines: string[] = [];
+
+  switch (comp.type) {
+    case "CheckBox":
+    case "RadioButton":
+      if (typeof comp.selected === "boolean") {
+        lines.push(`    ${comp.variableName}.setSelected(${comp.selected});`);
+      }
+      break;
+    case "ComboBox": {
+      const values = (comp.items ?? []).map((item) => `"${escapeJava(item)}"`).join(", ");
+      lines.push(
+        `    ${comp.variableName}.setModel(new DefaultComboBoxModel<>(new String[] {${values}}));`,
+      );
+      break;
+    }
+    case "List": {
+      const modelName = `${comp.variableName}Model`;
+      lines.push(`    DefaultListModel<String> ${modelName} = new DefaultListModel<>();`);
+      for (const item of comp.items ?? []) {
+        lines.push(`    ${modelName}.addElement("${escapeJava(item)}");`);
+      }
+      lines.push(`    ${comp.variableName}.setModel(${modelName});`);
+      break;
+    }
+    case "ProgressBar":
+    case "Slider":
+      if (typeof comp.min === "number") {
+        lines.push(`    ${comp.variableName}.setMinimum(${comp.min});`);
+      }
+      if (typeof comp.max === "number") {
+        lines.push(`    ${comp.variableName}.setMaximum(${comp.max});`);
+      }
+      if (typeof comp.value === "number") {
+        lines.push(`    ${comp.variableName}.setValue(${comp.value});`);
+      }
+      break;
+    case "Spinner":
+      lines.push(
+        `    SpinnerNumberModel ${comp.variableName}NumberModel = (SpinnerNumberModel) ${comp.variableName}.getModel();`,
+      );
+      if (typeof comp.min === "number") {
+        lines.push(`    ${comp.variableName}NumberModel.setMinimum(${comp.min});`);
+      }
+      if (typeof comp.max === "number") {
+        lines.push(`    ${comp.variableName}NumberModel.setMaximum(${comp.max});`);
+      }
+      if (typeof comp.value === "number") {
+        lines.push(`    ${comp.variableName}.setValue(${comp.value});`);
+      }
+      break;
+    case "Separator": {
+      const orientation =
+        comp.orientation === "vertical" ? "SwingConstants.VERTICAL" : "SwingConstants.HORIZONTAL";
+      lines.push(`    ${comp.variableName}.setOrientation(${orientation});`);
+      break;
+    }
+  }
+
+  return lines;
+}
+
 function getListenerCode(comp: ComponentModel, methodName: string): string {
   switch (comp.type) {
     case "Button":
@@ -53,6 +148,18 @@ function getListenerCode(comp: ComponentModel, methodName: string): string {
         `      public void changedUpdate(javax.swing.event.DocumentEvent e) { ${methodName}(); }`,
         "    });",
       ].join("\n");
+    case "CheckBox":
+      return `    ${comp.variableName}.addItemListener(e -> ${methodName}());`;
+    case "RadioButton":
+      return `    ${comp.variableName}.addActionListener(e -> ${methodName}());`;
+    case "ComboBox":
+      return `    ${comp.variableName}.addActionListener(e -> ${methodName}());`;
+    case "List":
+      return `    ${comp.variableName}.addListSelectionListener(e -> { if (!e.getValueIsAdjusting()) ${methodName}(); });`;
+    case "Slider":
+      return `    ${comp.variableName}.addChangeListener(e -> ${methodName}());`;
+    case "Spinner":
+      return `    ${comp.variableName}.addChangeListener(e -> ${methodName}());`;
     default:
       return "";
   }
@@ -138,7 +245,7 @@ function generateCustomComponentFile(
   customClassName: string,
   packageName?: string,
 ): GeneratedFile {
-  const swingClass = SWING_CLASS_MAP[comp.type];
+  const swingClass = getSwingClass(comp.type);
   const lines: string[] = [];
 
   if (packageName) {
@@ -153,7 +260,7 @@ function generateCustomComponentFile(
   lines.push("");
   lines.push(`  public ${customClassName}() {`);
 
-  if (comp.text) {
+  if (supportsTextConstructor(comp.type) && comp.text) {
     lines.push(`    super("${escapeJava(comp.text)}");`);
   } else {
     lines.push("    super();");
@@ -212,7 +319,7 @@ function generateMainFrameFile(
     const isCustom = customIds.has(comp.id);
     const typeName = isCustom
       ? (customClassNames.get(comp.id) as string)
-      : SWING_CLASS_MAP[comp.type];
+      : getSwingClass(comp.type);
     lines.push(`  private ${typeName} ${comp.variableName};`);
   }
 
@@ -232,12 +339,8 @@ function generateMainFrameFile(
       const customClassName = customClassNames.get(comp.id) as string;
       lines.push(`    ${comp.variableName} = new ${customClassName}();`);
     } else {
-      const swingClass = SWING_CLASS_MAP[comp.type];
-      if (comp.text) {
-        lines.push(`    ${comp.variableName} = new ${swingClass}("${escapeJava(comp.text)}");`);
-      } else {
-        lines.push(`    ${comp.variableName} = new ${swingClass}();`);
-      }
+      const swingClass = getSwingClass(comp.type);
+      lines.push(getComponentInitCode(comp, swingClass));
     }
 
     lines.push(
@@ -264,6 +367,8 @@ function generateMainFrameFile(
         );
       }
     }
+
+    lines.push(...getComponentPropsCode(comp));
 
     // Event listener
     const methodName = methodNames.get(comp.id);

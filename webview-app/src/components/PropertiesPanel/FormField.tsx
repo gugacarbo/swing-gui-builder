@@ -11,7 +11,7 @@ interface FormFieldProps {
 
 export function FormField({ label, children, error, className }: FormFieldProps) {
   return (
-    <label className={cn("flex flex-col gap-1 text-xs", className)}>
+    <label className={cn("flex flex-col gap-1 text-xs", className)} htmlFor="">
       <span className="text-muted-foreground">{label}</span>
       {children}
       {error && <span className="text-[11px] text-destructive">{error}</span>}

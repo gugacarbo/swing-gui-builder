@@ -41,6 +41,23 @@ const COLOR_FIELDS: ReadonlyArray<{ label: string; key: "backgroundColor" | "tex
   { label: "Foreground", key: "textColor" },
 ];
 
+const RANGE_FIELDS: ReadonlyArray<{ label: string; key: "value" | "min" | "max" }> = [
+  { label: "Value", key: "value" },
+  { label: "Min", key: "min" },
+  { label: "Max", key: "max" },
+];
+
+const RANGE_INPUTS: Record<"value" | "min" | "max", NumericInputOptions> = {
+  value: { min: -9_999, max: 9_999, integer: true },
+  min: { min: -9_999, max: 9_999, integer: true },
+  max: { min: -9_999, max: 9_999, integer: true },
+};
+
+const SELECT_CLASS_NAME = `${TEXT_INPUT_CLASS_NAME} pr-8`;
+const CHECKBOX_TYPES = new Set<CanvasComponent["type"]>(["CheckBox", "RadioButton"]);
+const ITEM_TYPES = new Set<CanvasComponent["type"]>(["ComboBox", "List"]);
+const RANGE_TYPES = new Set<CanvasComponent["type"]>(["ProgressBar", "Slider", "Spinner"]);
+
 function PropertiesHeader() {
   return (
     <header className="border-b border-vscode-panel-border px-4 py-3">
@@ -58,6 +75,10 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
       </section>
     );
   }
+
+  const isSelectableType = CHECKBOX_TYPES.has(component.type);
+  const hasItems = ITEM_TYPES.has(component.type);
+  const hasRange = RANGE_TYPES.has(component.type);
 
   return (
     <section className="flex h-full flex-col" aria-label="Properties panel">
@@ -104,6 +125,66 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
             />
           ))}
         </div>
+
+        {isSelectableType ? (
+          <FormField label="Selected">
+            <input
+              type="checkbox"
+              className="h-4 w-4 accent-vscode-focusBorder"
+              checked={component.selected ?? false}
+              onChange={(event) => onUpdateComponent(component.id, { selected: event.target.checked })}
+            />
+          </FormField>
+        ) : null}
+
+        {hasItems ? (
+          <FormField label="Items">
+            <textarea
+              className="min-h-24 w-full rounded border border-vscode-panel-border bg-vscode-input-background px-2 py-1 text-sm text-vscode-input-foreground outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring"
+              value={(component.items ?? []).join("\n")}
+              placeholder={"Item 1\nItem 2"}
+              onChange={(event) =>
+                onUpdateComponent(component.id, {
+                  items: event.target.value
+                    .split(/\r?\n/)
+                    .map((line) => line.trim())
+                    .filter((line) => line.length > 0),
+                })
+              }
+            />
+          </FormField>
+        ) : null}
+
+        {hasRange ? (
+          <div className="grid grid-cols-3 gap-2">
+            {RANGE_FIELDS.map(({ label, key }) => (
+              <NumberField
+                key={key}
+                label={label}
+                value={component[key] ?? (key === "max" ? 100 : 0)}
+                range={RANGE_INPUTS[key]}
+                onChange={(nextValue) => onUpdateComponent(component.id, { [key]: nextValue })}
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {component.type === "Separator" ? (
+          <FormField label="Orientation">
+            <select
+              className={SELECT_CLASS_NAME}
+              value={component.orientation ?? "horizontal"}
+              onChange={(event) =>
+                onUpdateComponent(component.id, {
+                  orientation: event.target.value as CanvasComponent["orientation"],
+                })
+              }
+            >
+              <option value="horizontal">Horizontal</option>
+              <option value="vertical">Vertical</option>
+            </select>
+          </FormField>
+        ) : null}
       </div>
     </section>
   );

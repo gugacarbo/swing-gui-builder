@@ -1,0 +1,204 @@
+{
+  "project": "Swing GUI Builder",
+  "branchName": "ralph/expand-swing-components",
+  "description": "Expandir Componentes Swing no Builder - Adicionar 9 novos tipos de componentes (containers, seleção, listas, progresso, separadores) com suporte completo em todas as camadas",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Estender tipos de componente no backend",
+      "description": "Como desenvolvedor da extensão, preciso definir os novos tipos de componentes no modelo do backend para que o sistema reconheça e processe os novos componentes Swing.",
+      "acceptanceCriteria": [
+        "ComponentType define 14 tipos: Panel, Button, Label, TextField, PasswordField, TextArea, CheckBox, RadioButton, ComboBox, List, ProgressBar, Slider, Spinner, Separator",
+        "ComponentType estendido com props condicionais: selected?: boolean, items?: string[], value?: number, min?: number, max?: number, orientation?: 'horizontal' | 'vertical'",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "US-001 implemented in backend ComponentModel (14 types + conditional props). Validation: pnpm run compile passed."
+    },
+    {
+      "id": "US-002",
+      "title": "Sincronizar tipos no frontend do webview",
+      "description": "Como desenvolvedor da extensão, preciso espelhar os tipos do backend no frontend para garantir consistência entre extensão e webview.",
+      "acceptanceCriteria": [
+        "webview-app/src/types/canvas.ts define ComponentType idêntico ao backend (14 tipos)",
+        "Interface CanvasComponent inclui todas as props condicionais",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "US-002 implemented in webview-app/src/types/canvas.ts (14 ComponentType values + conditional CanvasComponent props). Validation: pnpm --dir webview-app typecheck and pnpm run compile passed."
+    },
+    {
+      "id": "US-003",
+      "title": "Atualizar paleta com novos componentes",
+      "description": "Como usuário do builder, quero ver todos os 13 componentes disponíveis na paleta para arrastar para o canvas.",
+      "acceptanceCriteria": [
+        "Palette.tsx exibe 13 itens: JPanel, JButton, JLabel, JTextField, JTextArea, JCheckBox, JRadioButton, JComboBox, JList, JProgressBar, JSlider, JSpinner, JSeparator",
+        "Ícones lucide-react atribuídos: JRadioButton → Circle, JComboBox → ChevronDown, JList → List, JProgressBar → Loader, JSlider → SlidersHorizontal, JSpinner → Hash, JSeparator → Minus",
+        "Todos os itens são arrastáveis",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Palette.tsx now renders 13 draggable items (JPanel, JButton, JLabel, JTextField, JTextArea, JCheckBox, JRadioButton, JComboBox, JList, JProgressBar, JSlider, JSpinner, JSeparator) with required icon mapping (Circle, ChevronDown, List, Loader, SlidersHorizontal, Hash, Minus). Validation: pnpm run compile and pnpm --dir webview-app typecheck passed."
+    },
+    {
+      "id": "US-004",
+      "title": "Corrigir e estender mapeamentos de drag & drop",
+      "description": "Como usuário do builder, quero arrastar componentes da paleta para o canvas e criar o tipo correto.",
+      "acceptanceCriteria": [
+        "PALETTE_TO_COMPONENT_TYPE define 13 mapeamentos corretos",
+        "JPanel → Panel (corrigido de Label)",
+        "JCheckBox → CheckBox (corrigido de Button)",
+        "Novos mapeamentos: JRadioButton → RadioButton, JComboBox → ComboBox, JList → List, JProgressBar → ProgressBar, JSlider → Slider, JSpinner → Spinner, JSeparator → Separator",
+        "Drop cria componente com tipo e props corretos",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "useCanvasDragDrop.ts PALETTE_TO_COMPONENT_TYPE now has correct 13 mappings: JPanel→Panel, JButton→Button, JLabel→Label, JTextField→TextField, JTextArea→TextArea, JCheckBox→CheckBox, JRadioButton→RadioButton, JComboBox→ComboBox, JList→List, JProgressBar→ProgressBar, JSlider→Slider, JSpinner→Spinner, JSeparator→Separator. Drop path still creates components using getDefaultSize/getDefaultProps flow."
+    },
+    {
+      "id": "US-005",
+      "title": "Definir defaults por tipo de componente",
+      "description": "Como usuário do builder, quero que componentes recém-criados tenham valores padrão adequados ao seu tipo.",
+      "acceptanceCriteria": [
+        "componentDefaults.ts define defaults para todos os 14 tipos",
+        "Panel: text='Panel', width=200, height=150",
+        "CheckBox/RadioButton: selected=false",
+        "ComboBox/List: items array com valores padrão",
+        "ProgressBar/Slider/Spinner: value=50, min=0, max=100",
+        "Separator: orientation='horizontal'",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "componentDefaults.ts now defines defaults for all 14 types including required specifics: Panel text/size (Panel, 200x150), CheckBox/RadioButton selected=false, ComboBox/List items arrays, ProgressBar/Slider/Spinner value=50 min=0 max=100, Separator orientation='horizontal'. Validation: pnpm run compile and pnpm --dir webview-app typecheck passed."
+    },
+    {
+      "id": "US-006",
+      "title": "Estender geração de código Java - Classes Swing",
+      "description": "Como usuário do builder, quero gerar código Java que use as classes Swing corretas para cada tipo de componente.",
+      "acceptanceCriteria": [
+        "SWING_CLASS_MAP atualizado com 14 mapeamentos",
+        "Panel → JPanel, CheckBox → JCheckBox, RadioButton → JRadioButton",
+        "ComboBox → JComboBox<String>, List → JList<String>",
+        "ProgressBar → JProgressBar, Slider → JSlider, Spinner → JSpinner, Separator → JSeparator",
+        "Tipos existentes mantidos: Button, Label, TextField, PasswordField, TextArea",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "SWING_CLASS_MAP expanded to 14 mappings, including Panel/JPanel and all 8 new Swing classes with generics for ComboBox/List."
+    },
+    {
+      "id": "US-007",
+      "title": "Estender geração de código Java - Inicialização de props",
+      "description": "Como usuário do builder, quero gerar código Java que configure corretamente as propriedades específicas de cada componente.",
+      "acceptanceCriteria": [
+        "Código gerado inclui setSelected(boolean) para CheckBox e RadioButton",
+        "Código gerado inclui modelo de dados para ComboBox (DefaultComboBoxModel) e List (DefaultListModel)",
+        "Código gerado inclui setValue(int), setMinimum(int), setMaximum(int) para ProgressBar, Slider, Spinner",
+        "Código gerado inclui setOrientation(SwingConstants.HORIZONTAL/VERTICAL) para Separator",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Generator now emits selected/model/range/orientation initialization: setSelected, DefaultComboBoxModel, DefaultListModel, setMinimum/setMaximum/setValue, and setOrientation."
+    },
+    {
+      "id": "US-008",
+      "title": "Estender geração de código Java - Listeners",
+      "description": "Como usuário do builder, quero gerar código Java que adicione listeners apropriados a componentes interativos.",
+      "acceptanceCriteria": [
+        "CheckBox gera addActionListener ou addItemListener",
+        "RadioButton gera addActionListener",
+        "ComboBox gera addActionListener ou addItemListener",
+        "List gera addListSelectionListener",
+        "Slider gera addChangeListener",
+        "Spinner gera addChangeListener",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Generator now emits listeners for CheckBox, RadioButton, ComboBox, List, Slider, and Spinner; compile check passed."
+    },
+    {
+      "id": "US-009",
+      "title": "Atualizar schema de configuração",
+      "description": "Como desenvolvedor da extensão, preciso atualizar o schema JSON para aceitar configurações para todos os tipos de componentes.",
+      "acceptanceCriteria": [
+        "schemas/swingbuilder.schema.json define defaults para todos os 14 tipos em components.properties",
+        "Schema referencia #/definitions/componentDefaults para cada tipo",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "US-009 implemented: schema components.properties now includes all 14 component types, each referencing #/definitions/componentDefaults."
+    },
+    {
+      "id": "US-010",
+      "title": "Atualizar template de configuração inicial",
+      "description": "Como desenvolvedor da extensão, preciso fornecer um template de configuração que demonstre todos os tipos suportados.",
+      "acceptanceCriteria": [
+        "initConfigCommand.ts gera template com exemplos para todos os 14 tipos",
+        "Template inclui pelo menos um componente de cada categoria (container, entrada, seleção, lista, progresso, separador)",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "US-010 implemented: init config template now demonstrates all 14 component types and covers container, input, selection, list, progress, and separator categories."
+    },
+    {
+      "id": "US-011",
+      "title": "Adicionar campos condicionais no painel de propriedades",
+      "description": "Como usuário do builder, quero editar propriedades específicas de cada tipo de componente no painel de propriedades.",
+      "acceptanceCriteria": [
+        "PropertiesPanel exibe campos condicionais por tipo",
+        "Todos os tipos: text, backgroundColor, textColor, fontFamily, fontSize",
+        "CheckBox/RadioButton: campo selected (checkbox)",
+        "ComboBox/List: campo items (textarea multiline)",
+        "ProgressBar/Slider/Spinner: campos value, min, max (number inputs)",
+        "Separator: campo orientation (select: horizontal/vertical)",
+        "Alterações refletem no modelo em tempo real",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "US-011 completed in webview-app/src/components/PropertiesPanel/index.tsx with conditional fields by type: selected (CheckBox/RadioButton), items textarea (ComboBox/List), value/min/max numeric inputs (ProgressBar/Slider/Spinner), orientation select (Separator). Base fields (text/backgroundColor/textColor/fontFamily/fontSize) remain visible for all selected types. Validation: pnpm run compile and pnpm --dir webview-app typecheck passed. Browser verification executed against local dev server with drag-drop sampling for CheckBox, ComboBox, ProgressBar, and Separator; realtime model updates confirmed via emitted stateChanged payloads. Limitation: browser run sampled representative types rather than exhaustive manual checks across every type."
+    },
+    {
+      "id": "US-012",
+      "title": "Validação end-to-end da cadeia de componentes",
+      "description": "Como desenvolvedor da extensão, preciso garantir que todos os componentes funcionem corretamente do drag à geração de código.",
+      "acceptanceCriteria": [
+        "pnpm run compile executa sem erros",
+        "Roundtrip funcional: paleta → drag → canvas → modelo → estado sincronizado para todos os 13 componentes",
+        "PALETTE_TO_COMPONENT_TYPE tem cobertura 100% dos itens da paleta",
+        "componentDefaults.ts tem defaults para todos os 14 tipos",
+        "SWING_CLASS_MAP tem mapeamento para todos os 14 tipos",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "Validation complete: pnpm run compile passed; pnpm --dir webview-app typecheck passed; automated browser roundtrip validated all 13 palette items through palette→drag→canvas render→stateChanged synchronized state with no failures; coverage script confirmed PALETTE_TO_COMPONENT_TYPE covers all palette items and both componentDefaults/SWING_CLASS_MAP cover all 14 types."
+    },
+    {
+      "id": "US-013",
+      "title": "Validação de compilação Java",
+      "description": "Como usuário do builder, quero ter garantia de que o código Java gerado compila corretamente.",
+      "acceptanceCriteria": [
+        "Classe Java gerada com todos os 14 tipos de componentes compila com javac sem erros",
+        "Código gerado segue sintaxe Java válida",
+        "Imports corretos incluídos (javax.swing.*, java.awt.*)",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "Validation complete: generated AllComponentsWindow.java containing all 14 component types (including PasswordField); file includes imports javax.swing.* and java.awt.*; javac compiled generated class successfully (AllComponentsWindow.class produced). Typecheck already passes."
+    }
+  ]
+}

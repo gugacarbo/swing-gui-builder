@@ -1,0 +1,29 @@
+# Progress: Expand Swing Components
+
+## Status
+🔄 In Progress
+
+## Completed Stories
+(none yet)
+
+## Current Story
+(none started)
+
+## Notes
+- PRD converted to prd.json
+- 13 user stories defined
+- Ready for Ralph autonomous execution
+- [2026-03-15 13:19:54] START US-001: extending backend component types and conditional props.
+- [2026-03-15 13:20:47] FINISH US-001: success; backend types and conditional props extended, compile passed.
+- [2026-03-15 13:22:20] START US-006..US-008: extending Java generator mappings, props, and listeners.
+- [2026-03-15 13:22:23] START US-009/US-010: updating schema defaults and init config template.
+- [2026-03-15 13:22:51] START US-002: syncing frontend webview component types and conditional props.
+- [2026-03-15 13:24:04] FINISH US-009/US-010: success; schema and init template updated for 14 component types, compile passed.
+- [2026-03-15 13:24:25] FINISH US-002: success; frontend component types synced to backend and compile/typecheck passed.
+- [2026-03-15 13:24:50] FINISH US-006..US-008: success; Java generator mappings, props initialization, and listeners implemented; compile passed.
+- [2026-03-15 13:27:06] START US-003/US-004/US-005: updating palette items/icons, drag-drop mappings, and component defaults.
+- [2026-03-15 13:29:02] FINISH US-003/US-004/US-005: success; palette expanded to 13 draggable items with required icons, drag-drop mappings fixed/extended, defaults completed for all 14 types, compile+typecheck passed.
+- [2026-03-15 13:31:55] START US-011: implementing conditional property fields in PropertiesPanel.
+- [2026-03-15 13:36:30] FINISH US-011: success; conditional fields implemented (selected/items/value-min-max/orientation), compile+typecheck passed, browser verification passed via sampled drag-drop scenarios (CheckBox, ComboBox, ProgressBar, Separator); note: did not exhaustively click every component type, but base fields are rendered unconditionally in code.
+- [2026-03-15 13:46:23] START US-012/US-013: final validation (compile/typecheck, roundtrip automation, Java generation compile).
+- [2026-03-15 13:46:23] FINISH US-012/US-013: success; compile+typecheck passed, browser automation validated 13-component roundtrip and synced state, mapping/default coverage checks passed, generated 14-type Java class compiled with javac and includes javax.swing/java.awt imports.

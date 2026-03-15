@@ -32,11 +32,20 @@
       "type": "object",
       "description": "Per-component-type default settings",
       "properties": {
+        "Panel": { "$ref": "#/definitions/componentDefaults" },
         "Button": { "$ref": "#/definitions/componentDefaults" },
         "Label": { "$ref": "#/definitions/componentDefaults" },
         "TextField": { "$ref": "#/definitions/componentDefaults" },
         "PasswordField": { "$ref": "#/definitions/componentDefaults" },
-        "TextArea": { "$ref": "#/definitions/componentDefaults" }
+        "TextArea": { "$ref": "#/definitions/componentDefaults" },
+        "CheckBox": { "$ref": "#/definitions/componentDefaults" },
+        "RadioButton": { "$ref": "#/definitions/componentDefaults" },
+        "ComboBox": { "$ref": "#/definitions/componentDefaults" },
+        "List": { "$ref": "#/definitions/componentDefaults" },
+        "ProgressBar": { "$ref": "#/definitions/componentDefaults" },
+        "Slider": { "$ref": "#/definitions/componentDefaults" },
+        "Spinner": { "$ref": "#/definitions/componentDefaults" },
+        "Separator": { "$ref": "#/definitions/componentDefaults" }
       },
       "additionalProperties": false
     }

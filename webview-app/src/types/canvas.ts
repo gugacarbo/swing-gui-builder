@@ -1,4 +1,18 @@
-export type ComponentType = "Button" | "Label" | "TextField" | "PasswordField" | "TextArea";
+export type ComponentType =
+  | "Panel"
+  | "Button"
+  | "Label"
+  | "TextField"
+  | "PasswordField"
+  | "TextArea"
+  | "CheckBox"
+  | "RadioButton"
+  | "ComboBox"
+  | "List"
+  | "ProgressBar"
+  | "Slider"
+  | "Spinner"
+  | "Separator";
 
 export interface CanvasComponent {
   id: string;
@@ -14,6 +28,12 @@ export interface CanvasComponent {
   fontFamily: string;
   fontSize: number;
   eventMethodName: string;
+  selected?: boolean;
+  items?: string[];
+  value?: number;
+  min?: number;
+  max?: number;
+  orientation?: "horizontal" | "vertical";
 }
 
 export type ComponentProps = Pick<
