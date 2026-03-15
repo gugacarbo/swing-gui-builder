@@ -8,7 +8,9 @@ const BASE_DEFAULT_PROPS: Omit<ComponentProps, "text"> = {
   eventMethodName: "",
 };
 
-type ComponentSpecificDefaults = Partial<Pick<CanvasComponent, "selected" | "items" | "value" | "min" | "max" | "orientation">>;
+type ComponentSpecificDefaults = Partial<
+  Pick<CanvasComponent, "selected" | "items" | "value" | "min" | "max" | "orientation" | "position">
+>;
 type DefaultComponentProps = ComponentProps & ComponentSpecificDefaults;
 
 const DEFAULT_PROPS_BY_TYPE: Record<ComponentType, DefaultComponentProps> = {
@@ -26,6 +28,10 @@ const DEFAULT_PROPS_BY_TYPE: Record<ComponentType, DefaultComponentProps> = {
   Slider: { ...BASE_DEFAULT_PROPS, text: "Slider", value: 50, min: 0, max: 100 },
   Spinner: { ...BASE_DEFAULT_PROPS, text: "Spinner", value: 50, min: 0, max: 100 },
   Separator: { ...BASE_DEFAULT_PROPS, text: "Separator", orientation: "horizontal" },
+  MenuBar: { ...BASE_DEFAULT_PROPS, text: "MenuBar" },
+  Menu: { ...BASE_DEFAULT_PROPS, text: "Menu" },
+  MenuItem: { ...BASE_DEFAULT_PROPS, text: "Menu Item" },
+  ToolBar: { ...BASE_DEFAULT_PROPS, text: "ToolBar", position: "top" },
 };
 
 const DEFAULT_SIZE_BY_TYPE: Record<ComponentType, { width: number; height: number }> = {
@@ -43,6 +49,10 @@ const DEFAULT_SIZE_BY_TYPE: Record<ComponentType, { width: number; height: numbe
   Slider: { width: 180, height: 44 },
   Spinner: { width: 120, height: 36 },
   Separator: { width: 180, height: 10 },
+  MenuBar: { width: 320, height: 34 },
+  Menu: { width: 110, height: 30 },
+  MenuItem: { width: 140, height: 28 },
+  ToolBar: { width: 280, height: 40 },
 };
 
 export function getDefaultProps(type: ComponentType): DefaultComponentProps {

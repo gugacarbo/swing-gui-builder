@@ -1,0 +1,145 @@
+# Progress Tracking - Complex Swing Components
+
+## Status: Completed
+
+### User Stories
+| ID | Title | Status | Notes |
+|----|-------|--------|-------|
+| US-001 | Estender ComponentModel com suporte a hierarquia | ✅ | children, parentId e position adicionados; compile OK |
+| US-002 | Atualizar tipos do canvas no webview-app | ✅ | types hierárquicos sincronizados e exports adicionados |
+| US-003 | Atualizar useCanvasState para gerenciar hierarquia | ✅ | addChild/removeChild/getChildren/getRootComponents implementados |
+| US-004 | Criar componente HierarchyPanel (tree view) | ✅ | tree view hierárquica com labels e expand/collapse |
+| US-005 | Adicionar drag-and-drop ao HierarchyPanel | ✅ | hook de drag-and-drop com reordenação e drop feedback |
+| US-006 | Adicionar seção 'Containers' na Palette | ✅ | seção com JMenuBar/JMenu/JMenuItem/JToolBar e ícones |
+| US-007 | Renderizar JMenuBar fixo no topo do Canvas | ✅ | menubar fixo no topo com preview e clique para expandir |
+| US-008 | Renderizar JToolBar em posição fixa no Canvas | ✅ | toolbars fixas em north/south/east/west com filhos |
+| US-009 | Implementar generateMenuBar() no JavaGenerator | ✅ | geração JMenuBar/JMenu/JMenuItem + listeners + setJMenuBar |
+| US-010 | Implementar generateToolBar() no JavaGenerator | ✅ | geração JToolBar com orientação e BorderLayout |
+| US-011 | Atualizar ordem de geração Java | ✅ | JMenuBar antes, componentes planos no meio, JToolBar por último |
+| US-012 | Atualizar swingbuilder.schema.json com hierarquia | ✅ | schema com children, parentId e position |
+| US-013 | Adicionar templates para JMenuBar/JToolBar na config | ✅ | templates e validação dos tipos hierárquicos no ConfigReader |
+
+## Dependencies
+```
+US-001 ──► US-002 ──► US-003 ──► US-004 ──► US-005
+              │           │
+              │           └──► US-007, US-008 (renderização)
+              │
+              └──► US-006 (palette)
+
+US-003 ──► US-009, US-010 ──► US-011 (geração Java)
+
+US-001 ──► US-012 (schema)
+US-012 ──► US-013 (templates)
+```
+
+## Completed: 13/13
+
+## [2026-03-15T17:26:23Z] - Iteration Summary
+Active Task: complex-swing-components
+Current Story: US-001
+Worker Result: SUCCESS
+Notes: ComponentModel atualizado com campos hierárquicos opcionais (backward compatible)
+Next Story: US-002 / US-012 (paralelo)
+---
+## [2026-03-15T22:21:42Z] - START US-002
+Story: US-002
+Notes: Iniciada sincronização dos tipos hierárquicos em webview-app/src/types/canvas.ts
+---
+## [2026-03-15T22:22:37Z] - FINISH US-002
+Story: US-002
+Result: SUCCESS
+Notes: Tipos do canvas sincronizados (children, parentId e position) com exports HierarchicalComponent/ComponentPosition. Validação: pnpm --dir webview-app typecheck OK.
+---
+
+## [2026-03-15T22:22:43Z] - START US-012
+Status: STARTED
+Story: US-012 Atualizar swingbuilder.schema.json com hierarquia
+---
+
+## [2026-03-15T22:24:04Z] - FINISH US-012
+Result: SUCCESS
+Summary: Added optional schema fields children (string[]), parentId (string), and position enum (top/bottom/left/right); pnpm run compile passed.
+---
+## [2026-03-15T22:25:53Z] - START US-006
+Story: US-006
+Notes: Iniciada implementação da seção 'Containers' na Palette com JMenuBar/JMenu/JMenuItem/JToolBar.
+---
+
+
+## [2026-03-15T22:25:54Z] - START US-003
+Status: STARTED
+Story: US-003 Atualizar useCanvasState para gerenciar hierarquia
+---
+## [2026-03-15T22:26:58Z] - START US-013
+Status: STARTED
+Story: US-013 Adicionar templates para JMenuBar/JToolBar na config
+---
+
+
+## [2026-03-15T22:27:52Z] - FINISH US-003
+Story: US-003
+Result: SUCCESS
+Summary: addChild/removeChild/getChildren/getRootComponents implementados no useCanvasState com compatibilidade flat; pnpm --dir webview-app typecheck e pnpm run compile OK.
+---
+## [2026-03-15T22:28:21Z] - FINISH US-006
+Story: US-006
+Result: SUCCESS
+Notes: Seção Containers adicionada na Palette com JMenuBar/JMenu/JMenuItem/JToolBar e ícones específicos. Validação: pnpm --dir webview-app typecheck OK.
+---
+
+## [2026-03-15T22:30:42Z] - FINISH US-013
+Result: SUCCESS
+Summary: Templates de config para MenuBar/Menu/MenuItem e ToolBar adicionados; ConfigReader atualizado para validar/aceitar tipos hierárquicos; validação: pnpm run compile OK.
+---
+
+
+## [2026-03-15T22:32:42Z] - START US-004
+Status: STARTED
+Story: US-004 Criar componente HierarchyPanel (tree view)
+---
+## [2026-03-15T22:32:44Z] - START US-009/US-010
+Story: US-009, US-010
+Notes: Iniciada implementação conjunta de generateMenuBar() e generateToolBar() no JavaGenerator (área compartilhada).
+---
+## [2026-03-15T22:34:30Z] - START US-007 + US-008
+Stories: US-007, US-008
+Notes: Implementação conjunta no Canvas para JMenuBar fixo no topo e JToolBar fixo por borda, com renderização de filhos e interações visuais.
+---
+## [2026-03-15T23:27:36Z] - FINISH US-004
+Story: US-004
+Result: SUCCESS
+Summary: HierarchyPanel finalizado com árvore JMenuBar → JMenu → JMenuItem, labels de nome/tipo e controles de expandir/colapsar.
+---
+## [2026-03-15T23:27:44Z] - FINISH US-005
+Story: US-005
+Result: SUCCESS
+Summary: useHierarchyDragDrop concluído com reordenação de JMenu/JMenuItem na árvore e atualização visual imediata via moveComponentInHierarchy.
+---
+## [2026-03-15T23:27:56Z] - FINISH US-007/US-008
+Stories: US-007, US-008
+Result: SUCCESS
+Summary: Canvas com JMenuBar fixa no topo (dropdown simulado por clique) e JToolBar fixa em north/south/east/west com renderização de filhos por borda.
+---
+## [2026-03-15T23:28:08Z] - FINISH US-009/US-010
+Stories: US-009, US-010
+Result: SUCCESS
+Summary: JavaGenerator atualizado com generateMenuBar() e generateToolBar(), incluindo setJMenuBar, listeners para JMenuItem e posicionamento BorderLayout.
+---
+## [2026-03-15T23:28:20Z] - FINISH US-011
+Story: US-011
+Result: SUCCESS
+Summary: Ordem de geração consolidada (JMenuBar primeiro, componentes planos no meio, JToolBar por último) e validada em JavaGenerator.ordering.test.ts.
+---
+## [2026-03-15T23:28:35Z] - FINAL COMPLETION SUMMARY
+Task: complex-swing-components
+Result: STORIES COMPLETE (13/13)
+Validation: pnpm --dir webview-app typecheck PASS; pnpm run compile PASS; pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts PASS; pnpm run lint FAIL (src/config/ConfigReader.ts formatting).
+Notes: PRD atualizado com US-004/005/007/008/009/010/011 marcados como concluídos; rename final pendente de lint clean.
+---
+## [2026-03-15T23:32:41Z] - FINAL RETRY SUCCESS
+Task: complex-swing-components
+Result: SUCCESS
+Validation: pnpm run lint PASS; pnpm --dir webview-app typecheck PASS; pnpm run compile PASS.
+Notes: Retry final concluído com validações limpas e PRD 13/13 com passes=true.
+---

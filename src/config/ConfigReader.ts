@@ -7,6 +7,9 @@ export interface ComponentDefaults {
   textColor: string;
   fontFamily: string;
   fontSize: number;
+  children?: string[];
+  parentId?: string;
+  position?: "top" | "bottom" | "left" | "right";
 }
 
 export interface SwingBuilderConfig {
@@ -27,7 +30,45 @@ const INTERNAL_DEFAULTS: SwingBuilderConfig = {
   components: {},
 };
 
-const COMPONENT_TYPES = ["Button", "Label", "TextField", "PasswordField", "TextArea"];
+const COMPONENT_TYPES = [
+  "Panel",
+  "Button",
+  "Label",
+  "TextField",
+  "PasswordField",
+  "TextArea",
+  "CheckBox",
+  "RadioButton",
+  "ComboBox",
+  "List",
+  "ProgressBar",
+  "Slider",
+  "Spinner",
+  "Separator",
+  "MenuBar",
+  "Menu",
+  "MenuItem",
+  "ToolBar",
+] as const;
+const COMPONENT_TYPE_SET = new Set<string>(COMPONENT_TYPES);
+
+function isComponentPosition(value: unknown): value is NonNullable<ComponentDefaults["position"]> {
+  return value === "top" || value === "bottom" || value === "left" || value === "right";
+}
+
+function normalizeComponentDefaults(raw: Record<string, unknown>): Partial<ComponentDefaults> {
+  const comp: Partial<ComponentDefaults> = {};
+  if (typeof raw.backgroundColor === "string") comp.backgroundColor = raw.backgroundColor;
+  if (typeof raw.textColor === "string") comp.textColor = raw.textColor;
+  if (typeof raw.fontFamily === "string") comp.fontFamily = raw.fontFamily;
+  if (typeof raw.fontSize === "number") comp.fontSize = raw.fontSize;
+  if (Array.isArray(raw.children) && raw.children.every((child) => typeof child === "string")) {
+    comp.children = raw.children;
+  }
+  if (typeof raw.parentId === "string") comp.parentId = raw.parentId;
+  if (isComponentPosition(raw.position)) comp.position = raw.position;
+  return comp;
+}
 
 function readVSCodeSettings(): Partial<SwingBuilderConfig> {
   const cfg = vscode.workspace.getConfiguration("swingGuiBuilder");
@@ -48,7 +89,7 @@ function readVSCodeSettings(): Partial<SwingBuilderConfig> {
   for (const type of COMPONENT_TYPES) {
     const compCfg = cfg.get<Record<string, unknown>>(`components.${type}`);
     if (compCfg) {
-      const comp: Partial<ComponentDefaults> = {};
+      const comp = normalizeComponentDefaults(compCfg);
       if (typeof compCfg.defaultBackgroundColor === "string")
         comp.backgroundColor = compCfg.defaultBackgroundColor;
       if (typeof compCfg.defaultTextColor === "string") comp.textColor = compCfg.defaultTextColor;
@@ -77,13 +118,9 @@ function normalizeProjectConfig(raw: Record<string, unknown>): Partial<SwingBuil
     for (const [type, val] of Object.entries(
       raw.components as Record<string, Record<string, unknown>>,
     )) {
+      if (!COMPONENT_TYPE_SET.has(type)) continue;
       if (val && typeof val === "object") {
-        const comp: Partial<ComponentDefaults> = {};
-        if (typeof val.backgroundColor === "string") comp.backgroundColor = val.backgroundColor;
-        if (typeof val.textColor === "string") comp.textColor = val.textColor;
-        if (typeof val.fontFamily === "string") comp.fontFamily = val.fontFamily;
-        if (typeof val.fontSize === "number") comp.fontSize = val.fontSize;
-        result.components[type] = comp;
+        result.components[type] = normalizeComponentDefaults(val);
       }
     }
   }
@@ -142,6 +179,9 @@ function mergeConfigs(
       textColor: p.textColor ?? v.textColor ?? d.textColor,
       fontFamily: p.fontFamily ?? v.fontFamily ?? d.fontFamily,
       fontSize: p.fontSize ?? v.fontSize ?? d.fontSize,
+      children: p.children ?? v.children ?? d.children,
+      parentId: p.parentId ?? v.parentId ?? d.parentId,
+      position: p.position ?? v.position ?? d.position,
     };
   }
 
@@ -162,6 +202,9 @@ export function getComponentDefaults(componentType: string): ComponentDefaults {
     textColor: componentOverrides.textColor || config.defaultTextColor,
     fontFamily: componentOverrides.fontFamily || config.defaultFontFamily,
     fontSize: componentOverrides.fontSize || config.defaultFontSize,
+    children: componentOverrides.children ? [...componentOverrides.children] : undefined,
+    parentId: componentOverrides.parentId,
+    position: componentOverrides.position,
   };
 }
 

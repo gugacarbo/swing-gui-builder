@@ -12,9 +12,21 @@ export type ComponentType =
   | "ProgressBar"
   | "Slider"
   | "Spinner"
-  | "Separator";
+  | "Separator"
+  | "MenuBar"
+  | "Menu"
+  | "MenuItem"
+  | "ToolBar";
 
-export interface CanvasComponent {
+export type ComponentPosition = "top" | "bottom" | "left" | "right" | "north" | "south" | "east" | "west";
+
+export interface HierarchicalComponent {
+  children?: string[];
+  parentId?: string;
+  position?: ComponentPosition;
+}
+
+export interface CanvasComponent extends HierarchicalComponent {
   id: string;
   type: ComponentType;
   variableName: string;

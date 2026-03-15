@@ -1,0 +1,202 @@
+{
+    "project": "swing-gui-builder-vscode",
+    "branchName": "ralph/hierarchical-components",
+    "description": "Adicionar componentes Swing hierárquicos (JMenuBar, JMenu, JMenuItem, JToolBar) com suporte a estrutura parent-child",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Estender ComponentModel com suporte a hierarquia",
+            "description": "Como desenvolvedor, preciso adicionar campos children e parentId ao ComponentModel para suportar relacionamentos parent-child.",
+            "acceptanceCriteria": [
+                "Adicionar campo 'children?: string[]' ao ComponentModel (IDs dos filhos)",
+                "Adicionar campo 'parentId?: string' ao ComponentModel (ID do pai)",
+                "Adicionar campo 'position?: \"top\" | \"bottom\" | \"left\" | \"right\"' para posicionamento especial",
+                "Manter compatibilidade com componentes existentes que não usam hierarquia",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": "Concluído: fields children, parentId e position adicionados em src/components/ComponentModel.ts; compile OK."
+        },
+        {
+            "id": "US-002",
+            "title": "Atualizar tipos do canvas no webview-app",
+            "description": "Como desenvolvedor, preciso sincronizar os tipos hierárquicos entre extension e webview-app.",
+            "acceptanceCriteria": [
+                "Atualizar webview-app/src/types/canvas.ts com mesmos campos de hierarquia",
+                "Exportar tipos HierarchicalComponent, ComponentPosition",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": "Canvas types sincronizados com hierarquia (children/parentId/position) e exports HierarchicalComponent/ComponentPosition; pnpm --dir webview-app typecheck OK."
+        },
+        {
+            "id": "US-003",
+            "title": "Atualizar useCanvasState para gerenciar hierarquia",
+            "description": "Como desenvolvedor, preciso que o hook de estado gerencie componentes hierárquicos com operações de adicionar/remover filhos.",
+            "acceptanceCriteria": [
+                "Adicionar funções addChild(parentId, childId) e removeChild(parentId, childId)",
+                "Adicionar função getChildren(componentId) que retorna lista de filhos",
+                "Adicionar função getRootComponents() que retorna componentes sem pai",
+                "Manter funcionamento de componentes planos existentes",
+                "Typecheck passes"
+            ],
+            "priority": 3,
+            "passes": true,
+            "notes": "useCanvasState agora expõe addChild/removeChild/getChildren/getRootComponents com compatibilidade para componentes planos; limpeza de vínculos no removeComponent; validação: pnpm --dir webview-app typecheck e pnpm run compile OK."
+        },
+        {
+            "id": "US-004",
+            "title": "Criar componente HierarchyPanel (tree view)",
+            "description": "Como usuário, quero ver a estrutura hierárquica dos menus em uma tree view para navegar e editar.",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/components/HierarchyPanel.tsx",
+                "Exibir JMenuBar → JMenu → JMenuItem em estrutura de árvore",
+                "Cada nó mostra nome do componente e tipo",
+                "Botões para expandir/colapsar subárvores",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 4,
+            "passes": true,
+            "notes": "HierarchyPanel.tsx criado com tree view hierárquica (JMenuBar → JMenu → JMenuItem), labels de nome/tipo e controles de expandir/colapsar; validação: pnpm --dir webview-app typecheck e pnpm run compile OK."
+        },
+        {
+            "id": "US-005",
+            "title": "Adicionar drag-and-drop ao HierarchyPanel",
+            "description": "Como usuário, quero reordenar menus e itens arrastando-os na tree view.",
+            "acceptanceCriteria": [
+                "Criar hook useHierarchyDragDrop com lógica de reordenação",
+                "Drag de JMenuItem entre diferentes JMenu é possível",
+                "Drag de JMenu para reordenar dentro de JMenuBar",
+                "Atualização visual imediata após drop",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 5,
+            "passes": true,
+            "notes": "useHierarchyDragDrop implementado para reordenar JMenu/JMenuItem via drag-and-drop com feedback de alvo e atualização imediata por moveComponentInHierarchy; validação: pnpm --dir webview-app typecheck e pnpm run compile OK."
+        },
+        {
+            "id": "US-006",
+            "title": "Adicionar seção 'Containers' na Palette",
+            "description": "Como usuário, quero ver componentes hierárquicos em uma seção separada da paleta.",
+            "acceptanceCriteria": [
+                "Atualizar Palette.tsx com nova seção 'Containers'",
+                "Adicionar JMenuBar, JMenu, JMenuItem, JToolBar à seção",
+                "Ícones apropriados para cada tipo de container",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 6,
+            "passes": true,
+            "notes": "Palette.tsx atualizado com seção Containers e itens JMenuBar/JMenu/JMenuItem/JToolBar com ícones apropriados (Rows3, SquareMenu, ListTree, Wrench); validação: pnpm --dir webview-app typecheck OK."
+        },
+        {
+            "id": "US-007",
+            "title": "Renderizar JMenuBar fixo no topo do Canvas",
+            "description": "Como usuário, quero ver o JMenuBar renderizado visualmente no topo do canvas (não-draggable).",
+            "acceptanceCriteria": [
+                "Atualizar Canvas.tsx para renderizar JMenuBar em área fixa no topo",
+                "JMenuBar não é arrastável (não usa x/y)",
+                "Mostrar preview visual dos menus (dropdown simulado)",
+                "Clique em menu expande visualmente os items",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 7,
+            "passes": true,
+            "notes": "Canvas renderiza JMenuBar em área fixa no topo (fora do fluxo draggable), com preview de menus e dropdown simulado por clique; validação: pnpm --dir webview-app typecheck e pnpm run compile OK."
+        },
+        {
+            "id": "US-008",
+            "title": "Renderizar JToolBar em posição fixa no Canvas",
+            "description": "Como usuário, quero ver o JToolBar renderizado em posição de border layout (north/south/east/west).",
+            "acceptanceCriteria": [
+                "JToolBar renderizado em área fixa baseado em prop 'position'",
+                "Posições suportadas: north (topo), south (baixo), east (direita), west (esquerda)",
+                "JToolBar contém botões filhos renderizados horizontal/verticalmente",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 8,
+            "passes": true,
+            "notes": "Canvas renderiza JToolBar fixa por posição (north/south/east/west), com filhos exibidos em layout horizontal/vertical conforme borda; validação: pnpm --dir webview-app typecheck e pnpm run compile OK."
+        },
+        {
+            "id": "US-009",
+            "title": "Implementar generateMenuBar() no JavaGenerator",
+            "description": "Como desenvolvedor, preciso gerar código Java para JMenuBar com menus e itens aninhados.",
+            "acceptanceCriteria": [
+                "Adicionar método generateMenuBar(menuBar: ComponentModel) em JavaGenerator.ts",
+                "Gera: JMenuBar, JMenu, JMenuItem com add() corretos",
+                "Gera: frame.setJMenuBar(menuBar) no final",
+                "Gera: addActionListener para cada JMenuItem com eventMethodName",
+                "Typecheck passes"
+            ],
+            "priority": 9,
+            "passes": true,
+            "notes": "JavaGenerator ganhou generateMenuBar() com geração aninhada JMenu/JMenuItem, add() corretos, frame.setJMenuBar(...) e listeners por eventMethodName; validação: pnpm run compile e vitest ordering test OK."
+        },
+        {
+            "id": "US-010",
+            "title": "Implementar generateToolBar() no JavaGenerator",
+            "description": "Como desenvolvedor, preciso gerar código Java para JToolBar com botões filhos.",
+            "acceptanceCriteria": [
+                "Adicionar método generateToolBar(toolBar: ComponentModel) em JavaGenerator.ts",
+                "Gera: new JToolBar() com orientação correta",
+                "Gera: add() para cada botão filho na ordem correta",
+                "Posiciona toolbar no contentPane com BorderLayout.NORTH/SOUTH/etc",
+                "Typecheck passes"
+            ],
+            "priority": 10,
+            "passes": true,
+            "notes": "JavaGenerator ganhou generateToolBar() com orientação, add() de filhos na ordem e posicionamento no contentPane via BorderLayout; validação: pnpm run compile e vitest ordering test OK."
+        },
+        {
+            "id": "US-011",
+            "title": "Atualizar ordem de geração Java",
+            "description": "Como desenvolvedor, preciso garantir que componentes hierárquicos sejam gerados na ordem correta.",
+            "acceptanceCriteria": [
+                "JMenuBar gerado primeiro (setJMenuBar)",
+                "Componentes planos gerados no meio",
+                "JToolBar gerado por último",
+                "Código gerado compila sem erros",
+                "Typecheck passes"
+            ],
+            "priority": 11,
+            "passes": true,
+            "notes": "Ordem de geração consolidada via partitionComponentsByGenerationPhase (JMenuBar primeiro, componentes planos no meio, JToolBar por último) com cobertura em JavaGenerator.ordering.test.ts; validação: pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts OK."
+        },
+        {
+            "id": "US-012",
+            "title": "Atualizar swingbuilder.schema.json com hierarquia",
+            "description": "Como desenvolvedor, preciso atualizar o schema JSON para validar campos de hierarquia.",
+            "acceptanceCriteria": [
+                "Adicionar propriedade 'children' (array de strings) ao schema",
+                "Adicionar propriedade 'parentId' (string) ao schema",
+                "Adicionar propriedade 'position' (enum: top/bottom/left/right) ao schema",
+                "Schema valida arquivos .swingbuilder.json existentes",
+                "Typecheck passes"
+            ],
+            "priority": 12,
+            "passes": true,
+            "notes": "Schema updated with optional children (string[]), parentId (string) and position enum (top/bottom/left/right) in componentDefaults; validation: pnpm run compile passed."
+        },
+        {
+            "id": "US-013",
+            "title": "Adicionar templates para JMenuBar/JToolBar na config",
+            "description": "Como desenvolvedor, preciso adicionar templates padrão para componentes hierárquicos.",
+            "acceptanceCriteria": [
+                "Adicionar template JMenuBar com 1 JMenu e 1 JMenuItem em initConfigCommand.ts",
+                "Adicionar template JToolBar vazio em initConfigCommand.ts",
+                "ConfigReader valida tipos MenuBar, Menu, MenuItem, ToolBar",
+                "Typecheck passes"
+            ],
+            "priority": 13,
+            "passes": true,
+            "notes": "initConfigCommand.ts atualizado com templates MenuBar -> Menu -> MenuItem e ToolBar vazio; ConfigReader agora aceita/valida MenuBar, Menu, MenuItem e ToolBar (incluindo children/parentId/position); validação: pnpm run compile OK."
+        }
+    ]
+}

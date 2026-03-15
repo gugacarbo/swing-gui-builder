@@ -57,6 +57,31 @@ const SELECT_CLASS_NAME = `${TEXT_INPUT_CLASS_NAME} pr-8`;
 const CHECKBOX_TYPES = new Set<CanvasComponent["type"]>(["CheckBox", "RadioButton"]);
 const ITEM_TYPES = new Set<CanvasComponent["type"]>(["ComboBox", "List"]);
 const RANGE_TYPES = new Set<CanvasComponent["type"]>(["ProgressBar", "Slider", "Spinner"]);
+const TOOLBAR_POSITION_OPTIONS: ReadonlyArray<{ label: string; value: "top" | "bottom" | "left" | "right" }> = [
+  { label: "Top (north)", value: "top" },
+  { label: "Bottom (south)", value: "bottom" },
+  { label: "Left (west)", value: "left" },
+  { label: "Right (east)", value: "right" },
+];
+
+function toToolBarPositionValue(position: CanvasComponent["position"] | undefined): "top" | "bottom" | "left" | "right" {
+  switch (position) {
+    case "north":
+      return "top";
+    case "south":
+      return "bottom";
+    case "west":
+      return "left";
+    case "east":
+      return "right";
+    case "bottom":
+    case "left":
+    case "right":
+    case "top":
+    default:
+      return position ?? "top";
+  }
+}
 
 function PropertiesHeader() {
   return (
@@ -79,6 +104,7 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
   const isSelectableType = CHECKBOX_TYPES.has(component.type);
   const hasItems = ITEM_TYPES.has(component.type);
   const hasRange = RANGE_TYPES.has(component.type);
+  const hasToolBarPosition = component.type === "ToolBar";
 
   return (
     <section className="flex h-full flex-col" aria-label="Properties panel">
@@ -182,6 +208,26 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
             >
               <option value="horizontal">Horizontal</option>
               <option value="vertical">Vertical</option>
+            </select>
+          </FormField>
+        ) : null}
+
+        {hasToolBarPosition ? (
+          <FormField label="Position">
+            <select
+              className={SELECT_CLASS_NAME}
+              value={toToolBarPositionValue(component.position)}
+              onChange={(event) =>
+                onUpdateComponent(component.id, {
+                  position: event.target.value as CanvasComponent["position"],
+                })
+              }
+            >
+              {TOOLBAR_POSITION_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </FormField>
         ) : null}

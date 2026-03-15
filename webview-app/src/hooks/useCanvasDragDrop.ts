@@ -12,6 +12,7 @@ const PALETTE_TO_COMPONENT_TYPE: Record<string, ComponentType> = {
   JPanel: "Panel",
   JButton: "Button",
   JLabel: "Label",
+  JPasswordField: "PasswordField",
   JTextField: "TextField",
   JTextArea: "TextArea",
   JCheckBox: "CheckBox",
@@ -22,6 +23,10 @@ const PALETTE_TO_COMPONENT_TYPE: Record<string, ComponentType> = {
   JSlider: "Slider",
   JSpinner: "Spinner",
   JSeparator: "Separator",
+  JMenuBar: "MenuBar",
+  JMenu: "Menu",
+  JMenuItem: "MenuItem",
+  JToolBar: "ToolBar",
 };
 
 function toComponentType(rawType: string): ComponentType | null {

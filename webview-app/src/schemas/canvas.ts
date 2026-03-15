@@ -1,47 +1,76 @@
 import { z } from "zod";
 
 export const ComponentTypeSchema = z.enum([
+  "Panel",
   "Button",
   "Label",
   "TextField",
   "PasswordField",
   "TextArea",
+  "CheckBox",
+  "RadioButton",
+  "ComboBox",
+  "List",
+  "ProgressBar",
+  "Slider",
+  "Spinner",
+  "Separator",
+  "MenuBar",
+  "Menu",
+  "MenuItem",
+  "ToolBar",
 ]);
 
-export const BoundsSchema = z.object({
-  x: z.number().finite().min(0),
-  y: z.number().finite().min(0),
-  width: z.number().finite().min(1),
-  height: z.number().finite().min(1),
-});
+const OrientationSchema = z.enum(["horizontal", "vertical"]);
 
-export const ComponentPropertiesSchema = z
-  .object({
-    text: z.string().optional(),
-    font: z.string().optional(),
-    background: z.string().optional(),
-    foreground: z.string().optional(),
-  })
-  .passthrough();
+const PositionSchema = z
+  .enum(["top", "bottom", "left", "right", "north", "south", "east", "west"])
+  .transform((position) => {
+    switch (position) {
+      case "north":
+        return "top";
+      case "south":
+        return "bottom";
+      case "west":
+        return "left";
+      case "east":
+        return "right";
+      default:
+        return position;
+    }
+  });
 
 export const CanvasComponentSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().min(1),
   type: ComponentTypeSchema,
-  bounds: BoundsSchema,
-  properties: ComponentPropertiesSchema,
-});
-
-export const PanSchema = z.object({
+  variableName: z.string().default(""),
   x: z.number().finite(),
   y: z.number().finite(),
+  width: z.number().finite().min(1),
+  height: z.number().finite().min(1),
+  text: z.string().default(""),
+  backgroundColor: z.string().default("#ffffff"),
+  textColor: z.string().default("#000000"),
+  fontFamily: z.string().default("Arial"),
+  fontSize: z.number().finite().min(1).default(12),
+  eventMethodName: z.string().default(""),
+  selected: z.boolean().optional(),
+  items: z.array(z.string()).optional(),
+  value: z.number().finite().optional(),
+  min: z.number().finite().optional(),
+  max: z.number().finite().optional(),
+  orientation: OrientationSchema.optional(),
+  children: z.array(z.string()).optional(),
+  parentId: z.string().optional(),
+  position: PositionSchema.optional(),
 });
 
 export const CanvasStateSchema = z
   .object({
     components: z.array(CanvasComponentSchema),
-    selectedId: z.string().uuid().nullable(),
-    zoom: z.number().finite().min(0.1),
-    pan: PanSchema,
+    className: z.string().min(1).default("MainWindow"),
+    frameWidth: z.number().finite().min(1).default(800),
+    frameHeight: z.number().finite().min(1).default(600),
   })
   .passthrough();
 
@@ -65,9 +94,6 @@ export const ConfigDefaultsSchema = z
   .passthrough();
 
 export type ComponentType = z.infer<typeof ComponentTypeSchema>;
-export type Bounds = z.infer<typeof BoundsSchema>;
-export type ComponentProperties = z.infer<typeof ComponentPropertiesSchema>;
 export type CanvasComponent = z.infer<typeof CanvasComponentSchema>;
-export type Pan = z.infer<typeof PanSchema>;
 export type CanvasState = z.infer<typeof CanvasStateSchema>;
 export type ConfigDefaults = z.infer<typeof ConfigDefaultsSchema>;

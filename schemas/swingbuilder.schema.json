@@ -73,6 +73,22 @@
           "minimum": 1,
           "maximum": 200,
           "description": "Font size in points"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "IDs of child components"
+        },
+        "parentId": {
+          "type": "string",
+          "description": "ID of parent component"
+        },
+        "position": {
+          "type": "string",
+          "enum": ["top", "bottom", "left", "right"],
+          "description": "Fixed position for hierarchical components"
         }
       },
       "additionalProperties": false

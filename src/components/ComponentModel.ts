@@ -34,6 +34,9 @@ export interface ComponentModel {
   min?: number;
   max?: number;
   orientation?: "horizontal" | "vertical";
+  children?: string[];
+  parentId?: string;
+  position?: "top" | "bottom" | "left" | "right";
 }
 
 export interface CanvasState {

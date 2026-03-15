@@ -1,9 +1,11 @@
 import { useCallback, useEffect } from "react";
 
 import { Canvas } from "@/components/Canvas";
+import { HierarchyPanel } from "@/components/HierarchyPanel";
 import { Palette } from "@/components/Palette";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { Toolbar } from "@/components/Toolbar";
+import { moveComponentInHierarchy } from "@/hooks/useHierarchyDragDrop";
 import { useCanvasState } from "@/hooks/useCanvasState";
 import { useExtensionListener } from "@/hooks/useExtensionListener";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
@@ -76,6 +78,13 @@ function App() {
     [updateComponents],
   );
 
+  const handleMoveComponentInHierarchy = useCallback(
+    (componentId: string, parentId: string, index: number) => {
+      updateComponents((current) => moveComponentInHierarchy(current, componentId, parentId, index));
+    },
+    [updateComponents],
+  );
+
   const handleDelete = useCallback(() => {
     if (!selectedComponentId) {
       return;
@@ -141,8 +150,19 @@ function App() {
       </header>
 
       <section className="grid min-h-0 flex-1 grid-cols-[260px_1fr_300px]">
-        <aside className="min-h-0 border-r border-vscode-panel-border bg-vscode-panel-background">
-          <Palette />
+        <aside className="flex min-h-0 flex-col border-r border-vscode-panel-border bg-vscode-panel-background">
+          <div className="min-h-0 flex-1">
+            <Palette />
+          </div>
+
+          <div className="max-h-[45%] min-h-0 border-t border-vscode-panel-border">
+            <HierarchyPanel
+              components={components}
+              selectedComponentId={selectedComponentId}
+              onSelectComponent={selectComponent}
+              onMoveComponent={handleMoveComponentInHierarchy}
+            />
+          </div>
         </aside>
 
         <section className="min-h-0 border-r border-vscode-panel-border bg-vscode-background" aria-label="Canvas panel">
@@ -171,4 +191,3 @@ function App() {
 }
 
 export default App;
-

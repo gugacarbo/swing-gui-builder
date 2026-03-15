@@ -6,12 +6,16 @@ import {
   Hash,
   LayoutPanelLeft,
   List,
+  ListTree,
   Loader,
   Minus,
   PanelTop,
+  Rows3,
   SlidersHorizontal,
+  SquareMenu,
   Square,
   Type,
+  Wrench,
 } from "lucide-react";
 
 interface PaletteItem {
@@ -20,7 +24,13 @@ interface PaletteItem {
   icon: typeof Component;
 }
 
-const PALETTE_ITEMS: PaletteItem[] = [
+interface PaletteSection {
+  id: string;
+  name: string;
+  items: PaletteItem[];
+}
+
+const COMPONENT_ITEMS: PaletteItem[] = [
   { id: "JPanel", name: "JPanel", icon: LayoutPanelLeft },
   { id: "JButton", name: "JButton", icon: Square },
   { id: "JLabel", name: "JLabel", icon: Type },
@@ -36,6 +46,18 @@ const PALETTE_ITEMS: PaletteItem[] = [
   { id: "JSeparator", name: "JSeparator", icon: Minus },
 ];
 
+const CONTAINER_ITEMS: PaletteItem[] = [
+  { id: "JMenuBar", name: "JMenuBar", icon: Rows3 },
+  { id: "JMenu", name: "JMenu", icon: SquareMenu },
+  { id: "JMenuItem", name: "JMenuItem", icon: ListTree },
+  { id: "JToolBar", name: "JToolBar", icon: Wrench },
+];
+
+const PALETTE_SECTIONS: PaletteSection[] = [
+  { id: "components", name: "Components", items: COMPONENT_ITEMS },
+  { id: "containers", name: "Containers", items: CONTAINER_ITEMS },
+];
+
 export function Palette() {
   const handleDragStart = (event: React.DragEvent<HTMLLIElement>, componentType: string) => {
     event.dataTransfer.effectAllowed = "copy";
@@ -49,25 +71,34 @@ export function Palette() {
         <h2 className="text-sm font-semibold">Palette</h2>
       </header>
 
-      <ul className="space-y-1 overflow-y-auto p-2" aria-label="Draggable Swing components">
-        {PALETTE_ITEMS.map((item) => {
-          const Icon = item.icon;
+      <div className="space-y-4 overflow-y-auto p-2" aria-label="Draggable Swing components">
+        {PALETTE_SECTIONS.map((section) => (
+          <div key={section.id} className="space-y-1">
+            <h3 className="px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {section.name}
+            </h3>
+            <ul className="space-y-1" aria-label={`Draggable ${section.name.toLowerCase()} components`}>
+              {section.items.map((item) => {
+                const Icon = item.icon;
 
-          return (
-            <li
-              key={item.id}
-              draggable
-              onDragStart={(event) => handleDragStart(event, item.id)}
-              className="flex cursor-grab select-none items-center gap-2 rounded-md border border-transparent px-2 py-2 text-sm hover:border-vscode-panel-border hover:bg-accent active:cursor-grabbing"
-              aria-label={`Drag ${item.name}`}
-              title={`Drag ${item.name} to canvas`}
-            >
-              <Icon className="size-4 text-muted-foreground" aria-hidden="true" />
-              <span>{item.name}</span>
-            </li>
-          );
-        })}
-      </ul>
+                return (
+                  <li
+                    key={item.id}
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, item.id)}
+                    className="flex cursor-grab select-none items-center gap-2 rounded-md border border-transparent px-2 py-2 text-sm hover:border-vscode-panel-border hover:bg-accent active:cursor-grabbing"
+                    aria-label={`Drag ${item.name}`}
+                    title={`Drag ${item.name} to canvas`}
+                  >
+                    <Icon className="size-4 text-muted-foreground" aria-hidden="true" />
+                    <span>{item.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

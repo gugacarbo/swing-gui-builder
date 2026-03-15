@@ -42,6 +42,10 @@ export async function initProjectConfig(): Promise<void> {
       Slider: { backgroundColor: "#F4F7FF" },
       Spinner: { backgroundColor: "#FFFFFF" },
       Separator: { backgroundColor: "#D9D9D9" },
+      MenuBar: { children: ["Menu"] },
+      Menu: { parentId: "MenuBar", children: ["MenuItem"] },
+      MenuItem: { parentId: "Menu" },
+      ToolBar: {},
     },
   };
 
