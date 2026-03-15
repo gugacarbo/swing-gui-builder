@@ -1,0 +1,36 @@
+# Progress Tracking - Complex Swing Components
+
+## Status: Not Started
+
+### User Stories
+| ID | Title | Status | Notes |
+|----|-------|--------|-------|
+| US-001 | Estender ComponentModel com suporte a hierarquia | ⬜ | |
+| US-002 | Atualizar tipos do canvas no webview-app | ⬜ | |
+| US-003 | Atualizar useCanvasState para gerenciar hierarquia | ⬜ | |
+| US-004 | Criar componente HierarchyPanel (tree view) | ⬜ | |
+| US-005 | Adicionar drag-and-drop ao HierarchyPanel | ⬜ | |
+| US-006 | Adicionar seção 'Containers' na Palette | ⬜ | |
+| US-007 | Renderizar JMenuBar fixo no topo do Canvas | ⬜ | |
+| US-008 | Renderizar JToolBar em posição fixa no Canvas | ⬜ | |
+| US-009 | Implementar generateMenuBar() no JavaGenerator | ⬜ | |
+| US-010 | Implementar generateToolBar() no JavaGenerator | ⬜ | |
+| US-011 | Atualizar ordem de geração Java | ⬜ | |
+| US-012 | Atualizar swingbuilder.schema.json com hierarquia | ⬜ | |
+| US-013 | Adicionar templates para JMenuBar/JToolBar na config | ⬜ | |
+
+## Dependencies
+```
+US-001 ──► US-002 ──► US-003 ──► US-004 ──► US-005
+              │           │
+              │           └──► US-007, US-008 (renderização)
+              │
+              └──► US-006 (palette)
+
+US-003 ──► US-009, US-010 ──► US-011 (geração Java)
+
+US-001 ──► US-012 (schema)
+US-012 ──► US-013 (templates)
+```
+
+## Completed: 0/13

@@ -97,9 +97,18 @@ export function activate(context: vscode.ExtensionContext) {
     // Derive Java package from output path relative to source root
     let javaPackage: string | undefined;
     if (projectStructure) {
-      const relativePath = path.relative(projectStructure.sourceRoot, outputDir);
-      if (!relativePath.startsWith("..")) {
+      // Normalize paths to handle Windows/Unix separator differences
+      const normalizedSourceRoot = projectStructure.sourceRoot.replace(/[/\\]/g, path.sep);
+      const normalizedOutputDir = outputDir.replace(/[/\\]/g, path.sep);
+      const relativePath = path.relative(normalizedSourceRoot, normalizedOutputDir);
+
+      outputChannel.appendLine(`Debug: sourceRoot=${projectStructure.sourceRoot}`);
+      outputChannel.appendLine(`Debug: outputDir=${outputDir}`);
+      outputChannel.appendLine(`Debug: relativePath=${relativePath}`);
+
+      if (relativePath && !relativePath.startsWith("..") && relativePath !== "") {
         javaPackage = relativePath.replace(/[/\\]/g, ".");
+        outputChannel.appendLine(`Debug: javaPackage=${javaPackage}`);
       }
     }
 
