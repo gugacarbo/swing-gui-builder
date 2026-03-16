@@ -1,3 +1,5 @@
+# IN DEVELOPMENT
+
 # Swing GUI Builder
 
 A visual drag-and-drop GUI builder for Java Swing in VS Code. Design your Swing interfaces visually and generate clean Java source code — no manual layout math required.

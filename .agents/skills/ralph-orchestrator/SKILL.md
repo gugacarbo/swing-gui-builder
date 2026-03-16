@@ -1,6 +1,7 @@
 ---
-name: Ralph Orchestrator
+name: ralph-orchestrator
 description: Orchestrates execution of a PRD by delegating User Stories to a worker agent
+user-invocable: true
 ---
 
 # Ralph Orchestrator Instructions

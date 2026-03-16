@@ -1,0 +1,184 @@
+<mxfile host="app.diagrams.net" modified="2026-03-16T00:00:00.000Z" agent="GitHub Copilot" version="1.1">
+  <diagram name="Ralph Skills Flow" id="ralph-skills-flow">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" background="#ffffff">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="Ralph Skills &amp; Agents - Fluxo de Execução" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
+          <mxGeometry x="400" y="15" width="420" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Type Legend -->
+        <mxCell id="skill-legend" value="🧩 Skill" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;strokeWidth=1;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="15" width="70" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="agent-legend" value="🤖 Agente" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;strokeWidth=1;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="15" width="75" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="internal-legend" value="⚙️ Interno" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;strokeWidth=1;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1215" y="15" width="75" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- Phase Labels -->
+        <mxCell id="phase1" value="FASE 1: Setup" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4a5568;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="130" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="phase2" value="FASE 2: Análise" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4a5568;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="130" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="phase3" value="FASE 3: Planejamento" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4a5568;" vertex="1" parent="1">
+          <mxGeometry x="40" y="290" width="160" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="phase4" value="FASE 4: Preparação" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4a5568;" vertex="1" parent="1">
+          <mxGeometry x="40" y="400" width="160" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="phase5" value="FASE 5: Orquestração" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4a5568;" vertex="1" parent="1">
+          <mxGeometry x="40" y="510" width="160" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="phase6" value="FASE 6: Execução" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#4a5568;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="160" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- Skill 1: task-creator -->
+        <mxCell id="task-creator" value="task-creator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1e40af;" vertex="1" parent="1">
+          <mxGeometry x="220" y="65" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="task-creator-desc" value="req-*.md, plan-*.md" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=9;spacingLeft=3;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="400" y="65" width="120" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Agent 2: req-planner (NEW) -->
+        <mxCell id="req-planner" value="req-planner" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#b45309;" vertex="1" parent="1">
+          <mxGeometry x="220" y="175" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="req-planner-desc" value="req → plan detalhado" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=9;spacingLeft=3;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="400" y="175" width="120" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Skill 3: prd -->
+        <mxCell id="prd" value="prd" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#1e40af;" vertex="1" parent="1">
+          <mxGeometry x="220" y="285" width="160" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="prd-desc" value="plan → prd-*.md" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=9;spacingLeft=3;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="400" y="285" width="120" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="prd-desc" value="Gera PRD estruturado&#xa;• Introduction/Overview&#xa;• User Stories com AC&#xa;• Functional Requirements&#xa;• Non-Goals" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=10;spacingLeft=5;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="480" y="220" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Skill 3: ralph -->
+        <mxCell id="ralph" value="ralph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#166534;" vertex="1" parent="1">
+          <mxGeometry x="250" y="380" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="ralph-desc" value="Converte PRD → prd.json&#xa;• User Stories → JSON array&#xa;• Adiciona critérios técnicos&#xa;• Define prioridades/ordem" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=10;spacingLeft=5;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="480" y="370" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Skill 4: ralph-orchestrator -->
+        <mxCell id="orchestrator" value="ralph-orchestrator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#7e22ce;" vertex="1" parent="1">
+          <mxGeometry x="250" y="530" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="orchestrator-desc" value="Orquestra execução do PRD&#xa;• Lê prd.json&#xa;• Seleciona próxima story&#xa;• Delega para worker&#xa;• Trata resultados (SUCCESS/FAILED)" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=10;spacingLeft=5;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="480" y="520" width="200" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Skill 5: ralph-autopilot-worker -->
+        <mxCell id="worker" value="ralph-autopilot-worker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#b91c1c;" vertex="1" parent="1">
+          <mxGeometry x="250" y="680" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="worker-desc" value="Executa UMA story específica&#xa;• Implementa código&#xa;• Valida (build/lint)&#xa;• Atualiza prd.json&#xa;• Commit: feat: US-XXX - Title" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=10;spacingLeft=5;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="480" y="670" width="200" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Output files -->
+        <mxCell id="output-folder" value="tasks/{task-name}/&#xa;├── req-*.md&#xa;├── plan-*.md&#xa;├── prd-*.md&#xa;├── prd.json&#xa;└── progress.txt" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#f1f5f9;strokeColor=#64748b;fontSize=10;align=left;spacingLeft=10;spacingTop=5;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="300" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Flow arrows -->
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="task-creator" target="prd">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="prd" target="ralph">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="ralph" target="orchestrator">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="orchestrator" target="worker">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Loop arrow for orchestrator -> worker -->
+        <mxCell id="loop-arrow" value="Próxima&#xa;Story" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#a855f7;strokeWidth=2;dashed=1;endArrow=blockThin;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="worker" target="orchestrator">
+          <mxGeometry x="-1" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+            <Array as="points">
+              <mxPoint x="180" y="710"/>
+              <mxPoint x="180" y="560"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend-box" value="Legenda" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8fafc;strokeColor=#e2e8f0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="950" y="80" width="280" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend1" value="📁 task-creator: Cria estrutura de pastas" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="legend-box">
+          <mxGeometry y="30" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend2" value="📋 prd: Gera documento de requisitos" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="legend-box">
+          <mxGeometry y="60" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend3" value="🔄 ralph: Converte para formato JSON" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="legend-box">
+          <mxGeometry y="90" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend4" value="🎯 orchestrator: Coordena execução" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="legend-box">
+          <mxGeometry y="120" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend5" value="⚙️ worker: Implementa código" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="legend-box">
+          <mxGeometry y="150" width="280" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Status flow -->
+        <mxCell id="status-box" value="Status de Retorno do Worker" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8fafc;strokeColor=#e2e8f0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="950" y="320" width="280" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="status1" value="✅ SUCCESS → story completa, continua" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="status-box">
+          <mxGeometry y="30" width="280" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="status2" value="❌ FAILED → loga erro, max 3 tentativas" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="status-box">
+          <mxGeometry y="55" width="280" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="status3" value="🚫 BLOCKED → dependência externa" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="status-box">
+          <mxGeometry y="80" width="280" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="status4" value="⏱️ TIMEOUT → retry se houver tentativas" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="status-box">
+          <mxGeometry y="105" width="280" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Parameters box -->
+        <mxCell id="params-box" value="Parâmetros de Execução" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8fafc;strokeColor=#e2e8f0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="950" y="500" width="280" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="param1" value="⏰ timeout: 30 min (padrão)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="params-box">
+          <mxGeometry y="30" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="param2" value="🔄 maxAttempts: 3 (padrão)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotated=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest=;fontSize=10;" vertex="1" parent="params-box">
+          <mxGeometry y="60" width="280" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
