@@ -1,6 +1,8 @@
+import { useEffect, useId, useState } from "react";
 import {
   Braces,
   ChevronDown,
+  ChevronRight,
   Circle,
   Component,
   Hash,
@@ -17,6 +19,8 @@ import {
   Type,
   Wrench,
 } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 interface PaletteItem {
   id: string;
@@ -58,7 +62,33 @@ const PALETTE_SECTIONS: PaletteSection[] = [
   { id: "containers", name: "Containers", items: CONTAINER_ITEMS },
 ];
 
+const PALETTE_COLLAPSED_STORAGE_KEY = "swing-gui-builder.sidebar.palette-collapsed";
+
+function getInitialPaletteCollapsedState(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    return window.localStorage.getItem(PALETTE_COLLAPSED_STORAGE_KEY) === "true";
+  } catch (error) {
+    console.warn("[Palette] Failed to read persisted collapse state", error);
+    return false;
+  }
+}
+
 export function Palette() {
+  const [isCollapsed, setIsCollapsed] = useState(getInitialPaletteCollapsedState);
+  const contentId = useId();
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(PALETTE_COLLAPSED_STORAGE_KEY, String(isCollapsed));
+    } catch (error) {
+      console.warn("[Palette] Failed to persist collapse state", error);
+    }
+  }, [isCollapsed]);
+
   const handleDragStart = (event: React.DragEvent<HTMLLIElement>, componentType: string) => {
     event.dataTransfer.effectAllowed = "copy";
     event.dataTransfer.setData("text/plain", componentType);
@@ -66,12 +96,30 @@ export function Palette() {
   };
 
   return (
-    <section className="flex h-full flex-col" aria-label="Swing component palette">
-      <header className="border-b border-vscode-panel-border px-4 py-3">
+    <section
+      className={cn("flex min-h-0 flex-col", isCollapsed ? "shrink-0" : "flex-1")}
+      aria-label="Swing component palette"
+    >
+      <header className="flex items-center justify-between border-b border-vscode-panel-border px-4 py-3">
         <h2 className="text-sm font-semibold">Palette</h2>
+        <button
+          type="button"
+          className="inline-flex size-6 items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-foreground"
+          onClick={() => setIsCollapsed((previous) => !previous)}
+          aria-controls={contentId}
+          aria-expanded={!isCollapsed}
+          aria-label={isCollapsed ? "Expand palette section" : "Collapse palette section"}
+        >
+          {isCollapsed ? <ChevronRight className="size-4" aria-hidden="true" /> : <ChevronDown className="size-4" aria-hidden="true" />}
+        </button>
       </header>
 
-      <div className="space-y-4 overflow-y-auto p-2" aria-label="Draggable Swing components">
+      <div
+        id={contentId}
+        hidden={isCollapsed}
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto p-2"
+        aria-label="Draggable Swing components"
+      >
         {PALETTE_SECTIONS.map((section) => (
           <div key={section.id} className="space-y-1">
             <h3 className="px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

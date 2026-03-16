@@ -3,6 +3,11 @@ import * as vscode from "vscode";
 import type { CanvasState } from "../components/ComponentModel";
 import { getConfig } from "../config/ConfigReader";
 
+export interface PreviewCodeFile {
+  fileName: string;
+  content: string;
+}
+
 export class CanvasPanel {
   public static currentPanel: CanvasPanel | undefined;
   private readonly panel: vscode.WebviewPanel;
@@ -79,6 +84,13 @@ export class CanvasPanel {
     this.canvasState = state;
     this.panel.webview.postMessage({ type: "loadState", state });
     this.sendConfigDefaults();
+  }
+
+  public postPreviewCode(files: readonly PreviewCodeFile[]): Thenable<boolean> {
+    return this.panel.webview.postMessage({
+      type: "previewCodeResponse",
+      files,
+    });
   }
 
   private sendConfigDefaults() {

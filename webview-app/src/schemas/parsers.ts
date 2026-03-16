@@ -51,7 +51,10 @@ export function parseCanvasState(data: unknown): CanvasState | null {
 export function parseMessage(data: unknown): ExtensionMessage | null {
   if (data && typeof data === "object" && "type" in data) {
     const candidateType = (data as { type?: unknown }).type;
-    if (typeof candidateType === "string" && !["stateChanged", "toolbarCommand", "loadState", "configDefaults"].includes(candidateType)) {
+    if (
+      typeof candidateType === "string" &&
+      !["stateChanged", "toolbarCommand", "loadState", "configDefaults", "previewCodeResponse"].includes(candidateType)
+    ) {
       console.warn("[zod] Unknown extension message type ignored", {
         type: candidateType,
         received: data,

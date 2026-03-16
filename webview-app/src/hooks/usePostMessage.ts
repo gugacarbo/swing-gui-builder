@@ -23,6 +23,7 @@ export interface UsePostMessageResult {
   postMessage: (message: OutgoingExtensionMessage) => void;
   postStateChanged: (message: StateChangedMessage["state"]) => void;
   postToolbarCommand: (command: ToolbarCommandMessage["command"]) => void;
+  postPreviewCode: () => void;
 }
 
 export function usePostMessage(): UsePostMessageResult {
@@ -55,9 +56,14 @@ export function usePostMessage(): UsePostMessageResult {
     [postMessage],
   );
 
+  const postPreviewCode = useCallback(() => {
+    postToolbarCommand("previewCode");
+  }, [postToolbarCommand]);
+
   return {
     postMessage,
     postStateChanged,
     postToolbarCommand,
+    postPreviewCode,
   };
 }

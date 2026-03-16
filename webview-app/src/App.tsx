@@ -1,8 +1,9 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Canvas } from "@/components/Canvas";
 import { HierarchyPanel } from "@/components/HierarchyPanel";
 import { Palette } from "@/components/Palette";
+import { PreviewCodeModal } from "@/components/PreviewCodeModal";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { Toolbar } from "@/components/Toolbar";
 import { moveComponentInHierarchy } from "@/hooks/useHierarchyDragDrop";
@@ -12,6 +13,7 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { usePostMessage } from "@/hooks/usePostMessage";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import type { CanvasComponent, CanvasState } from "@/types/canvas";
+import type { PreviewCodeFile } from "@/types/messages";
 
 const INITIAL_CANVAS_STATE: CanvasState = {
   className: "MainWindow",
@@ -22,6 +24,13 @@ const INITIAL_CANVAS_STATE: CanvasState = {
 
 function App() {
   const { components, selectedComponent, selectedComponentId, setComponents, selectComponent } = useCanvasState([]);
+  const [frameDimensions, setFrameDimensions] = useState({
+    width: INITIAL_CANVAS_STATE.frameWidth,
+    height: INITIAL_CANVAS_STATE.frameHeight,
+  });
+  const [previewFiles, setPreviewFiles] = useState<PreviewCodeFile[]>([]);
+  const [selectedPreviewFileName, setSelectedPreviewFileName] = useState<string | null>(null);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const {
     state: historyComponents,
@@ -34,7 +43,7 @@ function App() {
     history,
   } = useUndoRedo<CanvasComponent[]>([]);
 
-  const { postStateChanged, postToolbarCommand } = usePostMessage();
+  const { postStateChanged, postToolbarCommand, postPreviewCode } = usePostMessage();
 
   const updateComponents = useCallback(
     (updater: (current: CanvasComponent[]) => CanvasComponent[]) => {
@@ -108,11 +117,31 @@ function App() {
     postToolbarCommand("generate");
   }, [postToolbarCommand]);
 
+  const handlePreviewCode = useCallback(() => {
+    postPreviewCode();
+  }, [postPreviewCode]);
+
+  const handleClosePreviewModal = useCallback(() => {
+    setIsPreviewModalOpen(false);
+  }, []);
+
+  const handleSelectPreviewFile = useCallback((fileName: string) => {
+    setSelectedPreviewFileName(fileName);
+  }, []);
+
+  const handlePreviewCodeResponse = useCallback((files: PreviewCodeFile[]) => {
+    setPreviewFiles(files);
+    setSelectedPreviewFileName(files[0]?.fileName ?? null);
+    setIsPreviewModalOpen(true);
+  }, []);
+
   useKeyboardShortcuts({
     onUndo: handleUndo,
     onRedo: handleRedo,
+    onDelete: handleDelete,
     canUndo,
     canRedo,
+    canDelete: selectedComponentId !== null,
   });
 
   useEffect(() => {
@@ -122,16 +151,23 @@ function App() {
   useEffect(() => {
     postStateChanged({
       ...INITIAL_CANVAS_STATE,
+      frameWidth: frameDimensions.width,
+      frameHeight: frameDimensions.height,
       components,
     });
-  }, [components, postStateChanged]);
+  }, [components, frameDimensions.height, frameDimensions.width, postStateChanged]);
 
   useExtensionListener({
     onLoadState: (state) => {
       setComponents(state.components);
       resetComponentHistory(state.components);
+      setFrameDimensions({
+        width: Math.max(1, Math.round(state.frameWidth)),
+        height: Math.max(1, Math.round(state.frameHeight)),
+      });
       selectComponent(null);
     },
+    onPreviewCodeResponse: handlePreviewCodeResponse,
   });
 
   return (
@@ -142,10 +178,12 @@ function App() {
           canRedo={canRedo}
           canDelete={selectedComponentId !== null}
           canGenerate
+          canPreview
           onUndo={handleUndo}
           onRedo={handleRedo}
           onDelete={handleDelete}
           onGenerate={handleGenerate}
+          onPreviewCode={handlePreviewCode}
         />
       </header>
 
@@ -167,6 +205,8 @@ function App() {
 
         <section className="min-h-0 border-r border-vscode-panel-border bg-vscode-background" aria-label="Canvas panel">
           <Canvas
+            frameWidth={frameDimensions.width}
+            frameHeight={frameDimensions.height}
             components={components}
             selectedComponentId={selectedComponentId}
             onSelectComponent={selectComponent}
@@ -186,6 +226,15 @@ function App() {
           </div>
         </aside>
       </section>
+
+      <PreviewCodeModal
+        isOpen={isPreviewModalOpen}
+        files={previewFiles}
+        selectedFileName={selectedPreviewFileName}
+        onSelectFile={handleSelectPreviewFile}
+        onGenerate={handleGenerate}
+        onClose={handleClosePreviewModal}
+      />
     </main>
   );
 }

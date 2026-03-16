@@ -42,6 +42,8 @@ export function useDragInteraction({
   gridSize = 1,
 }: UseDragInteractionOptions) {
   const [interaction, setInteraction] = useState<DragSession | null>(null);
+  const safeMinWidth = Math.max(1, Math.round(minWidth));
+  const safeMinHeight = Math.max(1, Math.round(minHeight));
 
   const isDragging = interaction !== null;
   const isResizing = interaction?.mode === "resize";
@@ -107,14 +109,14 @@ export function useDragInteraction({
         handle: interaction.handle,
         deltaX,
         deltaY,
-        minWidth,
-        minHeight,
+        minWidth: safeMinWidth,
+        minHeight: safeMinHeight,
         gridSize,
       });
 
       onResize(component.id, nextRect);
     },
-    [component.id, gridSize, interaction, minHeight, minWidth, onMove, onResize, zoom],
+    [component.id, gridSize, interaction, onMove, onResize, safeMinHeight, safeMinWidth, zoom],
   );
 
   const handleMouseUp = useCallback((event: DragPointerEvent) => {

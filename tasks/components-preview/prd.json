@@ -1,0 +1,289 @@
+{
+  "project": "swing-gui-builder-vscode",
+  "branchName": "ralph/components-preview",
+  "description": "Components Preview (Builder) - melhorar fidelidade visual do preview Swing, produtividade no canvas e preview de codigo sem gravar em disco.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Adicionar contrato de mensagem previewCode",
+      "description": "Como desenvolvedor, quero definir um contrato de mensagem para preview de codigo para integrar webview e extensao com payload consistente.",
+      "acceptanceCriteria": [
+        "Adicionar comando de toolbar previewCode nos tipos de mensagem compartilhados",
+        "Adicionar tipo de resposta para preview com lista de arquivos contendo fileName e content",
+        "Manter compatibilidade dos comandos existentes generate, save e open",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Implementar handler de preview na extensao",
+      "description": "Como desenvolvedor, quero que a extensao gere preview em memoria para retornar arquivos sem gravar em disco.",
+      "acceptanceCriteria": [
+        "Registrar fluxo para comando previewCode na camada de extensao",
+        "Reutilizar generateJavaFiles(state, packageName?) para montar os arquivos de preview",
+        "Retornar payload ordenado com fileName e content para a webview",
+        "Nao escrever arquivos no disco durante o preview",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Adicionar envio de preview no usePostMessage",
+      "description": "Como desenvolvedor, quero que o hook de postMessage suporte previewCode para acionar o fluxo a partir da webview.",
+      "acceptanceCriteria": [
+        "Atualizar hook usePostMessage para enviar comando previewCode",
+        "Manter assinatura e comportamento dos comandos atuais",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Receber payload de preview na webview",
+      "description": "Como desenvolvedor, quero capturar a resposta de preview da extensao para popular o estado da UI.",
+      "acceptanceCriteria": [
+        "Atualizar listener da webview para tratar mensagem de retorno do preview",
+        "Salvar no estado a lista de arquivos do preview",
+        "Tratar caso de payload vazio sem quebrar a UI",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Adicionar botao Preview Code na toolbar",
+      "description": "Como usuario, quero um botao de preview na toolbar para revisar o codigo antes de gerar arquivos reais.",
+      "acceptanceCriteria": [
+        "Adicionar botao Preview Code na toolbar",
+        "Clique no botao dispara comando previewCode",
+        "Botao convive com Generate sem remover fluxo atual",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Criar modal de preview com abrir e fechar",
+      "description": "Como usuario, quero abrir e fechar um modal de preview para revisar arquivos sem perder o estado do canvas.",
+      "acceptanceCriteria": [
+        "Criar estado no App para abrir e fechar modal de preview",
+        "Abrir modal ao receber dados de preview",
+        "Fechar modal nao altera componentes no canvas",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Implementar arvore de arquivos no modal",
+      "description": "Como usuario, quero ver a lista de arquivos gerados para navegar rapidamente entre os arquivos do preview.",
+      "acceptanceCriteria": [
+        "Modal exibe lista ou arvore de arquivos no painel esquerdo",
+        "Primeiro arquivo e selecionado automaticamente quando houver dados",
+        "Selecao muda arquivo ativo no estado",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Implementar visualizador readonly no modal",
+      "description": "Como usuario, quero ler o conteudo do arquivo selecionado em modo somente leitura para validar o codigo gerado.",
+      "acceptanceCriteria": [
+        "Modal mostra conteudo do arquivo selecionado em painel readonly",
+        "Troca de arquivo atualiza conteudo exibido",
+        "Adicionar acao secundaria para disparar Generate real",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Renderizar moldura visual de JFrame",
+      "description": "Como usuario, quero enxergar um frame explicito para entender limites reais da janela Swing no preview.",
+      "acceptanceCriteria": [
+        "Canvas renderiza moldura de JFrame com barra de titulo simulada",
+        "Dimensoes da moldura usam frameWidth e frameHeight do estado",
+        "Area de conteudo fica visualmente separada da area externa",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Ancorar MenuBar e ToolBar ao frame visual",
+      "description": "Como usuario, quero que MenuBar e ToolBar respeitem o frame para evitar percepcao de elementos soltos no topo.",
+      "acceptanceCriteria": [
+        "MenuBar e ToolBar sao renderizados relativos ao frame visual",
+        "Nao sao posicionados no viewport bruto",
+        "Com e sem MenuBar o topo do preview permanece coerente",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Preservar zoom pan selecao drag e resize com frame",
+      "description": "Como usuario, quero manter as interacoes do canvas apos o novo container de frame para nao perder produtividade.",
+      "acceptanceCriteria": [
+        "Zoom e pan continuam funcionando apos introduzir o frame container",
+        "Selecao de componente permanece correta",
+        "Drag e resize nao apresentam offset incorreto",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Renderizar fidelidade para componentes de entrada e texto",
+      "description": "Como usuario, quero visualizacao distinta para componentes de texto e entrada para revisar layout com mais confianca.",
+      "acceptanceCriteria": [
+        "Implementar renderizacao especifica para JLabel, JButton, JTextField e JTextArea",
+        "Aplicar baseline visual coerente de borda, padding e tipografia",
+        "Remover dependencia do renderer generico para esses tipos",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Renderizar fidelidade para selecao e lista",
+      "description": "Como usuario, quero visualizacao distinta para componentes de selecao para prever melhor o resultado final em Swing.",
+      "acceptanceCriteria": [
+        "Implementar renderizacao especifica para JCheckBox, JRadioButton, JComboBox e JList",
+        "Garantir representacao visual reconhecivel de cada tipo",
+        "Remover dependencia do renderer generico para esses tipos",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Renderizar fidelidade para feedback e container",
+      "description": "Como usuario, quero visualizacao distinta para componentes de feedback e container para validar composicao da tela.",
+      "acceptanceCriteria": [
+        "Implementar renderizacao especifica para JProgressBar, JSlider, JSpinner, JSeparator e JPanel",
+        "Garantir representacao visual reconhecivel de cada tipo",
+        "Remover dependencia do renderer generico para esses tipos",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Aplicar tamanhos minimos por tipo de componente",
+      "description": "Como usuario, quero limites minimos por tipo para evitar componentes ilegiveis ou quebrados durante resize.",
+      "acceptanceCriteria": [
+        "Definir tamanho minimo por tipo para componentes suportados",
+        "Resize respeita limites minimos",
+        "Nao quebrar comportamento atual de drag e resize",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Implementar colapso da secao Palette com persistencia",
+      "description": "Como usuario, quero colapsar a Palette para ganhar espaco no canvas e manter essa preferencia em localStorage.",
+      "acceptanceCriteria": [
+        "Adicionar controle de expandir e colapsar para Palette",
+        "Persistir estado da Palette em localStorage",
+        "Controle expoe aria-expanded coerente com estado",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Implementar colapso da secao Hierarchy com persistencia",
+      "description": "Como usuario, quero colapsar a Hierarchy de forma independente para ajustar o layout lateral conforme meu fluxo.",
+      "acceptanceCriteria": [
+        "Adicionar controle de expandir e colapsar para Hierarchy",
+        "Persistir estado da Hierarchy em localStorage",
+        "Controle expoe aria-expanded coerente com estado",
+        "Layout lateral permanece funcional em janelas baixas",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Adicionar atalho Delete para remover selecionado",
+      "description": "Como usuario, quero usar a tecla Delete para remover o componente selecionado sem usar o mouse.",
+      "acceptanceCriteria": [
+        "Pressionar Delete remove componente quando houver selecao",
+        "Nao remover nada quando nao houver componente selecionado",
+        "Nao disparar remocao com foco em input, textarea ou contentEditable",
+        "Backspace nao remove componentes",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 18,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Validar paridade entre preview e generate",
+      "description": "Como desenvolvedor, quero garantir que o preview exiba exatamente os mesmos arquivos e conteudos do generate real.",
+      "acceptanceCriteria": [
+        "Para o mesmo estado, lista de arquivos do preview corresponde ao generate real",
+        "Conteudo de cada arquivo no preview corresponde ao conteudo gerado no generate real",
+        "Fluxo de generate existente continua funcionando",
+        "Typecheck passes"
+      ],
+      "priority": 19,
+      "passes": true,
+      "notes": ""
+    }
+  ]
+}

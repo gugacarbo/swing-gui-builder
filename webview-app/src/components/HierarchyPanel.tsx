@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { useHierarchyDragDrop, type HierarchyDropTarget } from "@/hooks/useHierarchyDragDrop";
+import { cn } from "@/lib/utils";
 import type { CanvasComponent } from "@/types/canvas";
 
 interface HierarchyPanelProps {
@@ -54,6 +55,21 @@ const SWING_TYPE_LABELS: Record<string, string> = {
   MenuItem: "JMenuItem",
   JMenuItem: "JMenuItem",
 };
+
+const HIERARCHY_COLLAPSED_STORAGE_KEY = "swing-gui-builder.sidebar.hierarchy-collapsed";
+
+function getInitialHierarchyCollapsedState(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    return window.localStorage.getItem(HIERARCHY_COLLAPSED_STORAGE_KEY) === "true";
+  } catch (error) {
+    console.warn("[HierarchyPanel] Failed to read persisted collapse state", error);
+    return false;
+  }
+}
 
 function toSwingTypeLabel(type: string): string {
   if (type in SWING_TYPE_LABELS) {
@@ -251,6 +267,8 @@ export function HierarchyPanel({ components, selectedComponentId, onSelectCompon
   const expandableNodeIds = useMemo(() => collectExpandableNodeIds(hierarchyTree), [hierarchyTree]);
   const hasExpandableNodes = expandableNodeIds.length > 0;
   const [collapsedNodeIds, setCollapsedNodeIds] = useState<Set<string>>(new Set());
+  const [isCollapsed, setIsCollapsed] = useState(getInitialHierarchyCollapsedState);
+  const contentId = useId();
   const { draggingComponentId, dropTarget, isDraggableComponent, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
     useHierarchyDragDrop({
       components,
@@ -270,6 +288,14 @@ export function HierarchyPanel({ components, selectedComponentId, onSelectCompon
       return next;
     });
   }, [expandableNodeIds]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(HIERARCHY_COLLAPSED_STORAGE_KEY, String(isCollapsed));
+    } catch (error) {
+      console.warn("[HierarchyPanel] Failed to persist collapse state", error);
+    }
+  }, [isCollapsed]);
 
   const handleToggleNode = useCallback((id: string) => {
     setCollapsedNodeIds((previous) => {
@@ -292,30 +318,47 @@ export function HierarchyPanel({ components, selectedComponentId, onSelectCompon
   }, [expandableNodeIds]);
 
   return (
-    <section className="flex h-full min-h-0 flex-col" aria-label="Hierarchy panel">
+    <section
+      className={cn("flex min-h-0 flex-col border-t border-vscode-panel-border", isCollapsed ? "shrink-0" : "flex-1")}
+      aria-label="Hierarchy panel"
+    >
       <header className="flex items-center justify-between border-b border-vscode-panel-border px-3 py-2">
         <h2 className="text-sm font-semibold">Hierarchy</h2>
         <div className="flex items-center gap-1">
+          {!isCollapsed ? (
+            <>
+              <button
+                type="button"
+                className="rounded border border-vscode-panel-border px-2 py-0.5 text-[11px] hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                onClick={handleExpandAll}
+                disabled={!hasExpandableNodes}
+              >
+                Expand all
+              </button>
+              <button
+                type="button"
+                className="rounded border border-vscode-panel-border px-2 py-0.5 text-[11px] hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                onClick={handleCollapseAll}
+                disabled={!hasExpandableNodes}
+              >
+                Collapse all
+              </button>
+            </>
+          ) : null}
           <button
             type="button"
-            className="rounded border border-vscode-panel-border px-2 py-0.5 text-[11px] hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
-            onClick={handleExpandAll}
-            disabled={!hasExpandableNodes}
+            className="inline-flex size-6 items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-foreground"
+            onClick={() => setIsCollapsed((previous) => !previous)}
+            aria-controls={contentId}
+            aria-expanded={!isCollapsed}
+            aria-label={isCollapsed ? "Expand hierarchy section" : "Collapse hierarchy section"}
           >
-            Expand all
-          </button>
-          <button
-            type="button"
-            className="rounded border border-vscode-panel-border px-2 py-0.5 text-[11px] hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
-            onClick={handleCollapseAll}
-            disabled={!hasExpandableNodes}
-          >
-            Collapse all
+            {isCollapsed ? <ChevronRight className="size-4" aria-hidden="true" /> : <ChevronDown className="size-4" aria-hidden="true" />}
           </button>
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-2">
+      <div id={contentId} hidden={isCollapsed} className="min-h-0 flex-1 overflow-y-auto p-2">
         {hierarchyTree.length > 0 ? (
           <ul role="tree" aria-label="Component hierarchy tree" className="space-y-0.5">
             {hierarchyTree.map((node) => (

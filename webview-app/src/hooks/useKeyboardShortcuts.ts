@@ -10,8 +10,10 @@ type KeyboardEventTarget = Pick<Window, "addEventListener" | "removeEventListene
 export interface UseKeyboardShortcutsOptions {
   onUndo: KeyboardShortcutHandler;
   onRedo: KeyboardShortcutHandler;
+  onDelete?: KeyboardShortcutHandler;
   canUndo?: KeyboardShortcutAvailability;
   canRedo?: KeyboardShortcutAvailability;
+  canDelete?: KeyboardShortcutAvailability;
   target?: KeyboardEventTarget;
   shouldIgnoreEvent?: (event: KeyboardEvent) => boolean;
 }
@@ -25,18 +27,32 @@ function isEditableTarget(event: KeyboardEvent): boolean {
 export function useKeyboardShortcuts({
   onUndo,
   onRedo,
+  onDelete,
   canUndo = true,
   canRedo = true,
+  canDelete = false,
   target = window,
   shouldIgnoreEvent = isEditableTarget,
 }: UseKeyboardShortcutsOptions): void {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (shouldIgnoreEvent(event) || (!event.ctrlKey && !event.metaKey)) {
+      if (shouldIgnoreEvent(event)) {
         return;
       }
 
       const key = event.key.toLowerCase();
+      const isDeleteShortcut = key === "delete";
+
+      if (isDeleteShortcut && canDelete && onDelete) {
+        event.preventDefault();
+        onDelete();
+        return;
+      }
+
+      if (!event.ctrlKey && !event.metaKey) {
+        return;
+      }
+
       const isUndoShortcut = key === "z" && !event.shiftKey;
       const isRedoShortcut = key === "y" || (key === "z" && event.shiftKey);
 
@@ -57,5 +73,5 @@ export function useKeyboardShortcuts({
     return () => {
       target.removeEventListener("keydown", handleKeyDown);
     };
-  }, [canRedo, canUndo, onRedo, onUndo, shouldIgnoreEvent, target]);
+  }, [canDelete, canRedo, canUndo, onDelete, onRedo, onUndo, shouldIgnoreEvent, target]);
 }

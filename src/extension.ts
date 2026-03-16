@@ -1,10 +1,10 @@
 import * as path from "node:path";
 import * as vscode from "vscode";
-import { CanvasPanel } from "./canvas/CanvasPanel";
+import { CanvasPanel, type PreviewCodeFile } from "./canvas/CanvasPanel";
 import type { CanvasState } from "./components/ComponentModel";
 import { getOutputDirectory } from "./config/ConfigReader";
 import { initProjectConfig } from "./config/initConfigCommand";
-import { generateJavaFiles } from "./generator/JavaGenerator";
+import { generateJavaFiles, generatePreviewJavaFiles } from "./generator/JavaGenerator";
 import { detectJavaProject } from "./utils/JavaProjectDetector";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -191,6 +191,21 @@ export function activate(context: vscode.ExtensionContext) {
     );
   });
 
+  const previewCodeCmd = vscode.commands.registerCommand(
+    "swingGuiBuilder.previewCode",
+    async () => {
+      if (!CanvasPanel.currentPanel) {
+        vscode.window.showErrorMessage("No canvas is open. Open a canvas first.");
+        return;
+      }
+
+      const state = CanvasPanel.currentPanel.getCanvasState();
+      const previewFiles: PreviewCodeFile[] = generatePreviewJavaFiles(state);
+
+      await CanvasPanel.currentPanel.postPreviewCode(previewFiles);
+    },
+  );
+
   const saveCmd = vscode.commands.registerCommand("swingGuiBuilder.save", async () => {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders) {
@@ -238,7 +253,14 @@ export function activate(context: vscode.ExtensionContext) {
     initProjectConfig();
   });
 
-  context.subscriptions.push(newWindowCmd, generateCmd, saveCmd, openCmd, initConfigCmd);
+  context.subscriptions.push(
+    newWindowCmd,
+    generateCmd,
+    previewCodeCmd,
+    saveCmd,
+    openCmd,
+    initConfigCmd,
+  );
 }
 
 export function deactivate() {}

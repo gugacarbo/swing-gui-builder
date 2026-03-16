@@ -338,6 +338,16 @@ export function generateJavaFiles(state: CanvasState, packageName?: string): Gen
   return files;
 }
 
+export function generatePreviewJavaFiles(
+  state: CanvasState,
+  packageName?: string,
+): GeneratedFile[] {
+  return generateJavaFiles(state, packageName).map((file) => ({
+    fileName: file.fileName,
+    content: file.content,
+  }));
+}
+
 function generateCustomComponentFile(
   comp: ComponentModel,
   customClassName: string,

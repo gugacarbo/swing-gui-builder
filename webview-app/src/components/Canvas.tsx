@@ -7,6 +7,8 @@ import { ZOOM_DEFAULT } from "@/lib/constants";
 import type { CanvasComponent as CanvasComponentModel } from "@/types/canvas";
 
 interface CanvasProps {
+  frameWidth: number;
+  frameHeight: number;
   components: CanvasComponentModel[];
   selectedComponentId: string | null;
   onSelectComponent: (id: string | null) => void;
@@ -23,6 +25,7 @@ const FIXED_ZONE_SECTION_GAP = 6;
 const MENU_BAR_MIN_HEIGHT = 30;
 const TOOL_BAR_MIN_THICKNESS = 36;
 const TOOL_BAR_MIN_SIDE_WIDTH = 44;
+const FRAME_TITLE_BAR_HEIGHT = 34;
 
 function normalizeToolBarPosition(position: CanvasComponentModel["position"] | undefined): ToolBarEdge {
   switch (position) {
@@ -103,16 +106,31 @@ function getComponentLabel(component: CanvasComponentModel, fallback: string): s
   return fallback;
 }
 
-export function Canvas({ components, selectedComponentId, onSelectComponent, onAddComponent, onMoveComponent, onResizeComponent }: CanvasProps) {
+export function Canvas({
+  frameWidth,
+  frameHeight,
+  components,
+  selectedComponentId,
+  onSelectComponent,
+  onAddComponent,
+  onMoveComponent,
+  onResizeComponent,
+}: CanvasProps) {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [expandedMenuId, setExpandedMenuId] = useState<string | null>(null);
   const { zoom, pan, handleWheel, handlePointerDown, handlePointerMove, handlePointerUp, handleZoomIn, handleZoomOut, handleResetView } =
     useCanvasZoomPan();
 
+  const normalizedFrameWidth = Math.max(1, Math.round(frameWidth));
+  const normalizedFrameHeight = Math.max(FRAME_TITLE_BAR_HEIGHT + 1, Math.round(frameHeight));
+
   const { handleDrop, handleDragOver, isDragging } = useCanvasDragDrop({
     viewportRef,
     zoom,
-    pan,
+    pan: {
+      x: pan.x,
+      y: pan.y + FRAME_TITLE_BAR_HEIGHT * zoom,
+    },
     componentsCount: components.length,
     onAddComponent,
     onSelectComponent,
@@ -281,17 +299,39 @@ export function Canvas({ components, selectedComponentId, onSelectComponent, onA
         onPointerCancel={handlePointerUp}
       >
         <div className="absolute inset-0 origin-top-left" style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}>
-          {floatingComponents.map((component) => (
-            <CanvasComponent
-              key={component.id}
-              component={component}
-              zoom={zoom}
-              isSelected={selectedComponentId === component.id}
-              onSelect={onSelectComponent}
-              onMove={onMoveComponent}
-              onResize={onResizeComponent}
-            />
-          ))}
+          <div
+            className="relative overflow-hidden rounded-md border border-vscode-panel-border bg-vscode-panel-background shadow-lg"
+            style={{ width: normalizedFrameWidth, height: normalizedFrameHeight }}
+          >
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between border-b border-vscode-panel-border bg-vscode-panel-background px-3 text-[11px] text-muted-foreground"
+              style={{ height: FRAME_TITLE_BAR_HEIGHT }}
+            >
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-muted-foreground/50" />
+                <span className="h-2 w-2 rounded-full bg-muted-foreground/40" />
+                <span className="h-2 w-2 rounded-full bg-muted-foreground/30" />
+              </div>
+              <span className="truncate">{`JFrame (${normalizedFrameWidth} × ${normalizedFrameHeight})`}</span>
+              <span className="w-8" />
+            </div>
+
+            <div
+              className="absolute inset-x-0 bottom-0 border-t border-vscode-panel-border bg-vscode-background"
+              style={{ top: FRAME_TITLE_BAR_HEIGHT }}
+            >
+              <div className="relative h-full w-full overflow-hidden">
+                {floatingComponents.map((component) => (
+                  <CanvasComponent
+                    key={component.id}
+                    component={component}
+                    zoom={zoom}
+                    isSelected={selectedComponentId === component.id}
+                    onSelect={onSelectComponent}
+                    onMove={onMoveComponent}
+                    onResize={onResizeComponent}
+                  />
+                ))}
 
           {menuBarLayout.map(({ menuBar, top, height }) => {
             const menuChildren = getOrderedChildren(menuBar, componentsById, components).filter((child) => child.type === "Menu");
@@ -672,6 +712,9 @@ export function Canvas({ components, selectedComponentId, onSelectComponent, onA
               </div>
             );
           })}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

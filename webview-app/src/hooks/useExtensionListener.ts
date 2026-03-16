@@ -2,14 +2,16 @@ import { useEffect } from "react";
 
 import { parseMessage } from "@/schemas/parsers";
 import type { CanvasState, ConfigDefaults } from "@/types/canvas";
+import type { PreviewCodeFile } from "@/types/messages";
 
 export interface UseExtensionListenerOptions {
   onLoadState?: (state: CanvasState) => void;
   onConfigDefaults?: (config: ConfigDefaults) => void;
+  onPreviewCodeResponse?: (files: PreviewCodeFile[]) => void;
 }
 
 export function useExtensionListener(options: UseExtensionListenerOptions): void {
-  const { onLoadState, onConfigDefaults } = options;
+  const { onLoadState, onConfigDefaults, onPreviewCodeResponse } = options;
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent<unknown>) => {
@@ -26,6 +28,9 @@ export function useExtensionListener(options: UseExtensionListenerOptions): void
         case "configDefaults":
           onConfigDefaults?.(message.defaults as unknown as ConfigDefaults);
           break;
+        case "previewCodeResponse":
+          onPreviewCodeResponse?.(message.files);
+          break;
         default:
           console.warn("[useExtensionListener] Ignoring unsupported incoming message", {
             type: message.type,
@@ -39,5 +44,5 @@ export function useExtensionListener(options: UseExtensionListenerOptions): void
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, [onLoadState, onConfigDefaults]);
+  }, [onLoadState, onConfigDefaults, onPreviewCodeResponse]);
 }
