@@ -31,9 +31,8 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 1. **Duplicação de tipos** - `ComponentModel.ts` (extension) e `canvas.ts` (webview) definem tipos quase idênticos
 2. **Responsabilidades múltiplas em Canvas.tsx** - Gerencia zoom, pan, drag/drop, menu bars, toolbars
 3. **Comandos inline em extension.ts** - Lógica de generate/save/open acoplada
-4. **Falta de barrel exports** - Sem `index.ts` para exports centralizados
-5. **Constantes espalhadas** - `DEFAULT_*` em múltiplos arquivos
-6. **Nomenclatura inconsistente** - `ComponentModel` vs `CanvasComponent`
+4. **Constantes espalhadas** - `DEFAULT_*` em múltiplos arquivos
+5. **Nomenclatura inconsistente** - `ComponentModel` vs `CanvasComponent`
 
 ---
 
@@ -44,7 +43,6 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 - ✅ Separar lógica de comandos do extension.ts
 - ✅ Modularizar Canvas.tsx em componentes menores
 - ✅ Extrair funções helper de JavaGenerator.ts
-- ✅ Criar barrel exports (index.ts)
 - ✅ Padronizar nomenclatura e constantes
 - ✅ Prefixos de constantes (SWING_, DEFAULT_, etc.)
 
@@ -67,12 +65,12 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 
 #### Step 1.2 - Atualizar extension para usar shared types
 - **Arquivo:** `src/components/ComponentModel.ts`
-- **Ação:** Reexportar de `shared/types/canvas.ts` e remover definições duplicadas
+- **Ação:** Importar de `shared/types/canvas.ts` e remover definições duplicadas
 - **Dependência:** step 1.1
 
 #### Step 1.3 - Atualizar webview-app para usar shared types
 - **Arquivo:** `webview-app/src/types/canvas.ts`
-- **Ação:** Reexportar de `shared/types/canvas.ts` e remover duplicações
+- **Ação:** Importar de `shared/types/canvas.ts` e remover duplicações
 - **Dependência:** step 1.1
 
 #### Step 1.4 - Configurar tsconfig paths
@@ -99,15 +97,10 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 - **Ação:** Mover lógica de `swingGuiBuilder.open` para arquivo dedicado
 - **Dependência:** step 1.2
 
-#### Step 2.4 - Criar barrel exports de commands
-- **Arquivo:** `src/commands/index.ts` (novo)
-- **Ação:** Exportar todos os comandos
-- **Dependência:** steps 2.1, 2.2, 2.3
-
-#### Step 2.5 - Refatorar extension.ts
+#### Step 2.4 - Refatorar extension.ts
 - **Arquivo:** `src/extension.ts`
 - **Ação:** Importar comandos de `./commands` e simplificar arquivo principal
-- **Dependência:** step 2.4
+- **Dependência:** steps 2.1, 2.2, 2.3
 
 ---
 
@@ -127,11 +120,6 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 - **Arquivo:** `src/generator/componentGenerators.ts` (novo)
 - **Ação:** Funções `generateComponentCode`, `generateHierarchicalCode`
 - **Dependência:** steps 3.1, 3.2
-
-#### Step 3.4 - Criar barrel exports
-- **Arquivo:** `src/generator/index.ts` (novo)
-- **Ação:** Exportar funções públicas (`generateJavaFiles`, `generatePreviewJavaFiles`)
-- **Dependência:** steps 3.1, 3.2, 3.3
 
 ---
 
@@ -162,10 +150,6 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 - **Ação:** Importar helpers e subcomponentes, simplificar componente principal
 - **Dependência:** steps 4.1, 4.2, 4.3, 4.4
 
-#### Step 4.6 - Criar barrel exports de Canvas
-- **Arquivo:** `webview-app/src/components/Canvas/index.ts` (novo)
-- **Ação:** Exportar Canvas e tipos relacionados
-- **Dependência:** step 4.5
 
 ---
 
@@ -191,11 +175,6 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 - **Ação:** Importar helpers extraídos, simplificar componente
 - **Dependência:** steps 5.1, 5.2, 5.3
 
-#### Step 5.5 - Criar barrel exports
-- **Arquivo:** `webview-app/src/components/CanvasComponent/index.ts` (novo)
-- **Ação:** Exportar CanvasComponent e tipos
-- **Dependência:** step 5.4
-
 ---
 
 ### Fase 6: Constants & Naming Standardization
@@ -217,33 +196,9 @@ Refatoração estrutural do swing-gui-builder-vscode visando modularização, se
 
 ---
 
-### Fase 7: Barrel Exports (Final Organization)
+### Fase 7: Validation & Cleanup
 
-#### Step 7.1 - Criar barrel exports de hooks
-- **Arquivo:** `webview-app/src/hooks/index.ts` (novo)
-- **Ação:** Exportar todos os hooks publicamente
-- **Dependência:** nenhum
-
-#### Step 7.2 - Criar barrel exports de lib
-- **Arquivo:** `webview-app/src/lib/index.ts` (novo)
-- **Ação:** Exportar utils, constants, geometry
-- **Dependência:** step 6.1
-
-#### Step 7.3 - Criar barrel exports de types
-- **Arquivo:** `webview-app/src/types/index.ts` (novo)
-- **Ação:** Exportar canvas, messages
-- **Dependência:** step 1.3
-
-#### Step 7.4 - Criar barrel exports de components
-- **Arquivo:** `webview-app/src/components/index.ts` (novo)
-- **Ação:** Exportar todos os componentes
-- **Dependência:** steps 4.6, 5.5
-
----
-
-### Fase 8: Validation & Cleanup
-
-#### Step 8.1 - Executar testes existentes
+#### Step 7.1 - Executar testes existentes
 - **Arquivo:** `src/generator/*.test.ts`
 - **Ação:** Validar que testes de paridade e ordering ainda passam
 - **Dependência:** todas as fases anteriores

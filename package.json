@@ -11,10 +11,6 @@
     "type": "git",
     "url": "https://github.com/gugacarbo/swing-gui-builder.git"
   },
-  "activationEvents": [],
-  "engines": {
-    "vscode": "^1.85.0"
-  },
   "categories": [
     "Programming Languages",
     "Visualization",
@@ -34,6 +30,9 @@
     "ui",
     "ui-builder"
   ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
   "main": "./out/extension.js",
   "scripts": {
     "compile": "pnpm --dir webview-app build && tsc -p ./",
@@ -46,6 +45,7 @@
     "vsc:pkg": "vsce package",
     "vsc:push": "vsce publish"
   },
+  "activationEvents": [],
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
     "@types/node": "^20.0.0",
