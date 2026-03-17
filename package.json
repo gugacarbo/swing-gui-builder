@@ -49,7 +49,7 @@
     "check": "pnpm run lint && pnpm run typecheck && pnpm run compile",
     "lint": "biome check src && pnpm --dir shared lint && pnpm --dir webview-app lint",
     "lint:fix": "biome check --write src && pnpm --dir shared lint:fix && pnpm --dir webview-app lint:fix",
-    "typecheck": "pnpm --dir shared typecheck && pnpm --dir webview-app typecheck && tsc -p ./ --noEmit",
+    "typecheck": "pnpm --dir shared build && pnpm --dir webview-app typecheck && tsc -p ./ --noEmit",
     "vscode:prepublish": "pnpm run compile",
     "vsc:pkg": "vsce package",
     "vsc:push": "vsce publish"
