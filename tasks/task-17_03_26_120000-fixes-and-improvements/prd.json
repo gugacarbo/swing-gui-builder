@@ -78,8 +78,8 @@
                 "Typecheck passes"
             ],
             "priority": 5,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "generateJavaFiles agora retorna GeneratedFileWithPath[] e inclui subfolder baseado em getParentFolder(comp, allComponents). Arquivos sem parentId mantem subfolder undefined."
         },
         {
             "id": "US-006",

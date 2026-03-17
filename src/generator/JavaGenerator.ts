@@ -48,8 +48,22 @@ export interface GeneratedFileWithPath {
   subfolder?: string;
 }
 
-export function generateJavaFiles(state: CanvasState, packageName?: string): GeneratedFile[] {
-  const files: GeneratedFile[] = [];
+export function getParentFolder(
+  comp: ComponentModel,
+  allComponents: ComponentModel[],
+): string | undefined {
+  if (!comp.parentId) {
+    return undefined;
+  }
+
+  return allComponents.find((component) => component.id === comp.parentId)?.variableName;
+}
+
+export function generateJavaFiles(
+  state: CanvasState,
+  packageName?: string,
+): GeneratedFileWithPath[] {
+  const files: GeneratedFileWithPath[] = [];
   const methodNames = deduplicateMethodNames(state.components);
 
   // Collect all unique method stubs
@@ -77,7 +91,14 @@ export function generateJavaFiles(state: CanvasState, packageName?: string): Gen
 
   for (const comp of customComponents) {
     const className = customClassNames.get(comp.id) as string;
-    files.push(generateCustomComponentFile(comp, className, packageName));
+    files.push(
+      generateCustomComponentFile(
+        comp,
+        className,
+        packageName,
+        getParentFolder(comp, state.components),
+      ),
+    );
   }
 
   // Generate main JFrame class
@@ -109,7 +130,8 @@ function generateCustomComponentFile(
   comp: ComponentModel,
   customClassName: string,
   packageName?: string,
-): GeneratedFile {
+  subfolder?: string,
+): GeneratedFileWithPath {
   const swingClass = getSwingClass(comp.type);
   const lines: string[] = [];
 
@@ -154,6 +176,7 @@ function generateCustomComponentFile(
   return {
     fileName: `${customClassName}.java`,
     content: lines.join("\n"),
+    subfolder,
   };
 }
 
@@ -164,7 +187,7 @@ function generateMainFrameFile(
   customComponents: ComponentModel[],
   customClassNames: Map<string, string>,
   packageName?: string,
-): GeneratedFile {
+): GeneratedFileWithPath {
   const customIds = new Set(customComponents.map((c) => c.id));
   const { menuBars, regularComponents, toolBars, menuBarLines, toolBarLines } =
     generateHierarchicalCode(state.components, customIds, customClassNames, methodNames);
