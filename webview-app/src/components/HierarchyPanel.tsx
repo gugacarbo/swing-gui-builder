@@ -312,8 +312,8 @@ export function HierarchyPanel({
   return (
     <section
       className={cn(
-        "flex min-h-0 flex-col border-t border-vscode-panel-border",
-        isCollapsed ? "shrink-0" : "flex-1",
+        "flex min-h-0 flex-col overflow-hidden border-t border-vscode-panel-border",
+        isCollapsed ? "flex-none" : "flex-1",
       )}
       aria-label="Hierarchy panel"
     >

@@ -162,8 +162,8 @@
                 "Verify in browser using dev-browser skill: colapsar Hierarchy e confirmar que Palette não é afetada"
             ],
             "priority": 10,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "HierarchyPanel atualizado para comportamento flex correto: container com overflow-hidden e estado colapsado usando flex-none, mantendo area interna com min-h-0 flex-1 overflow-y-auto para scroll interno. Colapso da Hierarchy validado sem afetar a Palette via dev-browser em http://127.0.0.1:4173."
         },
         {
             "id": "US-011",
