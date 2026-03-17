@@ -130,11 +130,9 @@ pnpm install
 ### Build and validation commands
 
 ```bash
-pnpm --dir webview-app typecheck
-pnpm --dir webview-app build
+pnpm run typecheck
+pnpm run build
 pnpm run compile
-pnpm run lint
-pnpm run package
 ```
 
 ## License

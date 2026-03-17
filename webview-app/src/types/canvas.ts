@@ -1,4 +1,4 @@
-export type { ComponentType, CanvasComponent, CanvasState } from "@shared/types/canvas";
+export type { CanvasComponent, CanvasState, ComponentType } from "@shared/types/canvas";
 
 import type { CanvasComponent, CanvasState } from "@shared/types/canvas";
 

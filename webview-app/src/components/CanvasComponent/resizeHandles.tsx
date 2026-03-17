@@ -38,10 +38,7 @@ export const RESIZE_HANDLES: ReadonlyArray<ResizeHandleConfig> = [
 interface ResizeHandlesProps {
   isSelected: boolean;
   componentType: string;
-  onHandlePointerDown: (
-    event: PointerEvent<HTMLButtonElement>,
-    handle: ResizeHandle,
-  ) => void;
+  onHandlePointerDown: (event: PointerEvent<HTMLButtonElement>, handle: ResizeHandle) => void;
 }
 
 export function ResizeHandles({

@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState } from "react";
 import type { PointerEvent, WheelEvent } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { ZOOM_DEFAULT, ZOOM_MAX, ZOOM_MIN } from "@/lib/constants";
 import { clamp } from "@/lib/geometry";

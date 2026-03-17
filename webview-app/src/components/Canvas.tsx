@@ -1,16 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
+import { FRAME_TITLE_BAR_HEIGHT } from "@/components/Canvas/constants";
+import { buildFixedZoneLayout, getComponentLabel } from "@/components/Canvas/fixedZoneLayout";
 import { MenuBarZone } from "@/components/Canvas/MenuBarZone";
 import { ToolBarZone } from "@/components/Canvas/ToolBarZone";
-import {
-  buildFixedZoneLayout,
-  getComponentLabel,
-} from "@/components/Canvas/fixedZoneLayout";
 import { CanvasComponent } from "@/components/CanvasComponent";
 import { useCanvasDragDrop } from "@/hooks/useCanvasDragDrop";
 import { useCanvasZoomPan } from "@/hooks/useCanvasZoomPan";
 import { ZOOM_DEFAULT } from "@/lib/constants";
-import { FRAME_TITLE_BAR_HEIGHT } from "@/components/Canvas/constants";
 import type { CanvasComponent as CanvasComponentModel } from "@/types/canvas";
 
 interface CanvasProps {

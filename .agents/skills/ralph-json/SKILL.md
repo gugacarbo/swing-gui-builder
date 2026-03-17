@@ -1,6 +1,6 @@
 ---
 name: ralph-json
-description: "Convert PRDs to prd.json format for the Ralph autonomous agent system. Use when you have an existing PRD and need to convert it to Ralph's JSON format. Triggers on: convert this prd, turn this into ralph format, create prd.json from this, ralph json."
+description: "Convert PRDs to prd.json format for the Ralph autonomous agent system with parallel group support. Stories in the same group can be executed simultaneously. Use when you have an existing PRD and need to convert it to Ralph's JSON format. Triggers on: convert this prd, turn this into ralph format, create prd.json from this, ralph json."
 user-invocable: true
 ---
 
@@ -299,6 +299,9 @@ Before writing prd.json, verify:
 - [ ] **Previous run archived** (if prd.json exists with different branchName, archive it first)
 - [ ] Each story is completable in one iteration (small enough)
 - [ ] Stories are ordered by dependency (schema to backend to UI)
+- [ ] **Each story has a `group` property** (stories in same group can run in parallel)
+- [ ] **Groups are ordered correctly** (A before B, B before C, etc.)
+- [ ] **Stories with dependencies are in different groups**
 - [ ] Every story has "Typecheck passes" as criterion
 - [ ] UI stories have "Verify in browser using dev-browser skill" as criterion
 - [ ] Acceptance criteria are verifiable (not vague)

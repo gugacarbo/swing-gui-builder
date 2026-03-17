@@ -1,9 +1,9 @@
 import { FIXED_ZONE_PADDING } from "@/components/Canvas/constants";
+import { getOrderedChildren } from "@/components/Canvas/fixedZoneHelpers";
 import type {
   HorizontalToolBarLayoutItem,
   VerticalToolBarLayoutItem,
 } from "@/components/Canvas/fixedZoneLayout";
-import { getOrderedChildren } from "@/components/Canvas/fixedZoneHelpers";
 import type { CanvasComponent as CanvasComponentModel } from "@/types/canvas";
 
 interface ToolBarZoneProps {
@@ -61,7 +61,12 @@ export function ToolBarZone({
   return (
     <>
       {northToolBarLayout.map(({ toolBar, top, thickness }) => {
-        const childButtons = getToolBarButtons(toolBar, componentsById, components, getComponentLabel);
+        const childButtons = getToolBarButtons(
+          toolBar,
+          componentsById,
+          components,
+          getComponentLabel,
+        );
 
         return (
           <div
@@ -92,7 +97,9 @@ export function ToolBarZone({
                   data-canvas-fixed="true"
                   disabled={!childButton.componentId}
                   className={`rounded border border-vscode-panel-border bg-vscode-background px-2 py-1 text-[11px] whitespace-nowrap ${
-                    childButton.componentId ? "hover:bg-accent/70" : "cursor-default text-muted-foreground"
+                    childButton.componentId
+                      ? "hover:bg-accent/70"
+                      : "cursor-default text-muted-foreground"
                   } ${
                     childButton.componentId && selectedComponentId === childButton.componentId
                       ? "border-(--canvas-selection)"
@@ -117,7 +124,12 @@ export function ToolBarZone({
       })}
 
       {southToolBarLayout.map(({ toolBar, bottom, thickness }) => {
-        const childButtons = getToolBarButtons(toolBar, componentsById, components, getComponentLabel);
+        const childButtons = getToolBarButtons(
+          toolBar,
+          componentsById,
+          components,
+          getComponentLabel,
+        );
 
         return (
           <div
@@ -148,7 +160,9 @@ export function ToolBarZone({
                   data-canvas-fixed="true"
                   disabled={!childButton.componentId}
                   className={`rounded border border-vscode-panel-border bg-vscode-background px-2 py-1 text-[11px] whitespace-nowrap ${
-                    childButton.componentId ? "hover:bg-accent/70" : "cursor-default text-muted-foreground"
+                    childButton.componentId
+                      ? "hover:bg-accent/70"
+                      : "cursor-default text-muted-foreground"
                   } ${
                     childButton.componentId && selectedComponentId === childButton.componentId
                       ? "border-(--canvas-selection)"
@@ -173,7 +187,12 @@ export function ToolBarZone({
       })}
 
       {westToolBarLayout.map(({ toolBar, top, thickness, width }) => {
-        const childButtons = getToolBarButtons(toolBar, componentsById, components, getComponentLabel);
+        const childButtons = getToolBarButtons(
+          toolBar,
+          componentsById,
+          components,
+          getComponentLabel,
+        );
 
         return (
           <div
@@ -205,7 +224,9 @@ export function ToolBarZone({
                   data-canvas-fixed="true"
                   disabled={!childButton.componentId}
                   className={`rounded border border-vscode-panel-border bg-vscode-background px-2 py-1 text-[11px] ${
-                    childButton.componentId ? "hover:bg-accent/70" : "cursor-default text-muted-foreground"
+                    childButton.componentId
+                      ? "hover:bg-accent/70"
+                      : "cursor-default text-muted-foreground"
                   } ${
                     childButton.componentId && selectedComponentId === childButton.componentId
                       ? "border-(--canvas-selection)"
@@ -230,7 +251,12 @@ export function ToolBarZone({
       })}
 
       {eastToolBarLayout.map(({ toolBar, top, thickness, width }) => {
-        const childButtons = getToolBarButtons(toolBar, componentsById, components, getComponentLabel);
+        const childButtons = getToolBarButtons(
+          toolBar,
+          componentsById,
+          components,
+          getComponentLabel,
+        );
 
         return (
           <div
@@ -262,7 +288,9 @@ export function ToolBarZone({
                   data-canvas-fixed="true"
                   disabled={!childButton.componentId}
                   className={`rounded border border-vscode-panel-border bg-vscode-background px-2 py-1 text-[11px] ${
-                    childButton.componentId ? "hover:bg-accent/70" : "cursor-default text-muted-foreground"
+                    childButton.componentId
+                      ? "hover:bg-accent/70"
+                      : "cursor-default text-muted-foreground"
                   } ${
                     childButton.componentId && selectedComponentId === childButton.componentId
                       ? "border-(--canvas-selection)"

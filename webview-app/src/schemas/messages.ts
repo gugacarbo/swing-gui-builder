@@ -46,7 +46,7 @@ export const ConfigDefaultsMessageSchema = z
   })
   .transform((message) => ({
     type: message.type,
-    defaults: message.defaults ?? message.config!,
+    defaults: message.defaults ?? message.config,
   }));
 
 export const PreviewCodeFileSchema = z.object({

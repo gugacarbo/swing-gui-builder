@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { type Rect, type ResizeHandle, calculateResize, snapToGrid } from "@/lib/geometry";
+import { calculateResize, type Rect, type ResizeHandle, snapToGrid } from "@/lib/geometry";
 import type { CanvasComponent as CanvasComponentModel } from "@/types/canvas";
 
 interface DragStartOptions {

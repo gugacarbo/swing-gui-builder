@@ -15,7 +15,7 @@
                 "Typecheck passes"
             ],
             "priority": 1,
-            "passes": false,
+            "passes": true,
             "notes": ""
         },
         {
@@ -30,8 +30,8 @@
                 "Typecheck passes"
             ],
             "priority": 2,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Added shared package scripts (clean/build/typecheck/lint), created shared/tsconfig.json targeting dist output, removed emitted JS artifacts from shared/types, and validated with pnpm -r --if-present lint/typecheck/build."
         },
         {
             "id": "US-003",
@@ -46,8 +46,8 @@
                 "Typecheck passes"
             ],
             "priority": 3,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Added root scripts lint/lint:fix/typecheck/build/verify/check, wired lint-all aliases to standardized commands, added shared lint:fix script, and validated with pnpm run lint, pnpm run lint:fix, pnpm run typecheck, pnpm run build, and pnpm run verify."
         },
         {
             "id": "US-004",
@@ -60,8 +60,8 @@
                 "Typecheck passes"
             ],
             "priority": 4,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Updated README build/validation section to only root scripts (`typecheck`, `build`, `compile`), removed broken references to non-passing validation commands, fixed webview node tsconfig for reliable typecheck, and validated with `pnpm run typecheck && pnpm run build && pnpm run compile`."
         },
         {
             "id": "US-005",
@@ -75,8 +75,8 @@
                 "Typecheck passes"
             ],
             "priority": 5,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Updated root/webview deps to latest compatible stable ranges, removed duplicate biome package, aligned TypeScript/Biome/types versions across root/shared/webview, regenerated lockfile, and validated pnpm run typecheck."
         }
     ]
 }

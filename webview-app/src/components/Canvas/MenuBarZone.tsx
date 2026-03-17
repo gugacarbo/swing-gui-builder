@@ -1,8 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 
 import { FIXED_ZONE_PADDING } from "@/components/Canvas/constants";
-import type { MenuBarLayoutItem } from "@/components/Canvas/fixedZoneLayout";
 import { getOrderedChildren } from "@/components/Canvas/fixedZoneHelpers";
+import type { MenuBarLayoutItem } from "@/components/Canvas/fixedZoneLayout";
 import type { CanvasComponent as CanvasComponentModel } from "@/types/canvas";
 
 interface MenuBarZoneProps {
@@ -46,7 +46,10 @@ export function MenuBarZone({
                   ? menuItems.map((item) => ({
                       id: item.id,
                       componentId: item.id,
-                      label: getComponentLabel(item, item.type === "MenuItem" ? "Menu Item" : "Menu"),
+                      label: getComponentLabel(
+                        item,
+                        item.type === "MenuItem" ? "Menu Item" : "Menu",
+                      ),
                       isSubmenu: item.type === "Menu",
                     }))
                   : [

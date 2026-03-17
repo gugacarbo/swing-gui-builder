@@ -1,12 +1,26 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "a11y": {
+        "noStaticElementInteractions": "off",
+        "noNoninteractiveElementToInteractiveRole": "off",
+        "useAriaPropsSupportedByRole": "off",
+        "useFocusableInteractive": "off",
+        "useKeyWithClickEvents": "off",
+        "useSemanticElements": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      }
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   },
   "formatter": {
@@ -16,11 +30,12 @@
     "lineWidth": 100
   },
   "files": {
-    "ignore": [
-      "out/",
-      "node_modules/",
-      "webview-app/node_modules/",
-      "webview-app/dist/"
+    "includes": [
+      "**",
+      "!**/out/",
+      "!**/node_modules/",
+      "!**/webview-app/node_modules/",
+      "!**/webview-app/dist/"
     ]
   }
 }

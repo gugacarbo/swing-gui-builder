@@ -1,4 +1,9 @@
-import { DEFAULT_BG, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR } from "@/lib/constants";
+import {
+  DEFAULT_BG,
+  DEFAULT_FONT_FAMILY,
+  DEFAULT_FONT_SIZE,
+  DEFAULT_TEXT_COLOR,
+} from "@/lib/constants";
 import type { CanvasComponent, ComponentProps, ComponentType } from "@/types/canvas";
 
 const BASE_DEFAULT_PROPS: Omit<ComponentProps, "text"> = {

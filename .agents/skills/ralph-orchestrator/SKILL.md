@@ -1,6 +1,6 @@
 ---
 name: ralph-orchestrator
-description: Orchestrates execution of a PRD by delegating User Stories to a worker agent
+description: "Orchestrates execution of a PRD by delegating User Stories to worker agents. Stories with the same 'group' property are executed in parallel, while groups run sequentially (A → B → C)."
 user-invocable: true
 ---
 
@@ -43,28 +43,39 @@ These defaults should be used unless the specific story requires different value
 Task: [task-folder-name]
 Status: RUNNING | COMPLETED | BLOCKED
 Last Updated: [ISO-8601 timestamp]
+Current Group: [A|B|C|...]
 Current Story: US-XXX - [Story Title]
+Parallel Stories: US-XXX, US-YYY (if running in parallel)
 Attempts: [current/max]
 Worker Timeout: [seconds]
 
 Execution Summary:
 - Completed: [N] / [Total]
-- In Progress: US-XXX
+- In Progress: US-XXX, US-YYY (parallel)
+- Current Group: [X] (N/M complete)
 - Failed: [N]
 - Blocked: [N]
 === END HEADER ===
 ```
 
-### Iteration Log (Append After Each Worker)
+### Iteration Log (Append After Each Worker Group Completes)
 
 ```text
-## [2026-03-16T14:30:00Z] - Story Execution
-Story: US-003 - Component refactoring
-Result: SUCCESS | FAILED | BLOCKED | TIMEOUT
-Attempts Used: 1/3
-Duration: 5m 27s
-Files Modified: +128 | -45 | ~12
-Commit: refactor(canvas): simplify component (US-003)
+## [2026-03-16T14:30:00Z] - Group A Execution
+Stories: US-001, US-002 (parallel)
+Results:
+  - US-001: SUCCESS (5m 27s) - Files: +128 | -45
+  - US-002: SUCCESS (3m 12s) - Files: +67 | -12
+Commits:
+  - feat: US-001 - Add schema
+  - feat: US-002 - Add backend logic
+Group Status: COMPLETE
+---
+
+## [2026-03-16T14:45:00Z] - Group B Execution
+Stories: US-003 (single, others pending)
+Result: US-003 - TIMEOUT (attempt 1/3)
+Group Status: IN PROGRESS (retry scheduled)
 ---
 ```
 
@@ -99,44 +110,39 @@ WHILE there are incomplete stories:
     0. If user has not provided the active task, ask user to define it
 
     1. Read prd.json to get current state
-    2. Build candidate list of stories where passes != true and dependencies met
-    3. Select ONE story per iteration (priority + PRD order)
+    2. Identify the current group (first group with incomplete stories)
+    3. Get all stories in current group where passes != true
 
-    *** HEADER UPDATE - BEFORE WORKER CALL ***
-    4a. Update progress.txt header:
-        - Last Updated: current ISO-8601 timestamp
-        - Current Story: US-XXX - [Title]
-        - Attempts: current/maxAttempts
-        - Status: RUNNING
-        - Update Execution Summary
-        - WRITE IMMEDIATELY
+    *** GROUP EXECUTION ***
+    4. For each story in the current group (can run in PARALLEL):
+       a. If group has multiple incomplete stories, delegate ALL to workers in parallel
+       b. Each worker handles one story independently
 
-    4b. Call `ralph-worker` with:
-        - `prdPath`: tasks/[task-name]/prd.json
-        - `storyId`: US-XXX
-        - `timeout`: 30 (or custom if needed)
-        - `maxAttempts`: 3 (or custom if needed)
+    *** PARALLEL WORKER CALLS ***
+    For each story in current group:
+        - Update progress.txt header for the story
+        - Call `ralph-worker` with:
+            - `prdPath`: tasks/[task-name]/prd.json
+            - `storyId`: US-XXX
+            - `timeout`: 30 (or custom)
+            - `maxAttempts`: 3 (or custom)
 
-    5. Wait for the worker result (or timeout)
+    5. Wait for ALL workers in the group to complete
 
-    *** HEADER UPDATE - AFTER WORKER RETURNS ***
-    6. Handle result:
+    *** HANDLE GROUP RESULTS ***
+    6. For each worker result:
        - SUCCESS: mark story passes=true
-       - FAILED: log result and retry/skip decision
+       - FAILED: log and retry/skip
        - BLOCKED: log blocker
        - TIMEOUT: count attempt, retry if remaining
 
     7. Update `progress.txt`:
-       - Update header Last Updated timestamp
-       - Keep Status: RUNNING (or COMPLETED if done)
-       - Append iteration log entry with:
-         * Timestamp, Story ID, Result
-         * Attempts used, Duration, Files modified
-         * Git commit (if successful)
-       - Update Execution Summary counts
+       - Update header with group status
+       - Append iteration logs for each story
        - WRITE ATOMICALLY
 
-    8. Continue to next iteration
+    8. If all stories in current group pass, move to next group
+    9. Continue until all groups complete
 ```
 
 ---
@@ -155,27 +161,58 @@ At the start of each iteration, if not provided by the user, identify the active
 ## Story Selection Logic
 
 1. **Read `prd.json`** from the active task folder
-2. **Find stories** in the `userStories` array
-3. **Select first story** where `passes !== true`
-4. **Check dependencies** if specified (skip if dependencies not met)
-5. **Delegate** to worker with appropriate timeout
+2. **Group stories** by their `group` property (A, B, C, etc.)
+3. **Groups execute sequentially** (A → B → C)
+4. **Stories within a group execute in parallel** (if no dependencies)
+5. **Select next incomplete story** considering group ordering
 
-### Story Priority
+### Group-Based Execution
 
-- Stories may be executed in order unless dependencies require otherwise
-- If a story has `dependsOn`, ensure those stories are completed first
-- If a story is blocked by failed dependencies, mark as `[BLOCKED]` and skip
+- **Groups**: Stories are organized into groups (A, B, C...) based on dependencies
+- **Parallel execution**: Stories in the SAME group can run in parallel
+- **Sequential groups**: Group B only starts after ALL stories in Group A complete
+- **Dependency safety**: Stories with dependencies MUST be in different groups
+
+### Example Execution Flow:
+
+```
+Group A (Schema):     US-001 ────────┐
+                                      ├─→ All complete
+Group B (Backend):    US-002 ────────┤
+                                      ├─→ All complete
+Group C (UI):         US-003 ──┐     │
+                      US-004 ──┼─→ All complete (parallel)
+                      US-005 ──┘
+```
+
+### Story Priority (within group)
+
+- Stories within a group can execute in any order
+- Multiple workers can process stories in parallel
+- No dependencies allowed within the same group
 
 ---
 
-## Sequential Execution Policy
+## Parallel Group Execution Policy
 
-To keep orchestration deterministic and aligned with worker constraints, run exactly one story per iteration.
+Stories are executed based on their `group` property:
 
-- Do not execute multiple worker calls in parallel in the same iteration
-- Respect dependencies strictly before selecting the next story
-- Use priority + PRD order to pick the next candidate
-- If metadata is ambiguous, remain conservative and continue sequentially
+- **Same group → Parallel**: Stories with the same `group` value can be executed simultaneously
+- **Different groups → Sequential**: Group B only starts after all stories in Group A complete
+- **Groups execute in alphabetical order**: A → B → C → ...
+
+### When to Use Parallel Execution
+
+- Stories in the same group should be independent (no shared file modifications)
+- Backend and UI stories in the same layer can often run in parallel
+- If uncertain about dependencies, place stories in different groups (sequential)
+
+### Worker Parallelization
+
+For stories in the same group:
+1. Call `ralph-worker` for each story in parallel using `runSubagent`
+2. Wait for all workers to complete before moving to next group
+3. All stories in a group must pass before advancing
 
 ---
 

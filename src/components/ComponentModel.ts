@@ -1,4 +1,3 @@
-// @ts-ignore TS6059: shared type module is intentionally outside src
 import type { CanvasComponent, CanvasState, ComponentType } from "@shared/types/canvas";
 
 export type { CanvasState, ComponentType };

@@ -1,6 +1,5 @@
 packages:
   - "webview-app"
-  - "src"
   - "shared"
 onlyBuiltDependencies:
   - '@biomejs/biome'

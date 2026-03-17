@@ -1,5 +1,10 @@
-import { DEFAULT_BG, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR } from "@/lib/constants";
 import { z } from "zod";
+import {
+  DEFAULT_BG,
+  DEFAULT_FONT_FAMILY,
+  DEFAULT_FONT_SIZE,
+  DEFAULT_TEXT_COLOR,
+} from "@/lib/constants";
 
 export const ComponentTypeSchema = z.enum([
   "Panel",

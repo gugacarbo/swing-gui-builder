@@ -17,11 +17,16 @@
     }
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*"
   ],
   "exclude": [
-    "node_modules",
-    ".vscode-test",
-    "shared"
+    "shared",
+    "webview-app",
+    "node_modules"
+  ],
+  "references": [
+    {
+      "path": "./shared"
+    }
   ]
 }

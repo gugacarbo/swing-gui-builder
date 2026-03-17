@@ -1,6 +1,6 @@
 ---
 name: ralph-prd
-description: "Generate a Product Requirements Document (PRD) for a new feature. Use when planning a feature, starting a new project, or when asked to create a PRD. Triggers on: create a prd, write prd for, plan this feature, requirements for, spec out."
+description: "Generate a Product Requirements Document (PRD) for a new feature with grouped user stories for parallel execution. Use when planning a feature, starting a new project, or when asked to create a PRD. Triggers on: create a prd, write prd for, plan this feature, requirements for, spec out."
 user-invocable: true
 ---
 
@@ -79,12 +79,26 @@ Each story should be small enough to implement in one focused session.
 ### US-001: [Title]
 **Description:** As a [user], I want [feature] so that [benefit].
 
+**Group:** [A|B|C|...] (Stories in the same group can be executed in parallel)
+
 **Acceptance Criteria:**
 - [ ] Specific verifiable criterion
 - [ ] Another criterion
 - [ ] Typecheck/lint passes
 - [ ] **[UI stories only]** Verify in browser using dev-browser skill
 ```
+
+### Grouping Strategy
+
+Stories should be organized into groups (A, B, C...) based on dependencies:
+
+- **Same group**: Stories with NO dependencies between them → can run in parallel
+- **Different groups**: Stories with dependencies → must run sequentially (A → B → C)
+
+**Example:**
+- **Group A**: Database changes (US-001) - foundation
+- **Group B**: Backend logic (US-002) - depends on A
+- **Group C**: UI components (US-003, US-004, US-005) - can run in parallel, depends on B
 
 **Important:**
 - Acceptance criteria must be verifiable, not vague. "Works correctly" is bad. "Button shows confirmation dialog before deleting" is good.
@@ -161,6 +175,8 @@ Add priority levels to tasks so users can focus on what matters most. Tasks can 
 ### US-001: Add priority field to database
 **Description:** As a developer, I need to store task priority so it persists across sessions.
 
+**Group:** A
+
 **Acceptance Criteria:**
 - [ ] Add priority column to tasks table: 'high' | 'medium' | 'low' (default 'medium')
 - [ ] Generate and run migration successfully
@@ -168,6 +184,8 @@ Add priority levels to tasks so users can focus on what matters most. Tasks can 
 
 ### US-002: Display priority indicator on task cards
 **Description:** As a user, I want to see task priority at a glance so I know what needs attention first.
+
+**Group:** B
 
 **Acceptance Criteria:**
 - [ ] Each task card shows colored priority badge (red=high, yellow=medium, gray=low)
@@ -178,6 +196,8 @@ Add priority levels to tasks so users can focus on what matters most. Tasks can 
 ### US-003: Add priority selector to task edit
 **Description:** As a user, I want to change a task's priority when editing it.
 
+**Group:** B
+
 **Acceptance Criteria:**
 - [ ] Priority dropdown in task edit modal
 - [ ] Shows current priority as selected
@@ -187,6 +207,8 @@ Add priority levels to tasks so users can focus on what matters most. Tasks can 
 
 ### US-004: Filter tasks by priority
 **Description:** As a user, I want to filter the task list to see only high-priority items when I'm focused.
+
+**Group:** B
 
 **Acceptance Criteria:**
 - [ ] Filter dropdown with options: All | High | Medium | Low

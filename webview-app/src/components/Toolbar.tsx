@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Eye, Redo2, Trash2, Undo2, WandSparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ToolbarProps {
   canUndo: boolean;

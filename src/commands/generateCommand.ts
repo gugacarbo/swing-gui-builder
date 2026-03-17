@@ -69,7 +69,7 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
     // Ensure output directory exists
     try {
       await vscode.workspace.fs.createDirectory(outputUri);
-    } catch (error) {
+    } catch (_) {
       outputChannel.appendLine(`Note: Directory may already exist: ${outputDir}`);
     }
 
@@ -102,7 +102,7 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
       try {
         await vscode.workspace.fs.stat(fileUri);
         fileExists = true;
-      } catch (error) {
+      } catch (_) {
         fileExists = false;
         outputChannel.appendLine(`Debug: File does not exist yet: ${file.fileName}`);
       }

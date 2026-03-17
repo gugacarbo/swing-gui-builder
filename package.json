@@ -34,25 +34,28 @@
     "vscode": "^1.85.0"
   },
   "main": "./out/extension.js",
+  "activationEvents": [],
   "scripts": {
-    "compile": "pnpm --dir webview-app build && tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "compile": "pnpm run build:shared && pnpm run build:webview && pnpm run build:extension",
+    "build:extension": "tsc -p ./",
     "build:webview": "pnpm --dir webview-app build",
-    "package": "vsce package",
-    "lint-all": "pnpm --if-present lint",
-    "lint-all:fix": "pnpm --if-present lint:fix",
-    "vscode:prepublish": "pnpm run build:webview && pnpm run compile",
+    "build:shared": "pnpm --dir shared build",
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run compile",
+    "lint": "biome check src && pnpm --dir shared lint && pnpm --dir webview-app lint",
+    "lint:fix": "biome check --write src && pnpm --dir shared lint:fix && pnpm --dir webview-app lint:fix",
+    "typecheck": "pnpm --dir shared typecheck && pnpm --dir webview-app typecheck && tsc -p ./ --noEmit",
+    "vscode:prepublish": "pnpm run compile",
     "vsc:pkg": "vsce package",
     "vsc:push": "vsce publish"
   },
-  "activationEvents": [],
   "devDependencies": {
-    "@biomejs/biome": "^1.9.0",
-    "@types/node": "^20.0.0",
-    "@types/vscode": "^1.85.0",
-    "@vscode/vsce": "^3.0.0",
-    "typescript": "^5.4.0",
-    "vitest": "^4.0.18"
+    "@shared/types": "workspace:*",
+    "@biomejs/biome": "^2.4.7",
+    "@types/node": "^25.5.0",
+    "@types/vscode": "^1.110.0",
+    "@vscode/vsce": "^3.7.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   },
   "contributes": {
     "commands": [

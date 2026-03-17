@@ -1,9 +1,8 @@
-import type { NumericInputOptions } from "@/schemas/parsers";
-import type { CanvasComponent } from "@/types/canvas";
-
 import { ColorField } from "@/components/PropertiesPanel/ColorField";
 import { FormField } from "@/components/PropertiesPanel/FormField";
 import { NumberField } from "@/components/PropertiesPanel/NumberField";
+import type { NumericInputOptions } from "@/schemas/parsers";
+import type { CanvasComponent } from "@/types/canvas";
 
 interface PropertiesPanelProps {
   component: CanvasComponent | null;
@@ -79,10 +78,6 @@ function toToolBarPositionValue(
       return "left";
     case "east":
       return "right";
-    case "bottom":
-    case "left":
-    case "right":
-    case "top":
     default:
       return position ?? "top";
   }

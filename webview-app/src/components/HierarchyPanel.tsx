@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 
-import { useHierarchyDragDrop, type HierarchyDropTarget } from "@/hooks/useHierarchyDragDrop";
+import { type HierarchyDropTarget, useHierarchyDragDrop } from "@/hooks/useHierarchyDragDrop";
 import { toSwingTypeLabel } from "@/lib/swingTypeLabels";
 import { cn } from "@/lib/utils";
 import type { CanvasComponent } from "@/types/canvas";
@@ -116,7 +116,9 @@ function buildHierarchyTree(components: CanvasComponent[]): HierarchyNode[] {
     };
   };
 
-  const rootComponents = components.filter((component) => !component.parentId || !componentsById.has(component.parentId));
+  const rootComponents = components.filter(
+    (component) => !component.parentId || !componentsById.has(component.parentId),
+  );
   const orderedRoots = rootComponents.length > 0 ? rootComponents : components;
 
   const visitedNodeIds = new Set<string>();
@@ -181,9 +183,15 @@ function HierarchyTreeNode({
             type="button"
             className="inline-flex size-4 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-foreground"
             onClick={() => onToggleNode(node.component.id)}
-            aria-label={isExpanded ? `Collapse ${componentName} subtree` : `Expand ${componentName} subtree`}
+            aria-label={
+              isExpanded ? `Collapse ${componentName} subtree` : `Expand ${componentName} subtree`
+            }
           >
-            {isExpanded ? <ChevronDown className="size-3" aria-hidden="true" /> : <ChevronRight className="size-3" aria-hidden="true" />}
+            {isExpanded ? (
+              <ChevronDown className="size-3" aria-hidden="true" />
+            ) : (
+              <ChevronRight className="size-3" aria-hidden="true" />
+            )}
           </button>
         ) : (
           <span className="inline-flex size-4 shrink-0" aria-hidden="true" />
@@ -202,7 +210,9 @@ function HierarchyTreeNode({
           onClick={() => onSelectComponent(node.component.id)}
         >
           <span className="truncate font-medium">{componentName}</span>
-          <span className="ml-2 shrink-0 text-[11px] text-muted-foreground">{toSwingTypeLabel(node.component.type)}</span>
+          <span className="ml-2 shrink-0 text-[11px] text-muted-foreground">
+            {toSwingTypeLabel(node.component.type)}
+          </span>
         </button>
       </div>
 
@@ -213,37 +223,49 @@ function HierarchyTreeNode({
               key={childNode.component.id}
               node={childNode}
               depth={depth + 1}
-                selectedComponentId={selectedComponentId}
-                collapsedNodeIds={collapsedNodeIds}
-                onSelectComponent={onSelectComponent}
-                onToggleNode={onToggleNode}
-                draggingComponentId={draggingComponentId}
-                dropTarget={dropTarget}
-                isDraggableComponent={isDraggableComponent}
-                onDragStart={onDragStart}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-                onDragEnd={onDragEnd}
-              />
-            ))}
-          </ul>
+              selectedComponentId={selectedComponentId}
+              collapsedNodeIds={collapsedNodeIds}
+              onSelectComponent={onSelectComponent}
+              onToggleNode={onToggleNode}
+              draggingComponentId={draggingComponentId}
+              dropTarget={dropTarget}
+              isDraggableComponent={isDraggableComponent}
+              onDragStart={onDragStart}
+              onDragOver={onDragOver}
+              onDrop={onDrop}
+              onDragEnd={onDragEnd}
+            />
+          ))}
+        </ul>
       ) : null}
     </li>
   );
 }
 
-export function HierarchyPanel({ components, selectedComponentId, onSelectComponent, onMoveComponent }: HierarchyPanelProps) {
+export function HierarchyPanel({
+  components,
+  selectedComponentId,
+  onSelectComponent,
+  onMoveComponent,
+}: HierarchyPanelProps) {
   const hierarchyTree = useMemo(() => buildHierarchyTree(components), [components]);
   const expandableNodeIds = useMemo(() => collectExpandableNodeIds(hierarchyTree), [hierarchyTree]);
   const hasExpandableNodes = expandableNodeIds.length > 0;
   const [collapsedNodeIds, setCollapsedNodeIds] = useState<Set<string>>(new Set());
   const [isCollapsed, setIsCollapsed] = useState(getInitialHierarchyCollapsedState);
   const contentId = useId();
-  const { draggingComponentId, dropTarget, isDraggableComponent, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
-    useHierarchyDragDrop({
-      components,
-      onMoveComponent,
-    });
+  const {
+    draggingComponentId,
+    dropTarget,
+    isDraggableComponent,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleDragEnd,
+  } = useHierarchyDragDrop({
+    components,
+    onMoveComponent,
+  });
 
   useEffect(() => {
     const validNodeIds = new Set(expandableNodeIds);
@@ -289,7 +311,10 @@ export function HierarchyPanel({ components, selectedComponentId, onSelectCompon
 
   return (
     <section
-      className={cn("flex min-h-0 flex-col border-t border-vscode-panel-border", isCollapsed ? "shrink-0" : "flex-1")}
+      className={cn(
+        "flex min-h-0 flex-col border-t border-vscode-panel-border",
+        isCollapsed ? "shrink-0" : "flex-1",
+      )}
       aria-label="Hierarchy panel"
     >
       <header className="flex items-center justify-between border-b border-vscode-panel-border px-3 py-2">
@@ -323,7 +348,11 @@ export function HierarchyPanel({ components, selectedComponentId, onSelectCompon
             aria-expanded={!isCollapsed}
             aria-label={isCollapsed ? "Expand hierarchy section" : "Collapse hierarchy section"}
           >
-            {isCollapsed ? <ChevronRight className="size-4" aria-hidden="true" /> : <ChevronDown className="size-4" aria-hidden="true" />}
+            {isCollapsed ? (
+              <ChevronRight className="size-4" aria-hidden="true" />
+            ) : (
+              <ChevronDown className="size-4" aria-hidden="true" />
+            )}
           </button>
         </div>
       </header>
@@ -352,7 +381,8 @@ export function HierarchyPanel({ components, selectedComponentId, onSelectCompon
           </ul>
         ) : (
           <p className="px-2 py-3 text-xs text-muted-foreground">
-            Add components to see their hierarchy. Drag JMenu and JMenuItem nodes here to reorder menu structures.
+            Add components to see their hierarchy. Drag JMenu and JMenuItem nodes here to reorder
+            menu structures.
           </p>
         )}
       </div>

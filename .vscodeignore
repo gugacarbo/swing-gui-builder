@@ -2,8 +2,10 @@
 tsconfig.json
 biome.json
 package-lock.json
+pnpm-workspace.yaml
 pnpm-lock.yaml
 
+docs/**
 .vscode/**
 .vscode-test/**
 out/test/**
@@ -11,7 +13,13 @@ src/**
 webview-app/**
 node_modules/**
 tasks/**
+shared/**
 .agents/**
+.github/**
+.copilot/**
+.claude/**
 .devcontainer/**
 .pnpm-store/**
 *.log
+*.vsix
+CHANGELOG.*

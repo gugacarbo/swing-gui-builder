@@ -12,6 +12,7 @@ export class CanvasPanel {
   public static currentPanel: CanvasPanel | undefined;
   private readonly panel: vscode.WebviewPanel;
   private readonly extensionUri: vscode.Uri;
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: use Later for future features
   private readonly className: string;
   private canvasState: CanvasState;
   private disposables: vscode.Disposable[] = [];

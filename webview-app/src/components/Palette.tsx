@@ -1,4 +1,3 @@
-import { useEffect, useId, useState } from "react";
 import {
   Braces,
   ChevronDown,
@@ -14,11 +13,12 @@ import {
   PanelTop,
   Rows3,
   SlidersHorizontal,
-  SquareMenu,
   Square,
+  SquareMenu,
   Type,
   Wrench,
 } from "lucide-react";
+import { useEffect, useId, useState } from "react";
 
 import { toSwingTypeLabel } from "@/lib/swingTypeLabels";
 import { cn } from "@/lib/utils";
@@ -111,7 +111,11 @@ export function Palette() {
           aria-expanded={!isCollapsed}
           aria-label={isCollapsed ? "Expand palette section" : "Collapse palette section"}
         >
-          {isCollapsed ? <ChevronRight className="size-4" aria-hidden="true" /> : <ChevronDown className="size-4" aria-hidden="true" />}
+          {isCollapsed ? (
+            <ChevronRight className="size-4" aria-hidden="true" />
+          ) : (
+            <ChevronDown className="size-4" aria-hidden="true" />
+          )}
         </button>
       </header>
 
@@ -126,7 +130,10 @@ export function Palette() {
             <h3 className="px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {section.name}
             </h3>
-            <ul className="space-y-1" aria-label={`Draggable ${section.name.toLowerCase()} components`}>
+            <ul
+              className="space-y-1"
+              aria-label={`Draggable ${section.name.toLowerCase()} components`}
+            >
               {section.items.map((item) => {
                 const Icon = item.icon;
 

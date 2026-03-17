@@ -1,6 +1,6 @@
 ---
 name: ralph-worker
-description: "Executes a specific User Story from a PRD with mandatory technical validation. Use when a coordinator agent needs to delegate the implementation of an individual story. Receives the PRD and the Story ID to execute."
+description: "Executes a specific User Story from a PRD with mandatory technical validation. Workers for stories in the same group run in parallel. Use when a coordinator agent needs to delegate the implementation of an individual story. Receives the PRD and the Story ID to execute."
 argument-hint: "PRD path and Story ID. E.g.: tasks/feature-auth/prd.json US-003"
 ---
 
@@ -9,6 +9,13 @@ argument-hint: "PRD path and Story ID. E.g.: tasks/feature-auth/prd.json US-003"
 Executor agent for a specific User Story from a PRD. Designed to be called by a coordinator agent that manages the backlog and decides which story to execute.
 
 This worker is intentionally single-story and non-orchestrating: one invocation executes one story only.
+
+## Parallel Execution Context
+
+Stories may be executed in **parallel** when they belong to the same `group` in the PRD. The worker must:
+- Be completely independent from other workers executing stories in the same group
+- NOT modify files that might be touched by parallel workers
+- Report its own status without waiting for other workers
 
 ## When to Use
 
