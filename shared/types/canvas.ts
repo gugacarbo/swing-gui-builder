@@ -46,6 +46,7 @@ export interface CanvasComponent {
   orientation?: "horizontal" | "vertical";
   children?: string[];
   parentId?: string;
+  parentOffset?: { x: number; y: number };
   position?: "top" | "bottom" | "left" | "right" | "north" | "south" | "east" | "west";
 }
 

@@ -1,0 +1,220 @@
+{
+    "project": "swing-gui-builder",
+    "branchName": "ralph/fixes-and-improvements",
+    "description": "Quatro mudanças principais no Swing GUI Builder: correção da declaração de package no preview, estrutura de pastas organizada por containers, coordenadas relativas para filhos de Panel, e refatoração completa do layout da sidebar do webview.",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Estender CanvasComponent com parentOffset",
+            "description": "Como desenvolvedor, preciso que o tipo CanvasComponent suporte coordenadas relativas ao pai para que filhos de Panel sejam posicionados corretamente.",
+            "group": "A",
+            "acceptanceCriteria": [
+                "Adicionar campo opcional parentOffset?: { x: number; y: number } em shared/types/canvas.ts",
+                "Campo é opcional (undefined = coordenadas absolutas)",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": "Campo opcional parentOffset adicionado em shared/types/canvas.ts. Typecheck validado."
+        },
+        {
+            "id": "US-002",
+            "title": "Criar tipo GeneratedFileWithPath",
+            "description": "Como desenvolvedor, preciso de um tipo que represente arquivos gerados com subpastas para organizar a saída.",
+            "group": "A",
+            "acceptanceCriteria": [
+                "Adicionar interface GeneratedFileWithPath em src/generator/JavaGenerator.ts",
+                "Interface contém fileName: string, content: string, subfolder?: string",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": "GeneratedFileWithPath adicionada em src/generator/JavaGenerator.ts com fileName, content e subfolder opcional."
+        },
+        {
+            "id": "US-003",
+            "title": "Criar componente Sidebar",
+            "description": "Como usuário, preciso de uma sidebar organizada com Hierarchy em cima e Palette em baixo, ambos colapsáveis.",
+            "group": "A",
+            "acceptanceCriteria": [
+                "Criar webview-app/src/components/Sidebar.tsx",
+                "Componente contém HierarchyPanel (topo) e Palette (baixo)",
+                "Cada painel tem botão de colapso individual",
+                "Cada painel tem scroll interno independente",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: sidebar renderiza corretamente com dois painéis"
+            ],
+            "priority": 3,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Passar package no preview code",
+            "description": "Como usuário, quero que o preview de código use a mesma declaração de package que o comando generate.",
+            "group": "B",
+            "acceptanceCriteria": [
+                "Importar getOutputDirectory e detectJavaProject em previewCodeCommand.ts",
+                "Inferir package usando lógica idêntica ao generateCommand",
+                "Passar package para generatePreviewJavaFiles",
+                "Preview mostra package correto (ex: package com.example.app;)",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: abrir preview e confirmar package statement correto"
+            ],
+            "priority": 4,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Modificar gerador para retornar subfolder",
+            "description": "Como desenvolvedor, preciso que o gerador Java indique em qual subpasta cada arquivo deve ser salvo.",
+            "group": "B",
+            "acceptanceCriteria": [
+                "generateJavaFiles retorna GeneratedFileWithPath[]",
+                "Função getParentFolder(comp, allComponents) retorna nome do pai ou undefined",
+                "Componentes com pai recebem subfolder = parentName",
+                "Manter compatibilidade: arquivos sem pai têm subfolder undefined",
+                "Typecheck passes"
+            ],
+            "priority": 5,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-006",
+            "title": "Atualizar webview para calcular coords relativas",
+            "description": "Como usuário, quando arrasto um componente para dentro de um Panel, ele deve automaticamente se tornar filho com coordenadas relativas.",
+            "group": "B",
+            "acceptanceCriteria": [
+                "Detectar drop dentro de Panel em useCanvasDragDrop.ts",
+                "Calcular parentOffset = { x: dropX - panelX, y: dropY - panelY }",
+                "Atribuir parentId ao componente dropado",
+                "Snap automático: componente vira filho do Panel quando solto dentro",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: arrastar botão para dentro de panel e confirmar parentOffset"
+            ],
+            "priority": 6,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Refatorar layout do App.tsx",
+            "description": "Como usuário, preciso que a sidebar seja um componente dedicado com layout flexível.",
+            "group": "B",
+            "acceptanceCriteria": [
+                "Mover lógica de sidebar para componente Sidebar.tsx",
+                "App.tsx usa <Sidebar /> ao invés de inline JSX",
+                "Layout principal: [Sidebar][Canvas] com flexbox",
+                "Apenas Canvas tem zoom/pan, sidebar é fixa",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: layout responsivo sem quebra"
+            ],
+            "priority": 7,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Atualizar generateCommand para criar subpastas",
+            "description": "Como usuário, quero que arquivos gerados sejam organizados em subpastas por container pai.",
+            "group": "C",
+            "acceptanceCriteria": [
+                "Para cada arquivo com subfolder, criar pasta {outputDir}/{subfolder}/",
+                "Salvar arquivo em {outputDir}/{subfolder}/{fileName}",
+                "Arquivos sem subfolder são salvos em {outputDir}/{fileName}",
+                "Usar fs.createDirectory do VS Code API",
+                "Typecheck passes",
+                "Testar: gerar código com panel contendo botão e verificar estrutura de pastas"
+            ],
+            "priority": 8,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Atualizar gerador para panels com filhos",
+            "description": "Como desenvolvedor, preciso que o gerador produza código com panel.add() e coordenadas relativas para filhos.",
+            "group": "C",
+            "acceptanceCriteria": [
+                "generateComponentCode detecta Panel com filhos em componentGenerators.ts",
+                "Para cada filho, gerar panel.add(childComponent)",
+                "Filhos recebem setBounds(parentOffset.x, parentOffset.y, width, height)",
+                "Código gerado compila e executa corretamente",
+                "Typecheck passes"
+            ],
+            "priority": 9,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-010",
+            "title": "Atualizar HierarchyPanel layout",
+            "description": "Como usuário, preciso que o painel de hierarquia tenha scroll interno e comportamento de colapso adequado.",
+            "group": "C",
+            "acceptanceCriteria": [
+                "Remover max-h-[45%] fixo",
+                "Usar flex-1 min-h-0 para participação no flexbox",
+                "Adicionar overflow-y-auto para scroll interno",
+                "Colapso funciona independentemente da Palette",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: colapsar Hierarchy e confirmar que Palette não é afetada"
+            ],
+            "priority": 10,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-011",
+            "title": "Atualizar Palette layout",
+            "description": "Como usuário, preciso que a paleta de componentes tenha scroll interno e comportamento de colapso adequado.",
+            "group": "C",
+            "acceptanceCriteria": [
+                "Usar flex-1 min-h-0 para participação no flexbox",
+                "Adicionar overflow-y-auto para scroll interno",
+                "Colapso funciona independentemente da Hierarchy",
+                "Quando Hierarchy colapsada, Palette expande para ocupar espaço",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: colapsar Hierarchy e confirmar expansão da Palette"
+            ],
+            "priority": 11,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-012",
+            "title": "Renderizar filhos dentro do Panel no Canvas",
+            "description": "Como usuário, preciso ver os filhos de um Panel renderizados com posição relativa no canvas.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "Canvas.tsx renderiza filhos de Panel com posição absoluta relativa ao container",
+                "Filhos são movidos junto quando Panel é arrastado",
+                "Filhos permanecem dentro dos limites visuais do Panel",
+                "Zoom/pan do canvas afeta Panel e filhos proporcionalmente",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: criar panel com botão dentro, mover panel e confirmar filhos acompanham"
+            ],
+            "priority": 12,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-013",
+            "title": "Garantir que apenas Canvas seja movível",
+            "description": "Como usuário, preciso que apenas o canvas tenha zoom/pan, enquanto sidebar e header permaneçam fixos.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "Remover overflow/movimento do container pai do Canvas",
+                "Zoom/pan aplicado apenas no elemento do Canvas",
+                "Sidebar permanece fixa durante zoom/pan",
+                "Toolbar/header permanece fixo durante zoom/pan",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill: testar zoom/pan no canvas e confirmar sidebar fixa"
+            ],
+            "priority": 13,
+            "passes": false,
+            "notes": ""
+        }
+    ]
+}
