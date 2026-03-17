@@ -11,6 +11,7 @@ import { moveComponentInHierarchy } from "@/hooks/useHierarchyDragDrop";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { usePostMessage } from "@/hooks/usePostMessage";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
+import { clamp } from "@/lib/geometry";
 import type { CanvasComponent, CanvasState } from "@/types/canvas";
 import type { PreviewCodeFile } from "@/types/messages";
 
@@ -20,6 +21,98 @@ const INITIAL_CANVAS_STATE: CanvasState = {
   frameHeight: 768,
   components: [],
 };
+
+function buildComponentMap(components: CanvasComponent[]): Map<string, CanvasComponent> {
+  return new Map(components.map((component) => [component.id, component]));
+}
+
+function buildChildLookup(components: CanvasComponent[]): Map<string, string[]> {
+  const childLookup = new Map<string, string[]>();
+  const componentIds = new Set(components.map((component) => component.id));
+
+  const addChild = (parentId: string, childId: string) => {
+    if (!componentIds.has(parentId) || !componentIds.has(childId)) {
+      return;
+    }
+
+    const children = childLookup.get(parentId) ?? [];
+    if (!children.includes(childId)) {
+      children.push(childId);
+      childLookup.set(parentId, children);
+    }
+  };
+
+  for (const component of components) {
+    if (component.parentId) {
+      addChild(component.parentId, component.id);
+    }
+
+    for (const childId of component.children ?? []) {
+      addChild(component.id, childId);
+    }
+  }
+
+  return childLookup;
+}
+
+function collectDescendantIds(rootId: string, childLookup: Map<string, string[]>): Set<string> {
+  const descendants = new Set<string>();
+  const stack = [rootId];
+
+  while (stack.length > 0) {
+    const parentId = stack.pop();
+    if (!parentId) {
+      continue;
+    }
+
+    for (const childId of childLookup.get(parentId) ?? []) {
+      if (childId === rootId || descendants.has(childId)) {
+        continue;
+      }
+
+      descendants.add(childId);
+      stack.push(childId);
+    }
+  }
+
+  return descendants;
+}
+
+function normalizeToParentPanelBounds(
+  component: CanvasComponent,
+  componentsById: Map<string, CanvasComponent>,
+): CanvasComponent {
+  if (!component.parentId) {
+    return component;
+  }
+
+  const parent = componentsById.get(component.parentId);
+  if (!parent || parent.type !== "Panel") {
+    return component;
+  }
+
+  const panelX = Math.round(parent.x);
+  const panelY = Math.round(parent.y);
+  const panelWidth = Math.max(1, Math.round(parent.width));
+  const panelHeight = Math.max(1, Math.round(parent.height));
+
+  const width = Math.min(Math.max(1, Math.round(component.width)), panelWidth);
+  const height = Math.min(Math.max(1, Math.round(component.height)), panelHeight);
+  const x = clamp(Math.round(component.x), panelX, panelX + Math.max(0, panelWidth - width));
+  const y = clamp(Math.round(component.y), panelY, panelY + Math.max(0, panelHeight - height));
+
+  return {
+    ...component,
+    x,
+    y,
+    width,
+    height,
+    parentOffset: {
+      x: x - panelX,
+      y: y - panelY,
+    },
+  };
+}
 
 function App() {
   const { components, selectedComponent, selectedComponentId, setComponents, selectComponent } =
@@ -66,33 +159,101 @@ function App() {
 
   const handleMoveComponent = useCallback(
     (id: string, x: number, y: number) => {
-      updateComponents((current) =>
-        current.map((component) =>
-          component.id === id ? { ...component, x: Math.round(x), y: Math.round(y) } : component,
-        ),
-      );
+      updateComponents((current) => {
+        const componentsById = buildComponentMap(current);
+        const target = componentsById.get(id);
+        if (!target) {
+          return current;
+        }
+
+        const nextX = Math.round(x);
+        const nextY = Math.round(y);
+
+        if (target.type === "Panel") {
+          const deltaX = nextX - Math.round(target.x);
+          const deltaY = nextY - Math.round(target.y);
+
+          if (deltaX === 0 && deltaY === 0) {
+            return current;
+          }
+
+          const descendants = collectDescendantIds(id, buildChildLookup(current));
+
+          return current.map((component) => {
+            if (component.id === id) {
+              return { ...component, x: nextX, y: nextY };
+            }
+
+            if (!descendants.has(component.id)) {
+              return component;
+            }
+
+            return {
+              ...component,
+              x: Math.round(component.x + deltaX),
+              y: Math.round(component.y + deltaY),
+            };
+          });
+        }
+
+        return current.map((component) => {
+          if (component.id !== id) {
+            return component;
+          }
+
+          return normalizeToParentPanelBounds({ ...component, x: nextX, y: nextY }, componentsById);
+        });
+      });
     },
     [updateComponents],
   );
 
   const handleResizeComponent = useCallback(
     (id: string, updates: Pick<CanvasComponent, "x" | "y" | "width" | "height">) => {
-      updateComponents((current) =>
-        current.map((component) =>
-          component.id === id ? { ...component, ...updates } : component,
-        ),
-      );
+      updateComponents((current) => {
+        const componentsById = buildComponentMap(current);
+        const target = componentsById.get(id);
+        if (!target) {
+          return current;
+        }
+
+        const roundedUpdates = {
+          x: Math.round(updates.x),
+          y: Math.round(updates.y),
+          width: Math.max(1, Math.round(updates.width)),
+          height: Math.max(1, Math.round(updates.height)),
+        };
+
+        const resizedComponents = current.map((component) => {
+          if (component.id !== id) {
+            return component;
+          }
+
+          return normalizeToParentPanelBounds({ ...component, ...roundedUpdates }, componentsById);
+        });
+
+        if (target.type !== "Panel") {
+          return resizedComponents;
+        }
+
+        const resizedById = buildComponentMap(resizedComponents);
+        return resizedComponents.map((component) =>
+          normalizeToParentPanelBounds(component, resizedById),
+        );
+      });
     },
     [updateComponents],
   );
 
   const handleUpdateComponent = useCallback(
     (id: string, updates: Partial<CanvasComponent>) => {
-      updateComponents((current) =>
-        current.map((component) =>
+      updateComponents((current) => {
+        const nextComponents = current.map((component) =>
           component.id === id ? { ...component, ...updates } : component,
-        ),
-      );
+        );
+        const nextById = buildComponentMap(nextComponents);
+        return nextComponents.map((component) => normalizeToParentPanelBounds(component, nextById));
+      });
     },
     [updateComponents],
   );

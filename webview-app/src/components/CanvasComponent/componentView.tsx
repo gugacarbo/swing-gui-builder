@@ -19,6 +19,7 @@ interface CanvasComponentViewProps {
     handle: ResizeHandle,
   ) => boolean;
   onSelect: (id: string) => void;
+  children?: ReactNode;
 }
 
 export function CanvasComponentView({
@@ -33,6 +34,7 @@ export function CanvasComponentView({
   onPointerFinish,
   onResizeHandlePointerDown,
   onSelect,
+  children,
 }: CanvasComponentViewProps) {
   const capturePointer = (pointerId: number) => {
     rootRef.current?.setPointerCapture(pointerId);
@@ -89,7 +91,10 @@ export function CanvasComponentView({
         height: component.height,
       }}
     >
-      {preview}
+      <div className="relative h-full w-full overflow-hidden">
+        {preview}
+        {children}
+      </div>
 
       <ResizeHandles
         isSelected={isSelected}

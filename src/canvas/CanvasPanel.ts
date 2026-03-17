@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import * as vscode from "vscode";
-import type { CanvasState } from "../components/ComponentModel";
-import { getConfig } from "../config/ConfigReader";
+import type { CanvasState } from "@/components/ComponentModel";
+import { getConfig } from "@/config/ConfigReader";
 
 export interface PreviewCodeFile {
   fileName: string;
@@ -194,7 +194,8 @@ export class CanvasPanel {
 
   private getMissingBuildHtml(details: string, nonce: string): string {
     const safeDetails = escapeHtml(details);
-    return `<!DOCTYPE html>
+    return `
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">

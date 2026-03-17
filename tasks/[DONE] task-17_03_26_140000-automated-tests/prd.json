@@ -1,0 +1,203 @@
+{
+  "project": "swing-gui-builder",
+  "branchName": "ralph/automated-tests",
+  "description": "Implementar suite automatizada de testes para extensao VS Code e webview app, com cobertura inicial, validacoes de regras criticas e execucao em CI.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Configurar Vitest na extensao",
+      "description": "Como desenvolvedor, eu quero configurar Vitest na raiz da extensao para executar testes de forma padronizada em ambiente Node.",
+      "group": "A",
+      "acceptanceCriteria": [
+        "Existe arquivo vitest.config.ts na raiz com environment: \"node\"",
+        "A configuracao inclui include: [\"src/**/*.test.ts\"]",
+        "@vitest/coverage-v8 esta declarado em devDependencies da raiz",
+        "Existem scripts test, test:watch e test:coverage no package.json da raiz",
+        "pnpm test na raiz executa sem erro de configuracao do Vitest",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Configurar Vitest no webview app",
+      "description": "Como desenvolvedor, eu quero configurar Vitest no webview para testar hooks e logica React em ambiente jsdom.",
+      "group": "A",
+      "acceptanceCriteria": [
+        "Existe webview-app/vitest.config.ts com environment: \"jsdom\"",
+        "A configuracao usa setupFiles: [\"./vitest.setup.ts\"]",
+        "A configuracao inclui include: [\"src/**/*.test.{ts,tsx}\"]",
+        "Existe alias @/ apontando para ./src/ na configuracao de teste",
+        "vitest, @vitest/coverage-v8, jsdom, @testing-library/react e @testing-library/jest-dom estao em devDependencies do webview",
+        "Scripts test, test:watch e test:coverage existem em webview-app/package.json",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Preparar setup global de testes do webview",
+      "description": "Como desenvolvedor, eu quero um setup global para testes do webview para evitar repeticao de mocks e matchers.",
+      "group": "A",
+      "acceptanceCriteria": [
+        "Existe webview-app/vitest.setup.ts importando @testing-library/jest-dom",
+        "crypto.randomUUID() e mockado no setup quando necessario para estabilidade",
+        "Os testes do webview executam sem erro de APIs globais ausentes",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Testar utilitarios de geracao na extensao",
+      "description": "Como mantenedor, eu quero testes para utilitarios de geracao para detectar regressao em transformacoes basicas de codigo.",
+      "group": "B",
+      "acceptanceCriteria": [
+        "Existe src/generator/codeHelpers.test.ts cobrindo escapeJava, hexToRgb, supportsTextConstructor e isCustomComponent",
+        "Existe src/generator/swingMappings.test.ts cobrindo getSwingClass e getComponentSwingType",
+        "Todos os cenarios de erro e edge relevantes para os utilitarios sao testados",
+        "Os novos testes passam em pnpm test",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Testar JavaGenerator para package, subpastas e coordenadas relativas",
+      "description": "Como mantenedor, eu quero testar regras centrais do JavaGenerator para garantir geracao correta de codigo em cenarios reais de canvas.",
+      "group": "B",
+      "acceptanceCriteria": [
+        "Existe src/generator/JavaGenerator.package.test.ts validando inferencia e propagacao de package",
+        "Existe src/generator/JavaGenerator.subfolders.test.ts validando geracao por parentId e subpastas",
+        "Existe src/generator/JavaGenerator.relative-coords.test.ts validando setBounds relativo para filhos de Panel",
+        "Os testes cobrem cenarios positivos e ao menos um edge case por regra critica",
+        "Os novos testes passam em pnpm test",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Testar geradores de componentes com composicao",
+      "description": "Como mantenedor, eu quero validar geracao de componentes compostos para reduzir regressao em estruturas com hierarquia.",
+      "group": "B",
+      "acceptanceCriteria": [
+        "Existe src/generator/componentGenerators.test.ts cobrindo generateComponentCode para Panel com filhos",
+        "O teste verifica ordem de geracao e estrutura esperada de codigo para composicao",
+        "O teste passa em execucao local e no pipeline",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Testar defaults de componentes no webview",
+      "description": "Como desenvolvedor, eu quero validar defaults de props e tamanho para garantir criacao consistente de componentes no canvas.",
+      "group": "C",
+      "acceptanceCriteria": [
+        "Existe webview-app/src/lib/componentDefaults.test.ts cobrindo getDefaultProps",
+        "O teste cobre getDefaultSize para tipos suportados",
+        "Existem assercoes para tipos conhecidos e comportamento esperado para entrada invalida ou nao mapeada",
+        "Os testes passam em pnpm --filter webview-app test",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Testar useCanvasDragDrop no webview",
+      "description": "Como desenvolvedor, eu quero testes de drag/drop para garantir criacao de componentes e snap correto em Panels.",
+      "group": "C",
+      "acceptanceCriteria": [
+        "Existe webview-app/src/hooks/useCanvasDragDrop.test.ts cobrindo drop da palette e criacao de componente",
+        "O teste cobre snap para Panel e calculo de parentOffset",
+        "O teste cobre cenario fora de Panel sem vinculo indevido de parentId",
+        "Os testes passam em pnpm --filter webview-app test",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Testar useCanvasState e useUndoRedo",
+      "description": "Como desenvolvedor, eu quero validar estado e historico de operacoes para evitar regressao em edicao do canvas.",
+      "group": "C",
+      "acceptanceCriteria": [
+        "Existe webview-app/src/hooks/useCanvasState.test.ts cobrindo addComponent, updateComponent, deleteComponent e selectComponent",
+        "O mesmo arquivo cobre undo e redo dos principais fluxos",
+        "Existe webview-app/src/hooks/useUndoRedo.test.ts cobrindo pushState, undo, redo, canUndo e canRedo",
+        "Os testes passam em pnpm --filter webview-app test",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Criar testes de integracao de geracao",
+      "description": "Como mantenedor, eu quero testes de integracao para validar fluxo fim a fim de dados de canvas para arquivos Java.",
+      "group": "D",
+      "acceptanceCriteria": [
+        "Existe src/integration/package-inference.test.ts verificando consistencia entre preview e generate para package",
+        "Existe src/integration/panel-children.test.ts verificando subpasta e coordenadas relativas com Panel e filho",
+        "Existe src/integration/full-generation.test.ts verificando fluxo completo com estado complexo",
+        "Mocks necessarios de detectJavaProject e getOutputDirectory sao aplicados sem dependencia de VS Code real",
+        "Os testes de integracao passam em pnpm test",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Automatizar testes no GitHub Actions",
+      "description": "Como equipe, eu quero pipeline CI de testes para bloquear regressao antes de merge.",
+      "group": "E",
+      "acceptanceCriteria": [
+        "Existe workflow .github/workflows/test.yml disparado em push e pull request",
+        "O workflow faz checkout, setup de Node, setup de pnpm e instala dependencias",
+        "O workflow executa testes de todos os pacotes via comando recursivo",
+        "O workflow publica artefatos de cobertura",
+        "O tempo de execucao e monitoravel e sem falhas intermitentes recorrentes",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Documentar testes, cobertura e status",
+      "description": "Como equipe, eu quero documentacao clara para rodar testes localmente e acompanhar cobertura no repositorio.",
+      "group": "F",
+      "acceptanceCriteria": [
+        "README possui secao de Testing com comandos de execucao local",
+        "README exibe badge de status do workflow de testes",
+        "Existe tasks/task-17_03_26_140000-automated-tests/coverage-report.md com baseline e metas",
+        "Thresholds de cobertura foram configurados com meta inicial global de 50%",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": ""
+    }
+  ]
+}

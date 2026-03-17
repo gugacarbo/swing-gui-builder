@@ -2,6 +2,13 @@
 
 # Swing GUI Builder
 
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gugacarbo/swing-gui-builder/test)
+ ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgugacarbo%2Fswing-gui-builder%2Frefs%2Fheads%2Fmain%2Fpackage.json&query=%24.version&suffix=-beta&style=flat&label=version&cacheSeconds=3600) [![Test Workflow](https://github.com/gugacarbo/swing-gui-builder/actions/workflows/test.yml/badge.svg)](https://github.com/gugacarbo/swing-gui-builder/actions/workflows/test.yml) ![Visual Studio Marketplace Last Updated](https://img.shields.io/visual-studio-marketplace/last-updated/gugacarbo.swing-gui-builder) ![GitHub License](https://img.shields.io/github/license/gugacarbo/swing-gui-builder)
+
+
+
+
 A visual drag-and-drop GUI builder for Java Swing in VS Code. Design your Swing interfaces visually and generate clean Java source code — no manual layout math required.
 
 ## Features
@@ -134,6 +141,19 @@ pnpm run typecheck
 pnpm run build
 pnpm run compile
 ```
+
+## Testing
+
+Run tests from the repository root:
+
+```bash
+pnpm run typecheck
+pnpm test
+pnpm --dir webview-app test
+pnpm --workspace-concurrency=1 --filter . --filter ./shared --filter ./webview-app --if-present test:coverage
+```
+
+Coverage artifacts are generated in `coverage/` (extension) and `webview-app/coverage/`.
 
 ## License
 

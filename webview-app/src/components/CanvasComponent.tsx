@@ -1,4 +1,4 @@
-import { type CSSProperties, useRef } from "react";
+import { type CSSProperties, type ReactNode, useRef } from "react";
 
 import { CanvasComponentView } from "@/components/CanvasComponent/componentView";
 import { getComponentMinSize } from "@/components/CanvasComponent/minSizes";
@@ -16,6 +16,7 @@ interface CanvasComponentProps {
     id: string,
     updates: Pick<CanvasComponentModel, "x" | "y" | "width" | "height">,
   ) => void;
+  children?: ReactNode;
 }
 
 export function CanvasComponent({
@@ -25,6 +26,7 @@ export function CanvasComponent({
   onSelect,
   onMove,
   onResize,
+  children,
 }: CanvasComponentProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const minSize = getComponentMinSize(component);
@@ -60,6 +62,8 @@ export function CanvasComponent({
         handleMouseDown(event, { mode: "resize", handle })
       }
       onSelect={onSelect}
-    />
+    >
+      {children}
+    </CanvasComponentView>
   );
 }

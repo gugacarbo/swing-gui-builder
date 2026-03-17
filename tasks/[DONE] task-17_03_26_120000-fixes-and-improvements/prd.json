@@ -196,8 +196,8 @@
                 "Verify in browser using dev-browser skill: criar panel com botão dentro, mover panel e confirmar filhos acompanham"
             ],
             "priority": 12,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Canvas agora renderiza filhos de Panel de forma recursiva dentro do container do panel, usando parentOffset relativo com clamp de limites visuais. O arraste/resize de filhos dentro de panel foi acoplado aos limites do parent e o movimento do panel mantém filhos sincronizados. Zoom e pan continuam proporcionais para panel + filhos pelo mesmo transform do canvas. Validado com pnpm --dir webview-app lint/typecheck, pnpm run compile, pnpm run test e verificação browser via dev-browser (Playwright) com evidência em .agents/skills/dev-browser/tmp/us012-panel-children-verification.png."
         },
         {
             "id": "US-013",

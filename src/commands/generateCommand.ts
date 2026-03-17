@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { CanvasPanel } from "../canvas/CanvasPanel";
 import { getOutputDirectory } from "../config/ConfigReader";
 import { generateJavaFiles } from "../generator/JavaGenerator";
+import { inferJavaPackage, resolveOutputDirectory } from "../utils/JavaPackageInference";
 import { detectJavaProject } from "../utils/JavaProjectDetector";
 
 export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vscode.Disposable {
@@ -32,10 +33,7 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
     const configuredDir = getOutputDirectory();
 
     // Use configured dir if non-default, otherwise use detected project structure
-    const defaultDir =
-      configuredDir !== "swing/components/"
-        ? configuredDir
-        : (projectStructure?.suggestedOutputFolder ?? configuredDir);
+    const defaultDir = resolveOutputDirectory(configuredDir, projectStructure);
 
     let outputDir: string | undefined;
 
@@ -73,29 +71,24 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
       outputChannel.appendLine(`Note: Directory may already exist: ${outputDir}`);
     }
 
-    // Derive Java package from output path relative to source root
-    let javaPackage: string | undefined;
-    if (projectStructure) {
-      // Normalize paths to handle Windows/Unix separator differences
-      const normalizedSourceRoot = projectStructure.sourceRoot.replace(/[/\\]/g, path.sep);
-      const normalizedOutputDir = outputDir.replace(/[/\\]/g, path.sep);
-      const relativePath = path.relative(normalizedSourceRoot, normalizedOutputDir);
-
-      outputChannel.appendLine(`Debug: sourceRoot=${projectStructure.sourceRoot}`);
-      outputChannel.appendLine(`Debug: outputDir=${outputDir}`);
-      outputChannel.appendLine(`Debug: relativePath=${relativePath}`);
-
-      if (relativePath && !relativePath.startsWith("..") && relativePath !== "") {
-        javaPackage = relativePath.replace(/[/\\]/g, ".");
-        outputChannel.appendLine(`Debug: javaPackage=${javaPackage}`);
-      }
-    }
+    const javaPackage = inferJavaPackage(outputDir, projectStructure);
 
     const generatedFiles = generateJavaFiles(state, javaPackage);
     let overwriteAll = false;
 
     for (const file of generatedFiles) {
-      const fileUri = vscode.Uri.joinPath(outputUri, file.fileName);
+      const targetDirUri = file.subfolder
+        ? vscode.Uri.joinPath(outputUri, file.subfolder)
+        : outputUri;
+      const relativeOutputPath = file.subfolder
+        ? `${file.subfolder}/${file.fileName}`
+        : file.fileName;
+
+      if (file.subfolder) {
+        await vscode.workspace.fs.createDirectory(targetDirUri);
+      }
+
+      const fileUri = vscode.Uri.joinPath(targetDirUri, file.fileName);
 
       // Check if file exists
       let fileExists = false;
@@ -104,12 +97,12 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
         fileExists = true;
       } catch (_) {
         fileExists = false;
-        outputChannel.appendLine(`Debug: File does not exist yet: ${file.fileName}`);
+        outputChannel.appendLine(`Debug: File does not exist yet: ${relativeOutputPath}`);
       }
 
       if (fileExists && !overwriteAll) {
         const choice = await vscode.window.showWarningMessage(
-          `${file.fileName} already exists. What do you want to do?`,
+          `${relativeOutputPath} already exists. What do you want to do?`,
           "Overwrite",
           "Overwrite All",
           "Cancel",
@@ -127,16 +120,16 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
         if (choice === "Overwrite" || choice === "Overwrite All") {
           // Create backup
           const backupName = file.fileName.replace(".java", "_backup.java");
-          const backupUri = vscode.Uri.joinPath(outputUri, backupName);
+          const backupUri = vscode.Uri.joinPath(targetDirUri, backupName);
           try {
             const existingContent = await vscode.workspace.fs.readFile(fileUri);
             await vscode.workspace.fs.writeFile(backupUri, existingContent);
           } catch (error) {
             outputChannel.appendLine(
-              `Warning: Could not create backup for ${file.fileName}: ${error}`,
+              `Warning: Could not create backup for ${relativeOutputPath}: ${error}`,
             );
             vscode.window.showWarningMessage(
-              `Could not create backup for ${file.fileName}. Proceeding without backup.`,
+              `Could not create backup for ${relativeOutputPath}. Proceeding without backup.`,
             );
           }
         }
@@ -147,16 +140,16 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
       } else if (fileExists && overwriteAll) {
         // Create backup for overwrite all
         const backupName = file.fileName.replace(".java", "_backup.java");
-        const backupUri = vscode.Uri.joinPath(outputUri, backupName);
+        const backupUri = vscode.Uri.joinPath(targetDirUri, backupName);
         try {
           const existingContent = await vscode.workspace.fs.readFile(fileUri);
           await vscode.workspace.fs.writeFile(backupUri, existingContent);
         } catch (error) {
           outputChannel.appendLine(
-            `Warning: Could not create backup for ${file.fileName}: ${error}`,
+            `Warning: Could not create backup for ${relativeOutputPath}: ${error}`,
           );
           vscode.window.showWarningMessage(
-            `Could not create backup for ${file.fileName}. Proceeding without backup.`,
+            `Could not create backup for ${relativeOutputPath}. Proceeding without backup.`,
           );
         }
       }

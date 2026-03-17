@@ -17,7 +17,8 @@
     "@hono/node-ws": "^1.2.0",
     "express": "^4.21.0",
     "hono": "^4.11.1",
-    "playwright": "^1.49.0"
+    "playwright": "^1.49.0",
+    "resolve-pkg-maps": "^1.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

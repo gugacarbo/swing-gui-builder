@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
 import { CanvasPanel, type PreviewCodeFile } from "../canvas/CanvasPanel";
+import { getOutputDirectory } from "../config/ConfigReader";
 import { generatePreviewJavaFiles } from "../generator/JavaGenerator";
+import { inferJavaPackage, resolveOutputDirectory } from "../utils/JavaPackageInference";
+import { detectJavaProject } from "../utils/JavaProjectDetector";
 
 export function registerPreviewCodeCommand(): vscode.Disposable {
   return vscode.commands.registerCommand("swingGuiBuilder.previewCode", async () => {
@@ -10,7 +13,11 @@ export function registerPreviewCodeCommand(): vscode.Disposable {
     }
 
     const state = CanvasPanel.currentPanel.getCanvasState();
-    const previewFiles: PreviewCodeFile[] = generatePreviewJavaFiles(state);
+    const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    const projectStructure = workspaceRoot ? detectJavaProject(workspaceRoot) : undefined;
+    const outputDir = resolveOutputDirectory(getOutputDirectory(), projectStructure);
+    const javaPackage = inferJavaPackage(outputDir, projectStructure);
+    const previewFiles: PreviewCodeFile[] = generatePreviewJavaFiles(state, javaPackage);
 
     await CanvasPanel.currentPanel.postPreviewCode(previewFiles);
   });

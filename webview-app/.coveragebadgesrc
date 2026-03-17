@@ -1,0 +1,7 @@
+{
+  "label": "Webview Coverage",
+  "source": "./coverage/coverage-summary.json",
+  "attribute": "total.statements.pct",
+  "outputDir": "../media/coverage-badges",
+  "outputFile": "webview-coverage.svg"
+}
