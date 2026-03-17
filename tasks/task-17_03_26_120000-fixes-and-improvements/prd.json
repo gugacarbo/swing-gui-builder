@@ -129,8 +129,8 @@
                 "Testar: gerar código com panel contendo botão e verificar estrutura de pastas"
             ],
             "priority": 8,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "generateCommand agora cria subpastas com vscode.workspace.fs.createDirectory para arquivos com subfolder e grava os arquivos/backs no diretorio correto ({outputDir}/{subfolder}/{fileName}). Arquivos sem subfolder continuam sendo salvos na raiz de output. Coberto por src/commands/generateCommand.test.ts com cenario panel + button filho validando estrutura de pastas esperada."
         },
         {
             "id": "US-009",
@@ -179,8 +179,8 @@
                 "Verify in browser using dev-browser skill: colapsar Hierarchy e confirmar expansão da Palette"
             ],
             "priority": 11,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Palette atualizada para comportamento flex correto: seção usa min-h-0 flex-1 com overflow-hidden quando expandida e flex-none quando colapsada, mantendo scroll interno em min-h-0 flex-1 overflow-y-auto. Verificado via dev-browser que colapso da Hierarchy não afeta o estado da Palette e que a Palette expande para ocupar o espaço disponível."
         },
         {
             "id": "US-012",

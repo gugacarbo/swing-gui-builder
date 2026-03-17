@@ -98,7 +98,7 @@ export function Palette() {
 
   return (
     <section
-      className={cn("flex min-h-0 flex-col", isCollapsed ? "shrink-0" : "flex-1")}
+      className={cn("flex min-h-0 flex-col overflow-hidden", isCollapsed ? "flex-none" : "flex-1")}
       aria-label="Swing component palette"
     >
       <header className="flex items-center justify-between border-b border-vscode-panel-border px-4 py-3">

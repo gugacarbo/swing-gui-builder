@@ -275,3 +275,92 @@ Thread: https://ampcode.com/threads/
   - Parent-aware codegen should derive add target from parentId + component type instead of assuming root container.
 
 [DONE] US-009: Atualizar gerador para panels com filhos — 2026-03-17T16:23:10Z
+
+## [2026-03-17T16:25:33Z] - US-010 (Attempt 1/3)
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Status: COMPLETE
+- What was implemented
+  - Updated `webview-app/src/components/HierarchyPanel.tsx` to use `flex-none` when collapsed and keep `flex-1` when expanded, preserving independent flex behavior in the sidebar.
+  - Added `overflow-hidden` to the Hierarchy panel container so overflow is handled by the internal content region only.
+  - Preserved internal Hierarchy scroll container (`min-h-0 flex-1 overflow-y-auto`) to guarantee internal scrolling.
+- Files changed
+  - webview-app/src/components/HierarchyPanel.tsx
+  - tasks/task-17_03_26_120000-fixes-and-improvements/prd.json
+  - tasks/task-17_03_26_120000-fixes-and-improvements/progress.txt
+- Validation
+  - Baseline: `pnpm run check` ✅ ; `pnpm run test` ✅
+  - Story-focused: `pnpm exec biome check webview-app/src/components/HierarchyPanel.tsx` ✅
+  - Story-focused: `pnpm run typecheck` ✅
+  - Story-focused: `pnpm --dir webview-app typecheck` ✅
+  - Story-focused: `pnpm run compile` ⚠️ failed due pre-existing unrelated errors in `src/commands/generateCommand.test.ts`
+  - Browser verification (dev-browser skill + Playwright CDP on `http://127.0.0.1:4173`) ✅
+    - Collapsing Hierarchy switched the toggle to expand state (`hierarchyCollapseWorked: true`)
+    - Palette remained expanded and visible (`paletteExpandedAfter: true`, `paletteVisibleAfter: true`)
+    - Palette expanded independently after hierarchy collapse (`paletteHeightBefore: 376`, `paletteHeightAfter: 760`)
+    - Hierarchy classes confirm internal overflow/flex setup (`section`: `flex min-h-0 flex-col overflow-hidden ... flex-1`; content: `min-h-0 flex-1 overflow-y-auto p-2`)
+    - Evidence screenshot: `C:\Users\guga_\Desktop\swing-gui-builder-vscode\.agents\skills\dev-browser\tmp\us010-hierarchy-collapse-independence.png`
+- Commit: `feat: US-010 - Atualizar HierarchyPanel layout`
+- **Learnings for future iterations:**
+  - In stacked sidebar panels, `flex-none` on collapsed sections avoids unintended space retention better than `shrink-0`.
+  - Keep container overflow clipped (`overflow-hidden`) and place scrolling only on the inner content area to avoid scroll bleed between panels.
+
+[DONE] US-010: Atualizar HierarchyPanel layout — 2026-03-17T16:25:33Z
+
+## [2026-03-17T16:25:17Z] - US-008 (Attempt 1/3)
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Status: COMPLETE
+- What was implemented
+  - Updated `src/commands/generateCommand.ts` to honor `subfolder` metadata from generated files.
+  - For each file with `subfolder`, the command now creates `{outputDir}/{subfolder}` using `vscode.workspace.fs.createDirectory`.
+  - File write targets and backup targets now resolve inside subfolders when present.
+  - Root behavior was preserved: files without `subfolder` continue to be written to `{outputDir}/{fileName}`.
+  - Added `src/commands/generateCommand.test.ts` with a panel + child button scenario validating nested and root output paths.
+- Files changed
+  - src/commands/generateCommand.ts
+  - src/commands/generateCommand.test.ts
+  - tasks/task-17_03_26_120000-fixes-and-improvements/prd.json
+  - tasks/task-17_03_26_120000-fixes-and-improvements/progress.txt
+- Validation
+  - Story-focused: `pnpm exec biome check src/commands/generateCommand.ts src/commands/generateCommand.test.ts` ✅
+  - Story-focused: `pnpm run typecheck` ✅
+  - Story-focused: `pnpm run compile` ✅
+  - Story-focused: `pnpm exec vitest run src/commands/generateCommand.test.ts src/generator/JavaGenerator.subfolders.test.ts` ✅
+  - Repository: `pnpm run check` ⚠️ fails due pre-existing Biome formatting issues in unrelated files (`src/generator/JavaGenerator.package.test.ts`, `src/generator/codeHelpers.test.ts`, `src/generator/swingMappings.test.ts`)
+  - Repository: `pnpm run test` ✅ (10 files / 66 tests)
+- Commit: `feat: US-008 - Atualizar generateCommand para criar subpastas`
+- **Learnings for future iterations:**
+  - `GeneratedFileWithPath.subfolder` must be applied consistently to both final write path and backup path in overwrite flows.
+  - VS Code command filesystem behavior can be tested with mocked `vscode.workspace.fs` and command registration.
+
+[DONE] US-008: Atualizar generateCommand para criar subpastas — 2026-03-17T16:25:17Z
+
+## [2026-03-17T16:28:44Z] - US-011 (Attempt 1/3)
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Status: COMPLETE
+- What was implemented
+  - Updated `webview-app/src/components/Palette.tsx` so the panel uses `overflow-hidden` and `flex-none` when collapsed (`flex-1` when expanded), preserving `min-h-0` for correct flex participation.
+  - Kept the Palette content region as `min-h-0 flex-1 overflow-y-auto` to guarantee internal scrolling.
+  - Validated independent collapse behavior between Hierarchy and Palette.
+  - Confirmed Palette expands to occupy remaining sidebar space when Hierarchy is collapsed.
+- Files changed
+  - webview-app/src/components/Palette.tsx
+  - tasks/task-17_03_26_120000-fixes-and-improvements/prd.json
+  - tasks/task-17_03_26_120000-fixes-and-improvements/progress.txt
+- Validation
+  - Baseline: `pnpm run check` ❌ (pre-existing unrelated Biome formatting issues in test files), `pnpm run test` ✅
+  - Story-focused: `pnpm exec biome check webview-app/src/components/Palette.tsx` ✅
+  - Story-focused: `pnpm --dir webview-app typecheck` ✅
+  - Story-focused: `pnpm run typecheck` ✅
+  - Story-focused: `pnpm run compile` ⚠️ failed due unrelated pre-existing TypeScript errors in `src/integration/package-inference.test.ts`
+  - Browser verification (dev-browser skill + Playwright on `http://127.0.0.1:4173`) ✅
+    - Palette class includes `flex min-h-0 ... overflow-hidden flex-1`
+    - Palette content keeps `min-h-0 flex-1 overflow-y-auto` (`overflowY: auto`)
+    - Collapsing Hierarchy reduced it from `426px` to `42px` and expanded Palette from `425px` to `809px`
+    - Palette collapse/expand remained independent while Hierarchy stayed collapsed (`aria-expanded` remained `false`)
+    - Evidence screenshot: `C:\Users\guga_\AppData\Roaming\Code\User\.copilot\skills\dev-browser\tmp\us011-palette-verification.png`
+- Commit: `feat: US-011 - Atualizar Palette layout`
+- **Learnings for future iterations:**
+  - In stacked sidebar sections, using `flex-none` for collapsed state avoids reserving excess space.
+  - Keep scroll ownership in the inner section and clip parent overflow to prevent cross-panel scroll bleed.
+
+[DONE] US-011: Atualizar Palette layout — 2026-03-17T16:28:44Z
