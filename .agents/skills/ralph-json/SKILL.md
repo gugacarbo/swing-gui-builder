@@ -1,5 +1,5 @@
 ---
-name: ralph
+name: ralph-json
 description: "Convert PRDs to prd.json format for the Ralph autonomous agent system. Use when you have an existing PRD and need to convert it to Ralph's JSON format. Triggers on: convert this prd, turn this into ralph format, create prd.json from this, ralph json."
 user-invocable: true
 ---
@@ -121,9 +121,35 @@ Frontend stories are NOT complete until visually verified. Ralph will use the de
 1. **Each user story becomes one JSON entry**
 2. **IDs**: Sequential (US-001, US-002, etc.)
 3. **Priority**: Based on dependency order, then document order
-4. **All stories**: `passes: false` and empty `notes`
-5. **branchName**: Derive from feature name, kebab-case, prefixed with `ralph/`
-6. **Always add**: "Typecheck passes" to every story's acceptance criteria
+4. **Group**: Stories with the same `group` value can be executed in parallel
+5. **All stories**: `passes: false` and empty `notes`
+6. **branchName**: Derive from feature name, kebab-case, prefixed with `ralph/`
+7. **Always add**: "Typecheck passes" to every story's acceptance criteria
+
+---
+
+## Grouping Strategy
+
+Stories are grouped by their `group` property (e.g., "A", "B", "C"). Stories within the same group:
+
+- Have NO dependencies between each other
+- Can be executed in **parallel** by the orchestrator
+- Must all complete before the next group starts
+
+### Group ordering:
+- Groups execute in alphabetical order (A → B → C)
+- All stories in Group A must complete before Group B starts
+- Within a group, stories can run in any order or in parallel
+
+### Example grouping:
+- **Group A**: Database schema changes (US-001, US-002) - can run in parallel
+- **Group B**: Backend logic (US-003) - depends on Group A
+- **Group C**: UI components (US-004, US-005, US-006) - can run in parallel, depends on Group B
+
+### Rules:
+- If a story depends on another, they MUST be in different groups
+- Stories that touch the same files should NOT be in the same group
+- Independent stories should share the same group for parallel execution
 
 ---
 
@@ -178,6 +204,7 @@ Add ability to mark tasks with different statuses.
         "Typecheck passes"
       ],
       "priority": 1,
+      "group": "A",
       "passes": false,
       "notes": ""
     },
@@ -192,6 +219,7 @@ Add ability to mark tasks with different statuses.
         "Verify in browser using dev-browser skill"
       ],
       "priority": 2,
+      "group": "B",
       "passes": false,
       "notes": ""
     },
@@ -211,6 +239,22 @@ Add ability to mark tasks with different statuses.
       "notes": ""
     },
     {
+      "id": "US-003",
+      "title": "Add status toggle to task list rows",
+      "description": "As a user, I want to change task status directly from the list.",
+      "acceptanceCriteria": [
+        "Each row has status dropdown or toggle",
+        "Changing status saves immediately",
+        "UI updates without page refresh",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 3,
+      "group": "B",
+      "passes": false,
+      "notes": ""
+    },
+    {
       "id": "US-004",
       "title": "Filter tasks by status",
       "description": "As a user, I want to filter the list to see only certain statuses.",
@@ -221,12 +265,15 @@ Add ability to mark tasks with different statuses.
         "Verify in browser using dev-browser skill"
       ],
       "priority": 4,
+      "group": "B",
       "passes": false,
       "notes": ""
     }
   ]
 }
 ```
+
+Note: US-002, US-003, and US-004 are all in Group B (UI changes), allowing parallel execution after US-001 (schema) completes.
 
 ---
 

@@ -1,8 +1,8 @@
-out/
-node_modules/
+*.log
 *.vsix
+*.tsbuildinfo
+
+node_modules/
 .vscode-test/
 .pnpm-store/
-*.log
-*.tsbuildinfo
-pnpm-store/
+out/

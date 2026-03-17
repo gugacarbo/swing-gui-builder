@@ -1,5 +1,5 @@
 ---
-name: task-creator
+name: ralph-task-creator
 description: "Creates a new task structure following the swing-gui-builder project pattern. Use when the user asks to create a new task, feature, or increment the project. Triggers: create a task, new task, criar task, nova feature, adicionar feature, incrementar projeto, new feature, add feature."
 user-invocable: true
 ---

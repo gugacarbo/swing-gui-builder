@@ -39,8 +39,8 @@
     "watch": "tsc -watch -p ./",
     "build:webview": "pnpm --dir webview-app build",
     "package": "vsce package",
-    "lint": "biome check src/",
-    "lint:fix": "biome format --write src/ && biome check --write src/ &&  biome lint --write src/",
+    "lint-all": "pnpm --if-present lint",
+    "lint-all:fix": "pnpm --if-present lint:fix",
     "vscode:prepublish": "pnpm run build:webview && pnpm run compile",
     "vsc:pkg": "vsce package",
     "vsc:push": "vsce publish"

@@ -89,8 +89,8 @@
           <mxGeometry x="480" y="520" width="200" height="90" as="geometry"/>
         </mxCell>
 
-        <!-- Skill 5: ralph-autopilot-worker -->
-        <mxCell id="worker" value="ralph-autopilot-worker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#b91c1c;" vertex="1" parent="1">
+        <!-- Skill 5: ralph-worker -->
+        <mxCell id="worker" value="ralph-worker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#b91c1c;" vertex="1" parent="1">
           <mxGeometry x="250" y="680" width="200" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="worker-desc" value="Executa UMA story específica&#xa;• Implementa código&#xa;• Valida (build/lint)&#xa;• Atualiza prd.json&#xa;• Commit: feat: US-XXX - Title" style="text;html=1;strokeColor=#cbd5e1;fillColor=#f8fafc;align=left;verticalAlign=top;fontSize=10;spacingLeft=5;spacingTop=5;" vertex="1" parent="1">

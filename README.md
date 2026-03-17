@@ -1,4 +1,4 @@
-# IN DEVELOPMENT
+# IN DEVELOPMENT - Vibe Code Experiment
 
 # Swing GUI Builder
 

@@ -1,0 +1,82 @@
+{
+    "project": "swing-gui-builder",
+    "branchName": "ralph/monorepo-config-alignment",
+    "description": "Monorepo Config Alignment - Ensure consistent build, lint, typecheck, and verification commands across all packages in the pnpm workspace",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Fix Workspace Configuration",
+            "description": "As a developer, I want pnpm-workspace.yaml to only include real packages so that workspace operations are predictable and fast.",
+            "acceptanceCriteria": [
+                "pnpm-workspace.yaml contains only packages with package.json",
+                "webview-app remains as a workspace package",
+                "shared is formalized as a proper workspace package",
+                "Non-package paths (src) are removed from workspace config",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-002",
+            "title": "Formalize Shared Package",
+            "description": "As a developer, I want shared/ to be a proper workspace package with its own build configuration so it can be properly shared and versioned.",
+            "acceptanceCriteria": [
+                "shared/package.json exists with proper manifest (name, version, scripts)",
+                "shared/tsconfig.json configured to compile TypeScript sources",
+                "shared/types/*.ts compile to appropriate output (dist/ or cleaned)",
+                "Build artifacts don't pollute source with .js files",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-003",
+            "title": "Standardize Root Scripts",
+            "description": "As a developer, I want consistent root scripts (lint, lint:fix, typecheck, build, verify) so that I can run predictable validation commands from the repository root.",
+            "acceptanceCriteria": [
+                "pnpm run lint executes lint across all workspace packages",
+                "pnpm run lint:fix executes lint with fix across all workspace packages",
+                "pnpm run typecheck executes type checking across all packages",
+                "pnpm run build builds all packages in correct order",
+                "pnpm run verify (or check) runs: install precheck, lint, typecheck, build in sequence",
+                "Typecheck passes"
+            ],
+            "priority": 3,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Align Documentation with Scripts",
+            "description": "As a developer, I want README.md to list only valid commands so that documentation is trustworthy.",
+            "acceptanceCriteria": [
+                "All commands listed in README validation section exist in root package.json",
+                "No broken references like pnpm run lint that don't exist",
+                "Commands execute successfully when run",
+                "Typecheck passes"
+            ],
+            "priority": 4,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Update and Align Dependencies",
+            "description": "As a developer, I want consistent dependency versions across packages so that there are no version conflicts.",
+            "acceptanceCriteria": [
+                "Root dependencies updated to latest compatible versions",
+                "webview-app dependencies updated to latest stable versions",
+                "Shared dependency versions aligned (TypeScript, Biome, types)",
+                "No duplicate Biome packages (@biomejs/biome vs biome)",
+                "Typecheck passes"
+            ],
+            "priority": 5,
+            "passes": false,
+            "notes": ""
+        }
+    ]
+}

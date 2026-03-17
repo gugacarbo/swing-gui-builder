@@ -9,7 +9,7 @@ Ralph is an autonomous AI agent loop that runs in GitHub Copilot Chat mode to im
 This project uses **GitHub Copilot CLI in autopilot mode** with the following skills:
 - `prd` - Generate Product Requirements Documents
 - `ralph` - Convert PRDs to prd.json format
-- `ralph-autopilot-worker` - Execute a specific story from a PRD (called by coordinator agent)
+- `ralph-worker` - Execute a specific story from a PRD (called by coordinator agent)
 
 ## Task Folder Structure
 
@@ -38,7 +38,7 @@ tasks/
 
 1. **Create PRD:** Use the `prd` skill to create a new PRD in `tasks/[feature-name]/prd-[feature-name].md`
 2. **Convert PRD:** Use the `ralph` skill to convert to `prd.json`
-3. **Execute:** Use `ralph-autopilot-worker` to implement stories one at a time
+3. **Execute:** Use `ralph-worker` to implement stories one at a time
 4. **Complete:** When all stories pass, folder is renamed to `[DONE] [task-name]/`
 
 ## Patterns

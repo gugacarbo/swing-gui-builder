@@ -1,5 +1,5 @@
 ---
-name: ralph-autopilot-worker
+name: ralph-worker
 description: "Executes a specific User Story from a PRD with mandatory technical validation. Use when a coordinator agent needs to delegate the implementation of an individual story. Receives the PRD and the Story ID to execute."
 argument-hint: "PRD path and Story ID. E.g.: tasks/feature-auth/prd.json US-003"
 ---
