@@ -192,6 +192,7 @@ function generateMainFrameFile(
   const { menuBars, regularComponents, toolBars, menuBarLines, toolBarLines } =
     generateHierarchicalCode(state.components, customIds, customClassNames, methodNames);
   const hasToolBars = toolBars.length > 0;
+  const componentMap = new Map(state.components.map((component) => [component.id, component]));
   const lines: string[] = [];
 
   if (packageName) {
@@ -236,7 +237,15 @@ function generateMainFrameFile(
   // Component initialization
   for (const comp of regularComponents) {
     lines.push(
-      ...generateComponentCode(comp, customIds, customClassNames, methodNames, hasToolBars),
+      ...generateComponentCode(
+        comp,
+        customIds,
+        customClassNames,
+        methodNames,
+        hasToolBars,
+        componentMap,
+        state.components,
+      ),
     );
   }
 

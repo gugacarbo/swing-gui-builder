@@ -62,8 +62,8 @@
                 "Verify in browser using dev-browser skill: abrir preview e confirmar package statement correto"
             ],
             "priority": 4,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "previewCodeCommand agora importa getOutputDirectory e detectJavaProject e usa utilitario compartilhado (JavaPackageInference) para resolver outputDir e inferir package com a mesma logica do generateCommand. O package inferido e passado para generatePreviewJavaFiles. Validado em browser (dev-browser + Playwright) com preview exibindo `package com.example.app;` e evidencia em `.agents/skills/dev-browser/tmp/us004-preview-package-verification.png`."
         },
         {
             "id": "US-005",
@@ -95,8 +95,8 @@
                 "Verify in browser using dev-browser skill: arrastar botão para dentro de panel e confirmar parentOffset"
             ],
             "priority": 6,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "useCanvasDragDrop agora detecta drop dentro de Panel, atribui parentId e calcula parentOffset relativo ao panel com snapping. Schema do webview atualizado para aceitar parentOffset. Validado com lint/typecheck/compile e verificacao em browser (Playwright via dev-browser) arrastando JButton para dentro de JPanel."
         },
         {
             "id": "US-007",
@@ -112,8 +112,8 @@
                 "Verify in browser using dev-browser skill: layout responsivo sem quebra"
             ],
             "priority": 7,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "App.tsx refatorado para layout principal com flexbox ([Sidebar][Canvas+Properties]), usando componente Sidebar dedicado. Sidebar fixada com largura/posição estáveis e canvas isolado como área movível (zoom/pan). Validado com pnpm --dir webview-app lint, pnpm --dir webview-app typecheck, pnpm run compile e verificação de browser (Playwright no ambiente dev-browser) em http://127.0.0.1:4173 com screenshot em .agents/skills/dev-browser/tmp/us007-layout-verification.png."
         },
         {
             "id": "US-008",
@@ -145,8 +145,8 @@
                 "Typecheck passes"
             ],
             "priority": 9,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "componentGenerators agora detecta Panel com filhos, aplica setLayout(null) para layout absoluto interno, gera add no container correto (panel.add(child) para filhos) e usa parentOffset em setBounds para componentes com parentId em Panel. Validado com biome nos arquivos alterados e suíte de testes do gerador (incluindo componentGenerators e JavaGenerator.relative-coords)."
         },
         {
             "id": "US-010",
