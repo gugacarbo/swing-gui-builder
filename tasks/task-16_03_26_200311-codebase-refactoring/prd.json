@@ -1,404 +1,404 @@
 {
-    "project": "swing-gui-builder",
-    "branchName": "ralph/codebase-refactoring",
-    "description": "Refatoração estrutural do swing-gui-builder-vscode visando modularização, separação de responsabilidades e melhor manutenibilidade do código. O projeto atual apresenta problemas de código duplicado, responsabilidades múltiplas em arquivos grandes, e nomenclatura inconsistente entre extensão e webview.",
-    "userStories": [
-        {
-            "id": "US-001",
-            "title": "Criar pacote de tipos compartilhados",
-            "description": "Como desenvolvedor, preciso de tipos compartilhados entre extension e webview-app para eliminar duplicação e garantir consistência.",
-            "acceptanceCriteria": [
-                "Criar diretório shared/types/ na raiz do projeto",
-                "Definir tipos únicos: ComponentType, CanvasComponent, CanvasState",
-                "Executar typecheck sem erros",
-                "Documentar tipos em comentário JSDoc",
-                "Typecheck passes"
-            ],
-            "priority": 1,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-002",
-            "title": "Atualizar extension para usar shared types",
-            "description": "Como desenvolvedor, preciso que a extensão importe tipos do pacote compartilhado.",
-            "acceptanceCriteria": [
-                "Remover definições duplicadas de src/components/ComponentModel.ts",
-                "Importar tipos de shared/types/canvas.ts",
-                "Executar typecheck na extensão",
-                "Verificar que extension continua funcionando",
-                "Typecheck passes"
-            ],
-            "priority": 2,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-003",
-            "title": "Atualizar webview-app para usar shared types",
-            "description": "Como desenvolvedor, preciso que o webview-app importe tipos do pacote compartilhado.",
-            "acceptanceCriteria": [
-                "Remover definições duplicadas de webview-app/src/types/canvas.ts",
-                "Importar tipos de shared/types/canvas.ts",
-                "Configurar tsconfig path alias corretamente",
-                "Executar typecheck no webview-app",
-                "Typecheck passes"
-            ],
-            "priority": 3,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-004",
-            "title": "Configurar tsconfig paths",
-            "description": "Como desenvolvedor, preciso de path aliases configurados para importar de @shared/types.",
-            "acceptanceCriteria": [
-                "Adicionar path alias em tsconfig.json (root)",
-                "Adicionar path alias em webview-app/tsconfig.json",
-                "Testar build da extensão",
-                "Testar build do webview-app",
-                "Typecheck passes"
-            ],
-            "priority": 4,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-005",
-            "title": "Extrair comando generate para arquivo dedicado",
-            "description": "Como desenvolvedor, preciso extrair a lógica de geração de código do extension.ts para um arquivo separado.",
-            "acceptanceCriteria": [
-                "Criar arquivo src/commands/generateCommand.ts",
-                "Mover lógica de swingGuiBuilder.generate para o novo arquivo",
-                "Importar comando em extension.ts",
-                "Executar comando generate manualmente e verificar funcionamento",
-                "Typecheck passes"
+  "project": "swing-gui-builder",
+  "branchName": "ralph/codebase-refactoring",
+  "description": "Refatoração estrutural do swing-gui-builder-vscode visando modularização, separação de responsabilidades e melhor manutenibilidade do código. O projeto atual apresenta problemas de código duplicado, responsabilidades múltiplas em arquivos grandes, e nomenclatura inconsistente entre extensão e webview.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Criar pacote de tipos compartilhados",
+      "description": "Como desenvolvedor, preciso de tipos compartilhados entre extension e webview-app para eliminar duplicação e garantir consistência.",
+      "acceptanceCriteria": [
+        "Criar diretório shared/types/ na raiz do projeto",
+        "Definir tipos únicos: ComponentType, CanvasComponent, CanvasState",
+        "Executar typecheck sem erros",
+        "Documentar tipos em comentário JSDoc",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Criado shared/types/canvas.ts com JSDoc e tipos compartilhados ComponentType, CanvasComponent e CanvasState. Typecheck do projeto raiz executado com sucesso para validar a base compartilhada."
+    },
+    {
+      "id": "US-002",
+      "title": "Atualizar extension para usar shared types",
+      "description": "Como desenvolvedor, preciso que a extensão importe tipos do pacote compartilhado.",
+      "acceptanceCriteria": [
+        "Remover definições duplicadas de src/components/ComponentModel.ts",
+        "Importar tipos de shared/types/canvas.ts",
+        "Executar typecheck na extensão",
+        "Verificar que extension continua funcionando",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "src/components/ComponentModel.ts deixou de duplicar tipos e passou a importar CanvasComponent, CanvasState e ComponentType de shared/types/canvas.ts. Typecheck da extensão e compile do projeto executados com sucesso."
+    },
+    {
+      "id": "US-003",
+      "title": "Atualizar webview-app para usar shared types",
+      "description": "Como desenvolvedor, preciso que o webview-app importe tipos do pacote compartilhado.",
+      "acceptanceCriteria": [
+        "Remover definições duplicadas de webview-app/src/types/canvas.ts",
+        "Importar tipos de shared/types/canvas.ts",
+        "Configurar tsconfig path alias corretamente",
+        "Executar typecheck no webview-app",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "webview-app/src/types/canvas.ts foi refatorado para consumir tipos compartilhados de shared/types/canvas.ts via re-export seguro, removendo definições duplicadas de ComponentType/CanvasComponent/CanvasState e preservando os tipos locais de UI (ComponentProps, CanvasViewState, ConfigDefaults). Validação: pnpm --dir webview-app typecheck PASS."
+    },
+    {
+      "id": "US-004",
+      "title": "Configurar tsconfig paths",
+      "description": "Como desenvolvedor, preciso de path aliases configurados para importar de @shared/types.",
+      "acceptanceCriteria": [
+        "Adicionar path alias em tsconfig.json (root)",
+        "Adicionar path alias em webview-app/tsconfig.json",
+        "Testar build da extensão",
+        "Testar build do webview-app",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Adicionados aliases @shared/* no tsconfig da raiz e no webview-app/tsconfig.json. Atualizados imports de tipos compartilhados para @shared/types/canvas em src/components/ComponentModel.ts e webview-app/src/types/canvas.ts. Validação executada com sucesso: pnpm exec tsc -p . --noEmit, pnpm exec tsc -p ., pnpm --dir webview-app typecheck, pnpm --dir webview-app build."
+    },
+    {
+      "id": "US-005",
+      "title": "Extrair comando generate para arquivo dedicado",
+      "description": "Como desenvolvedor, preciso extrair a lógica de geração de código do extension.ts para um arquivo separado.",
+      "acceptanceCriteria": [
+        "Criar arquivo src/commands/generateCommand.ts",
+        "Mover lógica de swingGuiBuilder.generate para o novo arquivo",
+        "Importar comando em extension.ts",
+        "Executar comando generate manualmente e verificar funcionamento",
+        "Typecheck passes"
             ],
             "priority": 5,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-006",
-            "title": "Extrair comando save para arquivo dedicado",
-            "description": "Como desenvolvedor, preciso extrair a lógica de salvamento do extension.ts para um arquivo separado.",
-            "acceptanceCriteria": [
-                "Criar arquivo src/commands/saveCommand.ts",
-                "Mover lógica de swingGuiBuilder.save para o novo arquivo",
-                "Importar comando em extension.ts",
-                "Executar comando save manualmente e verificar funcionamento",
-                "Typecheck passes"
-            ],
-            "priority": 6,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-007",
-            "title": "Extrair comando open para arquivo dedicado",
-            "description": "Como desenvolvedor, preciso extrair a lógica de abertura do extension.ts para um arquivo separado.",
-            "acceptanceCriteria": [
-                "Criar arquivo src/commands/openCommand.ts",
-                "Mover lógica de swingGuiBuilder.open para o novo arquivo",
-                "Importar comando em extension.ts",
-                "Executar comando open manualmente e verificar funcionamento",
-                "Typecheck passes"
-            ],
-            "priority": 7,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-008",
-            "title": "Refatorar extension.ts principal",
-            "description": "Como desenvolvedor, preciso que o extension.ts importe comandos separados e fique mais simples.",
-            "acceptanceCriteria": [
-                "Simplificar src/extension.ts para apenas registrar comandos",
-                "Remover lógica inline dos comandos",
-                "Manter backward compatibility de imports",
-                "Executar typecheck e testes existentes",
-                "Typecheck passes"
-            ],
-            "priority": 8,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-009",
-            "title": "Extrair mapeamentos Swing do JavaGenerator",
-            "description": "Como desenvolvedor, preciso extrair mapeamentos de componentes Swing para arquivo dedicado.",
-            "acceptanceCriteria": [
-                "Criar arquivo src/generator/swingMappings.ts",
-                "Mover SWING_CLASS_MAP, getSwingClass, getComponentSwingType",
-                "Importar em JavaGenerator.ts",
-                "Executar testes de geração existentes",
-                "Typecheck passes"
-            ],
-            "priority": 9,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-010",
-            "title": "Extrair helpers de código do JavaGenerator",
-            "description": "Como desenvolvedor, preciso extrair funções helper de formatação para arquivo dedicado.",
-            "acceptanceCriteria": [
-                "Criar arquivo src/generator/codeHelpers.ts",
-                "Mover hexToRgb, capitalize, isCustomComponent e outros helpers",
-                "Importar em JavaGenerator.ts",
-                "Executar testes existentes",
-                "Typecheck passes"
-            ],
-            "priority": 10,
             "passes": true,
-            "notes": "Criado src/generator/codeHelpers.ts com helpers extraídos (hexToRgb, capitalize, isCustomComponent e utilitários de formatação/geração). JavaGenerator.ts atualizado para importar os helpers mantendo comportamento. Validação: biome check focal, pnpm run compile e testes JavaGenerator passaram."
+            "notes": "Criado src/commands/generateCommand.ts com a lógica de swingGuiBuilder.generate extraída de extension.ts. extension.ts passou a registrar o comando via registerGenerateCommand(outputChannel), mantendo comportamento. Validação: pnpm run lint-all PASS; pnpm run compile PASS; pnpm exec tsc -p . --noEmit PASS."
         },
-        {
-            "id": "US-011",
-            "title": "Extrair geradores específicos de componentes",
-            "description": "Como desenvolvedor, preciso extrair lógica de geração de componentes para arquivo dedicado.",
-            "acceptanceCriteria": [
-                "Criar arquivo src/generator/componentGenerators.ts",
-                "Mover generateComponentCode, generateHierarchicalCode",
-                "Importar em JavaGenerator.ts",
-                "Executar testes de paridade",
-                "Typecheck passes"
-            ],
-            "priority": 11,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-012",
-            "title": "Extrair helpers de MenuBar/ToolBar do Canvas",
-            "description": "Como desenvolvedor, preciso extrair funções auxiliares de zonas fixas do Canvas.tsx.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/components/Canvas/fixedZoneHelpers.ts",
-                "Mover normalizeToolBarPosition, getOrderedChildren, collectDescendantIds, getStackExtent",
-                "Importar em Canvas.tsx",
-                "Verificar funcionamento em browser",
-                "Typecheck passes",
-                "Verify in browser using dev-browser skill"
-            ],
-            "priority": 12,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-013",
-            "title": "Extrair componente MenuBarZone",
-            "description": "Como desenvolvedor, preciso criar componente dedicado para renderizar menu bars.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/components/Canvas/MenuBarZone.tsx",
-                "Implementar componente para renderização de menu bars",
-                "Importar em Canvas.tsx",
-                "Verificar funcionamento em browser",
-                "Typecheck passes",
-                "Verify in browser using dev-browser skill"
-            ],
-            "priority": 13,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-014",
-            "title": "Extrair componente ToolBarZone",
-            "description": "Como desenvolvedor, preciso criar componente dedicado para renderizar tool bars.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/components/Canvas/ToolBarZone.tsx",
-                "Implementar componente para renderização de tool bars",
-                "Importar em Canvas.tsx",
-                "Verificar funcionamento em browser",
-                "Typecheck passes",
-                "Verify in browser using dev-browser skill"
-            ],
-            "priority": 14,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-015",
-            "title": "Extrair constantes do Canvas",
-            "description": "Como desenvolvedor, preciso extrair constantes do Canvas.tsx para arquivo dedicado.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/components/Canvas/constants.ts",
-                "Mover FIXED_ZONE_*, MENU_BAR_*, TOOL_BAR_*, FRAME_TITLE_BAR_HEIGHT",
-                "Importar em Canvas.tsx e CanvasComponent.tsx",
-                "Executar typecheck",
-                "Typecheck passes"
-            ],
-            "priority": 15,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-016",
-            "title": "Refatorar Canvas.tsx principal",
-            "description": "Como desenvolvedor, preciso que o Canvas.tsx importe helpers e subcomponentes extraídos.",
-            "acceptanceCriteria": [
-                "Simplificar Canvas.tsx com imports de helpers e subcomponentes",
-                "Remover lógica inline de menu/tool bars",
-                "Executar typecheck",
-                "Verificar funcionamento em browser",
-                "Typecheck passes",
-                "Verify in browser using dev-browser skill"
-            ],
-            "priority": 16,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-017",
-            "title": "Extrair constantes de tamanho mínimo do CanvasComponent",
-            "description": "Como desenvolvedor, preciso extrair constantes de tamanho mínimo do CanvasComponent.tsx.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/components/CanvasComponent/minSizes.ts",
-                "Mover MIN_SIZE_BY_TYPE, FALLBACK_MIN_SIZE",
-                "Importar em CanvasComponent.tsx",
-                "Executar typecheck",
-                "Typecheck passes"
-            ],
-            "priority": 17,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-018",
-            "title": "Extrair renderizadores de preview",
-            "description": "Como desenvolvedor, preciso extrair lógica de renderização de preview para arquivo dedicado.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/components/CanvasComponent/previewRenderers.tsx",
-                "Mover renderComponentPreview e lógica de cada tipo",
-                "Importar em CanvasComponent.tsx",
-                "Verificar funcionamento em browser",
-                "Typecheck passes",
-                "Verify in browser using dev-browser skill"
-            ],
-            "priority": 18,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-019",
-            "title": "Extrair handles de resize",
-            "description": "Como desenvolvedor, preciso extrair lógica de handles de redimensionamento.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/components/CanvasComponent/resizeHandles.tsx",
-                "Mover RESIZE_HANDLES e lógica de renderização",
-                "Importar em CanvasComponent.tsx",
-                "Verificar funcionamento em browser",
-                "Typecheck passes",
-                "Verify in browser using dev-browser skill"
-            ],
-            "priority": 19,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-020",
-            "title": "Refatorar CanvasComponent.tsx principal",
-            "description": "Como desenvolvedor, preciso que o CanvasComponent.tsx importe módulos extraídos.",
-            "acceptanceCriteria": [
-                "Simplificar CanvasComponent.tsx com imports de módulos",
-                "Remover lógica inline de renderização",
-                "Executar typecheck",
-                "Verificar funcionamento em browser"
-            ],
-            "priority": 20,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-021",
-            "title": "Consolidar constantes centralizadas",
-            "description": "Como desenvolvedor, preciso de constantes centralizadas com prefixos padronizados.",
-            "acceptanceCriteria": [
-                "Criar/expandir webview-app/src/lib/constants.ts",
-                "Adicionar prefixos padronizados (DEFAULT_BG, DEFAULT_TEXT_COLOR)",
-                "Atualizar imports em todos os componentes",
-                "Executar typecheck",
-                "Typecheck passes"
-            ],
-            "priority": 21,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-022",
-            "title": "Criar mapeamentos de tipos Swing",
-            "description": "Como desenvolvedor, preciso de mapeamento centralizado de labels de tipos Swing.",
-            "acceptanceCriteria": [
-                "Criar arquivo webview-app/src/lib/swingTypeLabels.ts",
-                "Mover SWING_TYPE_LABELS do HierarchyPanel",
-                "Atualizar imports em Palette.tsx, HierarchyPanel.tsx",
-                "Executar typecheck",
-                "Typecheck passes"
-            ],
-            "priority": 22,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-023",
-            "title": "Executar testes de validação por fase",
-            "description": "Como desenvolvedor, preciso validar que testes passam após cada fase de refatoração.",
-            "acceptanceCriteria": [
-                "Executar testes de paridade (JavaGenerator.parity.test.ts)",
-                "Executar testes de ordering (JavaGenerator.ordering.test.ts)",
-                "Corrigir regressions identificadas",
-                "Documentar resultados de testes",
-                "Typecheck passes",
-                "Tests pass"
-            ],
-            "priority": 23,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-024",
-            "title": "Testar funcionalidade completa da extensão",
-            "description": "Como desenvolvedor, preciso testar o fluxo completo após refatoração.",
-            "acceptanceCriteria": [
-                "Testar abrir canvas",
-                "Testar adicionar componentes",
-                "Testar geração de código",
-                "Testar salvamento de projeto",
-                "Documentar resultados",
-                "Typecheck passes",
-                "Tests pass"
-            ],
-            "priority": 24,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-025",
-            "title": "Limpar imports não utilizados",
-            "description": "Como desenvolvedor, preciso remover imports órfãos após refatoração.",
-            "acceptanceCriteria": [
-                "Identificar imports não utilizados",
-                "Remover imports órfãos",
-                "Executar lint sem warnings",
-                "Typecheck passes"
-            ],
-            "priority": 25,
-            "passes": false,
-            "notes": ""
-        },
-        {
-            "id": "US-026",
-            "title": "Documentar estrutura final",
-            "description": "Como desenvolvedor, preciso de documentação da nova estrutura de pastas.",
-            "acceptanceCriteria": [
-                "Criar arquivo docs/architecture.md",
-                "Documentar nova estrutura de pastas",
-                "Documentar convenções adotadas",
-                "Incluir diagrama de arquitetura",
-                "Typecheck passes"
-            ],
-            "priority": 26,
-            "passes": false,
-            "notes": ""
-        }
-    ]
+    {
+      "id": "US-006",
+      "title": "Extrair comando save para arquivo dedicado",
+      "description": "Como desenvolvedor, preciso extrair a lógica de salvamento do extension.ts para um arquivo separado.",
+      "acceptanceCriteria": [
+        "Criar arquivo src/commands/saveCommand.ts",
+        "Mover lógica de swingGuiBuilder.save para o novo arquivo",
+        "Importar comando em extension.ts",
+        "Executar comando save manualmente e verificar funcionamento",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Extrair comando open para arquivo dedicado",
+      "description": "Como desenvolvedor, preciso extrair a lógica de abertura do extension.ts para um arquivo separado.",
+      "acceptanceCriteria": [
+        "Criar arquivo src/commands/openCommand.ts",
+        "Mover lógica de swingGuiBuilder.open para o novo arquivo",
+        "Importar comando em extension.ts",
+        "Executar comando open manualmente e verificar funcionamento",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Refatorar extension.ts principal",
+      "description": "Como desenvolvedor, preciso que o extension.ts importe comandos separados e fique mais simples.",
+      "acceptanceCriteria": [
+        "Simplificar src/extension.ts para apenas registrar comandos",
+        "Remover lógica inline dos comandos",
+        "Manter backward compatibility de imports",
+        "Executar typecheck e testes existentes",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Extrair mapeamentos Swing do JavaGenerator",
+      "description": "Como desenvolvedor, preciso extrair mapeamentos de componentes Swing para arquivo dedicado.",
+      "acceptanceCriteria": [
+        "Criar arquivo src/generator/swingMappings.ts",
+        "Mover SWING_CLASS_MAP, getSwingClass, getComponentSwingType",
+        "Importar em JavaGenerator.ts",
+        "Executar testes de geração existentes",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Criado src/generator/swingMappings.ts com SWING_CLASS_MAP, getSwingClass e getComponentSwingType extraídos do JavaGenerator.ts. JavaGenerator.ts passou a importar os mapeamentos preservando o comportamento de geração. Validação: pnpm run compile PASS; pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts src/generator/JavaGenerator.parity.test.ts PASS."
+    },
+    {
+      "id": "US-010",
+      "title": "Extrair helpers de código do JavaGenerator",
+      "description": "Como desenvolvedor, preciso extrair funções helper de formatação para arquivo dedicado.",
+      "acceptanceCriteria": [
+        "Criar arquivo src/generator/codeHelpers.ts",
+        "Mover hexToRgb, capitalize, isCustomComponent e outros helpers",
+        "Importar em JavaGenerator.ts",
+        "Executar testes existentes",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Criado src/generator/codeHelpers.ts com helpers extraídos (hexToRgb, capitalize, isCustomComponent e utilitários de formatação/geração). JavaGenerator.ts atualizado para importar os helpers mantendo comportamento. Validação: biome check focal, pnpm run compile e testes JavaGenerator passaram."
+    },
+    {
+      "id": "US-011",
+      "title": "Extrair geradores específicos de componentes",
+      "description": "Como desenvolvedor, preciso extrair lógica de geração de componentes para arquivo dedicado.",
+      "acceptanceCriteria": [
+        "Criar arquivo src/generator/componentGenerators.ts",
+        "Mover generateComponentCode, generateHierarchicalCode",
+        "Importar em JavaGenerator.ts",
+        "Executar testes de paridade",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Extrair helpers de MenuBar/ToolBar do Canvas",
+      "description": "Como desenvolvedor, preciso extrair funções auxiliares de zonas fixas do Canvas.tsx.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/components/Canvas/fixedZoneHelpers.ts",
+        "Mover normalizeToolBarPosition, getOrderedChildren, collectDescendantIds, getStackExtent",
+        "Importar em Canvas.tsx",
+        "Verificar funcionamento em browser",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Extrair componente MenuBarZone",
+      "description": "Como desenvolvedor, preciso criar componente dedicado para renderizar menu bars.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/components/Canvas/MenuBarZone.tsx",
+        "Implementar componente para renderização de menu bars",
+        "Importar em Canvas.tsx",
+        "Verificar funcionamento em browser",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Extrair componente ToolBarZone",
+      "description": "Como desenvolvedor, preciso criar componente dedicado para renderizar tool bars.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/components/Canvas/ToolBarZone.tsx",
+        "Implementar componente para renderização de tool bars",
+        "Importar em Canvas.tsx",
+        "Verificar funcionamento em browser",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Extrair constantes do Canvas",
+      "description": "Como desenvolvedor, preciso extrair constantes do Canvas.tsx para arquivo dedicado.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/components/Canvas/constants.ts",
+        "Mover FIXED_ZONE_*, MENU_BAR_*, TOOL_BAR_*, FRAME_TITLE_BAR_HEIGHT",
+        "Importar em Canvas.tsx e CanvasComponent.tsx",
+        "Executar typecheck",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "Criado webview-app/src/components/Canvas/constants.ts com FIXED_ZONE_*, MENU_BAR_*, TOOL_BAR_* e FRAME_TITLE_BAR_HEIGHT. Canvas.tsx atualizado para importar constantes do novo módulo; CanvasComponent.tsx teve bloco de imports ajustado. Validação: pnpm --dir webview-app typecheck PASS."
+    },
+    {
+      "id": "US-016",
+      "title": "Refatorar Canvas.tsx principal",
+      "description": "Como desenvolvedor, preciso que o Canvas.tsx importe helpers e subcomponentes extraídos.",
+      "acceptanceCriteria": [
+        "Simplificar Canvas.tsx com imports de helpers e subcomponentes",
+        "Remover lógica inline de menu/tool bars",
+        "Executar typecheck",
+        "Verificar funcionamento em browser",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Extrair constantes de tamanho mínimo do CanvasComponent",
+      "description": "Como desenvolvedor, preciso extrair constantes de tamanho mínimo do CanvasComponent.tsx.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/components/CanvasComponent/minSizes.ts",
+        "Mover MIN_SIZE_BY_TYPE, FALLBACK_MIN_SIZE",
+        "Importar em CanvasComponent.tsx",
+        "Executar typecheck",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Extrair renderizadores de preview",
+      "description": "Como desenvolvedor, preciso extrair lógica de renderização de preview para arquivo dedicado.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/components/CanvasComponent/previewRenderers.tsx",
+        "Mover renderComponentPreview e lógica de cada tipo",
+        "Importar em CanvasComponent.tsx",
+        "Verificar funcionamento em browser",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Extrair handles de resize",
+      "description": "Como desenvolvedor, preciso extrair lógica de handles de redimensionamento.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/components/CanvasComponent/resizeHandles.tsx",
+        "Mover RESIZE_HANDLES e lógica de renderização",
+        "Importar em CanvasComponent.tsx",
+        "Verificar funcionamento em browser",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 19,
+      "passes": true,
+      "notes": "Criado webview-app/src/components/CanvasComponent/resizeHandles.tsx com RESIZE_HANDLES e componente ResizeHandles; CanvasComponent.tsx atualizado para usar módulo extraído preservando comportamento de pointer capture e labels. Validação: pnpm --dir webview-app typecheck PASS."
+    },
+    {
+      "id": "US-020",
+      "title": "Refatorar CanvasComponent.tsx principal",
+      "description": "Como desenvolvedor, preciso que o CanvasComponent.tsx importe módulos extraídos.",
+      "acceptanceCriteria": [
+        "Simplificar CanvasComponent.tsx com imports de módulos",
+        "Remover lógica inline de renderização",
+        "Executar typecheck",
+        "Verificar funcionamento em browser"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Consolidar constantes centralizadas",
+      "description": "Como desenvolvedor, preciso de constantes centralizadas com prefixos padronizados.",
+      "acceptanceCriteria": [
+        "Criar/expandir webview-app/src/lib/constants.ts",
+        "Adicionar prefixos padronizados (DEFAULT_BG, DEFAULT_TEXT_COLOR)",
+        "Atualizar imports em todos os componentes",
+        "Executar typecheck",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-022",
+      "title": "Criar mapeamentos de tipos Swing",
+      "description": "Como desenvolvedor, preciso de mapeamento centralizado de labels de tipos Swing.",
+      "acceptanceCriteria": [
+        "Criar arquivo webview-app/src/lib/swingTypeLabels.ts",
+        "Mover SWING_TYPE_LABELS do HierarchyPanel",
+        "Atualizar imports em Palette.tsx, HierarchyPanel.tsx",
+        "Executar typecheck",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "passes": true,
+      "notes": "Criado webview-app/src/lib/swingTypeLabels.ts com SWING_TYPE_LABELS e toSwingTypeLabel; removido mapeamento local do HierarchyPanel; atualizados imports/uso em Palette.tsx e HierarchyPanel.tsx; typecheck do webview-app executado com sucesso."
+    },
+    {
+      "id": "US-023",
+      "title": "Executar testes de validação por fase",
+      "description": "Como desenvolvedor, preciso validar que testes passam após cada fase de refatoração.",
+      "acceptanceCriteria": [
+        "Executar testes de paridade (JavaGenerator.parity.test.ts)",
+        "Executar testes de ordering (JavaGenerator.ordering.test.ts)",
+        "Corrigir regressions identificadas",
+        "Documentar resultados de testes",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Testar funcionalidade completa da extensão",
+      "description": "Como desenvolvedor, preciso testar o fluxo completo após refatoração.",
+      "acceptanceCriteria": [
+        "Testar abrir canvas",
+        "Testar adicionar componentes",
+        "Testar geração de código",
+        "Testar salvamento de projeto",
+        "Documentar resultados",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-025",
+      "title": "Limpar imports não utilizados",
+      "description": "Como desenvolvedor, preciso remover imports órfãos após refatoração.",
+      "acceptanceCriteria": [
+        "Identificar imports não utilizados",
+        "Remover imports órfãos",
+        "Executar lint sem warnings",
+        "Typecheck passes"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-026",
+      "title": "Documentar estrutura final",
+      "description": "Como desenvolvedor, preciso de documentação da nova estrutura de pastas.",
+      "acceptanceCriteria": [
+        "Criar arquivo docs/architecture.md",
+        "Documentar nova estrutura de pastas",
+        "Documentar convenções adotadas",
+        "Incluir diagrama de arquitetura",
+        "Typecheck passes"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": ""
+    }
+  ]
 }

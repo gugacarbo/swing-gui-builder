@@ -1,4 +1,4 @@
-import type { CanvasState, ComponentModel, ComponentType } from "../components/ComponentModel";
+import type { CanvasState, ComponentModel } from "../components/ComponentModel";
 import {
   DEFAULT_BG,
   DEFAULT_FONT_FAMILY,
@@ -13,27 +13,7 @@ import {
   isCustomComponent,
   supportsTextConstructor,
 } from "./codeHelpers";
-
-const SWING_CLASS_MAP: Partial<Record<ComponentType, string>> = {
-  Panel: "JPanel",
-  Button: "JButton",
-  Label: "JLabel",
-  TextField: "JTextField",
-  PasswordField: "JPasswordField",
-  TextArea: "JTextArea",
-  CheckBox: "JCheckBox",
-  RadioButton: "JRadioButton",
-  ComboBox: "JComboBox<String>",
-  List: "JList<String>",
-  ProgressBar: "JProgressBar",
-  Slider: "JSlider",
-  Spinner: "JSpinner",
-  Separator: "JSeparator",
-};
-
-function getSwingClass(componentType: ComponentType): string {
-  return SWING_CLASS_MAP[componentType] ?? "JButton";
-}
+import { getComponentSwingType, getSwingClass } from "./swingMappings";
 
 function getComponentType(comp: ComponentModel): string {
   return comp.type as string;
@@ -53,14 +33,6 @@ function isMenuItemComponent(comp: ComponentModel): boolean {
 
 function isToolBarComponent(comp: ComponentModel): boolean {
   return getComponentType(comp) === "ToolBar";
-}
-
-function getComponentSwingType(comp: ComponentModel): string {
-  if (isMenuBarComponent(comp)) return "JMenuBar";
-  if (isMenuComponent(comp)) return "JMenu";
-  if (isMenuItemComponent(comp)) return "JMenuItem";
-  if (isToolBarComponent(comp)) return "JToolBar";
-  return getSwingClass(comp.type);
 }
 
 export { hexToRgb };

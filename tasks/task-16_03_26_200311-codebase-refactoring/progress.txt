@@ -1,8 +1,8 @@
 # Ralph Progress - Codebase Refactoring
 
-## Current Iteration: 0
+## Current Iteration: 4
 
-## Completed Stories: 0/26
+## Completed Stories: 4/26
 
 ## Last Run:
 
@@ -18,4 +18,85 @@ Summary: Criado src/generator/codeHelpers.ts e extraídos helpers de código/for
 Files: src/generator/codeHelpers.ts; src/generator/JavaGenerator.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
 Validation: pnpm exec biome check src/generator/JavaGenerator.ts src/generator/codeHelpers.ts PASS; pnpm run compile PASS; pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts src/generator/JavaGenerator.parity.test.ts PASS.
 SQL todo status: UPDATE todos SET status='done' WHERE id='us-010-extract-java-code-helpers';
+---
+
+## [2026-03-16T23:56:00Z] - US-001
+Story: US-001
+Result: SUCCESS
+Summary: Criado shared/types/canvas.ts com JSDoc e definição central de ComponentType, CanvasComponent e CanvasState para compartilhamento entre extension e webview.
+Files: shared/types/canvas.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm exec tsc -p . --noEmit PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-001-shared-types';
+---
+
+## [2026-03-16T23:57:00Z] - US-017
+Story: US-017
+Result: SUCCESS
+Summary: Criado webview-app/src/components/CanvasComponent/minSizes.ts com MIN_SIZE_BY_TYPE e FALLBACK_MIN_SIZE; CanvasComponent.tsx atualizado para importar constantes extraídas.
+Files: webview-app/src/components/CanvasComponent/minSizes.ts; webview-app/src/components/CanvasComponent.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-017-extract-canvascomponent-min-sizes';
+---
+
+## [2026-03-16T21:14:51.6589099-03:00] - US-019
+Story: US-019
+Result: SUCCESS
+Summary: Extraída a lógica de handles de resize para webview-app/src/components/CanvasComponent/resizeHandles.tsx (constante RESIZE_HANDLES e renderização dos botões). CanvasComponent.tsx passou a importar/usar ResizeHandles mantendo comportamento.
+Files: webview-app/src/components/CanvasComponent/resizeHandles.tsx; webview-app/src/components/CanvasComponent.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-019-extract-resize-handles';
+---
+
+## [2026-03-16T21:15:20.1406132-03:00] - US-003
+Story: US-003
+Result: SUCCESS
+Summary: Refatorado webview-app/src/types/canvas.ts para remover duplicações e consumir ComponentType/CanvasComponent/CanvasState de shared/types/canvas.ts via re-export seguro. Mantidos tipos específicos da UI (ComponentProps, CanvasViewState, ConfigDefaults) sem alteração de comportamento.
+Files: webview-app/src/types/canvas.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-003-webview-shared-types';
+---
+
+## [2026-03-16T21:19:07.4763058-03:00] - US-002
+Story: US-002
+Result: SUCCESS
+Summary: Removidas definições duplicadas de tipo em src/components/ComponentModel.ts; o arquivo agora importa e reutiliza CanvasComponent, CanvasState e ComponentType de shared/types/canvas.ts, preservando comportamento da extensão (mudança apenas de tipagem).
+Files: src/components/ComponentModel.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm exec biome check src/components/ComponentModel.ts PASS; pnpm exec tsc -p . --noEmit PASS; pnpm run compile PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-002-extension-shared-types';
+---
+
+## [2026-03-16T21:24:13.3583925-03:00] - US-009
+Story: US-009
+Result: SUCCESS
+Summary: Criado src/generator/swingMappings.ts e extraídos SWING_CLASS_MAP, getSwingClass e getComponentSwingType. JavaGenerator.ts atualizado para importar os mapeamentos mantendo o comportamento de geração.
+Files: src/generator/swingMappings.ts; src/generator/JavaGenerator.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm run compile PASS; pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts src/generator/JavaGenerator.parity.test.ts PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-009-extract-swing-mappings';
+---
+
+## [2026-03-16T21:24:32.6088701-03:00] - US-015
+Story: US-015
+Result: SUCCESS
+Summary: Criado webview-app/src/components/Canvas/constants.ts para centralizar FIXED_ZONE_*, MENU_BAR_*, TOOL_BAR_* e FRAME_TITLE_BAR_HEIGHT. Canvas.tsx passou a importar constantes do novo módulo (removendo definições inline). CanvasComponent.tsx teve bloco de imports atualizado sem alterar comportamento.
+Files: webview-app/src/components/Canvas/constants.ts; webview-app/src/components/Canvas.tsx; webview-app/src/components/CanvasComponent.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-015-extract-canvas-constants';
+---
+
+## [2026-03-16T21:25:27.1163111-03:00] - US-005
+Story: US-005
+Result: SUCCESS
+Summary: Criado src/commands/generateCommand.ts com toda a lógica do comando swingGuiBuilder.generate extraída de src/extension.ts. extension.ts passou a importar e registrar o comando via registerGenerateCommand(outputChannel), mantendo o comportamento original.
+Files: src/commands/generateCommand.ts; src/extension.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm run lint-all PASS; pnpm run compile PASS; pnpm exec tsc -p . --noEmit PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-005-extract-generate-command';
+---
+
+## [2026-03-17T00:24:07.0335421Z] - US-004
+Story: US-004
+Result: SUCCESS
+Summary: Configurados aliases @shared/* no tsconfig da raiz e no webview-app/tsconfig.json; imports de tipos compartilhados atualizados para @shared/types/canvas na extensão e no webview.
+Files: tsconfig.json; webview-app/tsconfig.json; src/components/ComponentModel.ts; webview-app/src/types/canvas.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm exec tsc -p . --noEmit PASS; pnpm exec tsc -p . PASS; pnpm --dir webview-app typecheck PASS; pnpm --dir webview-app build PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-004-tsconfig-path-alias';
 ---
