@@ -42,6 +42,12 @@ export interface GeneratedFile {
   content: string;
 }
 
+export interface GeneratedFileWithPath {
+  fileName: string;
+  content: string;
+  subfolder?: string;
+}
+
 export function generateJavaFiles(state: CanvasState, packageName?: string): GeneratedFile[] {
   const files: GeneratedFile[] = [];
   const methodNames = deduplicateMethodNames(state.components);
