@@ -213,8 +213,8 @@
                 "Verify in browser using dev-browser skill: testar zoom/pan no canvas e confirmar sidebar fixa"
             ],
             "priority": 13,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "App.tsx agora aplica overflow-hidden no root/main e nos containers da lane do canvas, com header marcado como shrink-0, garantindo que apenas o elemento transformado dentro de Canvas.tsx receba zoom/pan. Verificado em browser (dev-browser + Playwright) em http://127.0.0.1:4173: transform do canvas mudou (translate/scale), enquanto sidebar e header mantiveram as mesmas bounds. Evidencia: .agents/skills/dev-browser/tmp/us013-canvas-fixed-verification.png."
         }
     ]
 }

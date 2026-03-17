@@ -185,8 +185,8 @@ function App() {
   });
 
   return (
-    <main className="flex h-screen min-h-screen flex-col bg-vscode-background text-vscode-foreground">
-      <header className="border-b border-vscode-panel-border bg-vscode-panel-background px-4 py-2">
+    <main className="flex h-screen min-h-screen flex-col overflow-hidden bg-vscode-background text-vscode-foreground">
+      <header className="shrink-0 border-b border-vscode-panel-border bg-vscode-panel-background px-4 py-2">
         <Toolbar
           canUndo={canUndo}
           canRedo={canRedo}
@@ -209,9 +209,9 @@ function App() {
           onMoveComponent={handleMoveComponentInHierarchy}
         />
 
-        <section className="flex min-h-0 min-w-0 flex-1">
+        <section className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
           <section
-            className="min-h-0 min-w-0 flex-1 border-r border-vscode-panel-border bg-vscode-background"
+            className="min-h-0 min-w-0 flex-1 overflow-hidden border-r border-vscode-panel-border bg-vscode-background"
             aria-label="Canvas panel"
           >
             <Canvas

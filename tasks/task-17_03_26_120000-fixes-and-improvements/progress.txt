@@ -364,3 +364,33 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Keep scroll ownership in the inner section and clip parent overflow to prevent cross-panel scroll bleed.
 
 [DONE] US-011: Atualizar Palette layout — 2026-03-17T16:28:44Z
+
+## [2026-03-17T16:40:23Z] - US-013 (Attempt 1/3)
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- Status: COMPLETE
+- What was implemented
+  - Updated `webview-app/src/App.tsx` to make the parent layout non-movable by applying `overflow-hidden` to the root/main container and the canvas lane wrappers.
+  - Marked the top toolbar/header as `shrink-0`, so the header remains fixed while pan/zoom updates are constrained to the transformed canvas node.
+  - Ensured parent containers clip overflow, removing parent-level movement and keeping zoom/pan behavior isolated to the canvas element.
+- Files changed
+  - webview-app/src/App.tsx
+  - tasks/task-17_03_26_120000-fixes-and-improvements/prd.json
+  - tasks/task-17_03_26_120000-fixes-and-improvements/progress.txt
+- Validation
+  - Baseline: `pnpm run lint` ❌ (pre-existing unrelated Biome formatting issues in existing test files), `pnpm run typecheck` ✅, `pnpm run compile` ✅, `pnpm run test` ✅
+  - Story-focused: `pnpm exec biome check webview-app/src/App.tsx` ✅
+  - Story-focused: `pnpm --dir webview-app typecheck` ✅
+  - Story-focused: `pnpm run typecheck` ✅
+  - Story-focused: `pnpm run compile` ✅
+  - Browser verification (dev-browser skill + Playwright on `http://127.0.0.1:4173`) ✅
+    - Canvas transform changed from `translate(0px, 0px) scale(1)` to `translate(-120px, -90px) scale(1.1)` after zoom/pan interaction.
+    - Sidebar bounds remained fixed (`x=0, y=49, w=260, h=851`) before/after interaction.
+    - Header bounds remained fixed (`x=0, y=0, w=1440, h=49`) before/after interaction.
+    - Evidence screenshot: `C:\Users\guga_\Desktop\swing-gui-builder-vscode\.agents\skills\dev-browser\tmp\us013-canvas-fixed-verification.png`
+- Commit: `feat: US-013 - Garantir que apenas Canvas seja movível`
+- **Learnings for future iterations:**
+  - For fixed UI lanes, apply `overflow-hidden` to root and intermediary flex containers so only the canvas transform node can move.
+  - `shrink-0` on the top header prevents layout drift during canvas interactions.
+
+[DONE] US-013: Garantir que apenas Canvas seja movível — 2026-03-17T16:40:23Z
+
