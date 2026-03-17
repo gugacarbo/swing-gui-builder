@@ -57,14 +57,19 @@ const SELECT_CLASS_NAME = `${TEXT_INPUT_CLASS_NAME} pr-8`;
 const CHECKBOX_TYPES = new Set<CanvasComponent["type"]>(["CheckBox", "RadioButton"]);
 const ITEM_TYPES = new Set<CanvasComponent["type"]>(["ComboBox", "List"]);
 const RANGE_TYPES = new Set<CanvasComponent["type"]>(["ProgressBar", "Slider", "Spinner"]);
-const TOOLBAR_POSITION_OPTIONS: ReadonlyArray<{ label: string; value: "top" | "bottom" | "left" | "right" }> = [
+const TOOLBAR_POSITION_OPTIONS: ReadonlyArray<{
+  label: string;
+  value: "top" | "bottom" | "left" | "right";
+}> = [
   { label: "Top (north)", value: "top" },
   { label: "Bottom (south)", value: "bottom" },
   { label: "Left (west)", value: "left" },
   { label: "Right (east)", value: "right" },
 ];
 
-function toToolBarPositionValue(position: CanvasComponent["position"] | undefined): "top" | "bottom" | "left" | "right" {
+function toToolBarPositionValue(
+  position: CanvasComponent["position"] | undefined,
+): "top" | "bottom" | "left" | "right" {
   switch (position) {
     case "north":
       return "top";
@@ -96,7 +101,9 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
     return (
       <section className="flex h-full flex-col" aria-label="Properties panel">
         <PropertiesHeader />
-        <div className="p-4 text-sm text-muted-foreground">Select a component on canvas to edit its properties.</div>
+        <div className="p-4 text-sm text-muted-foreground">
+          Select a component on canvas to edit its properties.
+        </div>
       </section>
     );
   }
@@ -158,7 +165,9 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
               type="checkbox"
               className="h-4 w-4 accent-vscode-focusBorder"
               checked={component.selected ?? false}
-              onChange={(event) => onUpdateComponent(component.id, { selected: event.target.checked })}
+              onChange={(event) =>
+                onUpdateComponent(component.id, { selected: event.target.checked })
+              }
             />
           </FormField>
         ) : null}

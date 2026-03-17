@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from "react";
 import { FileCode2, FolderTree, X } from "lucide-react";
+import { useEffect, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -73,7 +73,9 @@ function buildPreviewTree(files: PreviewCodeFile[]): PreviewTreeNode[] {
 
   files
     .slice()
-    .sort((left, right) => left.fileName.localeCompare(right.fileName, undefined, { sensitivity: "base" }))
+    .sort((left, right) =>
+      left.fileName.localeCompare(right.fileName, undefined, { sensitivity: "base" }),
+    )
     .forEach((file, index) => {
       const normalizedPath = normalizeFilePath(file.fileName);
       const parts = normalizedPath.split("/").filter((part) => part.length > 0);
@@ -131,7 +133,9 @@ function renderTreeNodes(
                 <FolderTree className="size-3.5 shrink-0" aria-hidden="true" />
                 <span className="truncate">{node.name}</span>
               </div>
-              {node.children.length > 0 ? renderTreeNodes(node.children, selectedFileName, onSelectFile, depth + 1) : null}
+              {node.children.length > 0
+                ? renderTreeNodes(node.children, selectedFileName, onSelectFile, depth + 1)
+                : null}
             </li>
           );
         }
@@ -144,7 +148,9 @@ function renderTreeNodes(
               type="button"
               className={cn(
                 "flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs",
-                isSelected ? "bg-accent text-foreground" : "text-vscode-foreground hover:bg-accent/70",
+                isSelected
+                  ? "bg-accent text-foreground"
+                  : "text-vscode-foreground hover:bg-accent/70",
               )}
               onClick={() => onSelectFile(node.file.fileName)}
               title={node.file.fileName}
@@ -159,7 +165,14 @@ function renderTreeNodes(
   );
 }
 
-export function PreviewCodeModal({ isOpen, files, selectedFileName, onSelectFile, onGenerate, onClose }: PreviewCodeModalProps) {
+export function PreviewCodeModal({
+  isOpen,
+  files,
+  selectedFileName,
+  onSelectFile,
+  onGenerate,
+  onClose,
+}: PreviewCodeModalProps) {
   const selectedFile = useMemo(
     () => files.find((file) => file.fileName === selectedFileName) ?? null,
     [files, selectedFileName],
@@ -222,7 +235,13 @@ export function PreviewCodeModal({ isOpen, files, selectedFileName, onSelectFile
             <Button type="button" variant="secondary" size="sm" onClick={handleGenerate}>
               Generate
             </Button>
-            <Button type="button" variant="outline" size="sm" onClick={onClose} aria-label="Close preview modal">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+              aria-label="Close preview modal"
+            >
               <X className="size-4" aria-hidden="true" />
               Close
             </Button>

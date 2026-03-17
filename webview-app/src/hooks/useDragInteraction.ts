@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { calculateResize, snapToGrid, type Rect, type ResizeHandle } from "@/lib/geometry";
+import { type Rect, type ResizeHandle, calculateResize, snapToGrid } from "@/lib/geometry";
 import type { CanvasComponent as CanvasComponentModel } from "@/types/canvas";
 
 interface DragStartOptions {
@@ -17,7 +17,10 @@ interface DragSession {
   startRect: Rect;
 }
 
-type DragPointerEvent = Pick<React.PointerEvent<HTMLElement>, "button" | "clientX" | "clientY" | "stopPropagation"> &
+type DragPointerEvent = Pick<
+  React.PointerEvent<HTMLElement>,
+  "button" | "clientX" | "clientY" | "stopPropagation"
+> &
   Partial<Pick<React.PointerEvent<HTMLElement>, "pointerId">>;
 
 interface UseDragInteractionOptions {
@@ -25,7 +28,10 @@ interface UseDragInteractionOptions {
   zoom: number;
   onSelect: (id: string) => void;
   onMove: (id: string, nextX: number, nextY: number) => void;
-  onResize: (id: string, updates: Pick<CanvasComponentModel, "x" | "y" | "width" | "height">) => void;
+  onResize: (
+    id: string,
+    updates: Pick<CanvasComponentModel, "x" | "y" | "width" | "height">,
+  ) => void;
   minWidth?: number;
   minHeight?: number;
   gridSize?: number;
@@ -97,7 +103,11 @@ export function useDragInteraction({
       const deltaY = (event.clientY - interaction.startClientY) / zoom;
 
       if (interaction.mode === "move") {
-        onMove(component.id, snapToGrid(interaction.startRect.x + deltaX, gridSize), snapToGrid(interaction.startRect.y + deltaY, gridSize));
+        onMove(
+          component.id,
+          snapToGrid(interaction.startRect.x + deltaX, gridSize),
+          snapToGrid(interaction.startRect.y + deltaY, gridSize),
+        );
         return;
       }
 
@@ -119,22 +129,25 @@ export function useDragInteraction({
     [component.id, gridSize, interaction, onMove, onResize, safeMinHeight, safeMinWidth, zoom],
   );
 
-  const handleMouseUp = useCallback((event: DragPointerEvent) => {
-    if (!interaction) {
-      return false;
-    }
+  const handleMouseUp = useCallback(
+    (event: DragPointerEvent) => {
+      if (!interaction) {
+        return false;
+      }
 
-    if (
-      interaction.pointerId !== null &&
-      typeof event.pointerId === "number" &&
-      event.pointerId !== interaction.pointerId
-    ) {
-      return false;
-    }
+      if (
+        interaction.pointerId !== null &&
+        typeof event.pointerId === "number" &&
+        event.pointerId !== interaction.pointerId
+      ) {
+        return false;
+      }
 
-    setInteraction(null);
-    return true;
-  }, [interaction]);
+      setInteraction(null);
+      return true;
+    },
+    [interaction],
+  );
 
   return {
     isDragging,

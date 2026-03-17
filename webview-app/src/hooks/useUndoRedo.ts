@@ -24,7 +24,10 @@ export interface UseUndoRedoResult<T> {
   };
 }
 
-export function useUndoRedo<T>(initialState: T, options: UndoRedoOptions = {}): UseUndoRedoResult<T> {
+export function useUndoRedo<T>(
+  initialState: T,
+  options: UndoRedoOptions = {},
+): UseUndoRedoResult<T> {
   const { historyLimit = 100 } = options;
 
   const [historyState, setHistoryState] = useState<HistoryState<T>>({

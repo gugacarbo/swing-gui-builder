@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { FormField } from "@/components/PropertiesPanel/FormField";
-import { parseHexColorInput } from "@/schemas/parsers";
 import { cn } from "@/lib/utils";
+import { parseHexColorInput } from "@/schemas/parsers";
 
 interface ColorFieldProps {
   label: string;

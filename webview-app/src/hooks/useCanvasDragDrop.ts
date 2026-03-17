@@ -34,7 +34,9 @@ function toComponentType(rawType: string): ComponentType | null {
 }
 
 function createComponentId(): string {
-  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return (
+    globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
+  );
 }
 
 export interface UseCanvasDragDropOptions {
@@ -122,7 +124,8 @@ export function useCanvasDragDrop({
       setIsDragging(false);
 
       const paletteType =
-        event.dataTransfer.getData("application/x-swing-component") || event.dataTransfer.getData("text/plain");
+        event.dataTransfer.getData("application/x-swing-component") ||
+        event.dataTransfer.getData("text/plain");
 
       const componentType = resolveComponentType(paletteType);
       if (!componentType || !viewportRef.current) {
@@ -150,7 +153,17 @@ export function useCanvasDragDrop({
       onAddComponent(component);
       onSelectComponent(component.id);
     },
-    [componentsCount, createId, onAddComponent, onSelectComponent, pan.x, pan.y, resolveComponentType, viewportRef, zoom],
+    [
+      componentsCount,
+      createId,
+      onAddComponent,
+      onSelectComponent,
+      pan.x,
+      pan.y,
+      resolveComponentType,
+      viewportRef,
+      zoom,
+    ],
   );
 
   return {

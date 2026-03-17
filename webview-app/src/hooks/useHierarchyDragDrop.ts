@@ -71,7 +71,8 @@ function clampIndex(index: number, length: number): number {
 }
 
 function getDraggingId(dataTransfer: DataTransfer): string | null {
-  const dragId = dataTransfer.getData(HIERARCHY_DRAG_DATA_MIME) || dataTransfer.getData("text/plain");
+  const dragId =
+    dataTransfer.getData(HIERARCHY_DRAG_DATA_MIME) || dataTransfer.getData("text/plain");
   const trimmedDragId = dragId.trim();
   return trimmedDragId.length > 0 ? trimmedDragId : null;
 }
@@ -86,7 +87,9 @@ function resolveParentId(
     return component.parentId;
   }
 
-  const explicitParent = components.find((candidate) => (candidate.children ?? []).includes(componentId));
+  const explicitParent = components.find((candidate) =>
+    (candidate.children ?? []).includes(componentId),
+  );
   return explicitParent?.id ?? null;
 }
 
@@ -120,7 +123,10 @@ function resolveDropPosition(
   draggedType: HierarchyType,
   targetType: HierarchyType,
 ): HierarchyDropPosition {
-  if ((draggedType === "MenuItem" && targetType === "Menu") || (draggedType === "Menu" && targetType === "MenuBar")) {
+  if (
+    (draggedType === "MenuItem" && targetType === "Menu") ||
+    (draggedType === "Menu" && targetType === "MenuBar")
+  ) {
     return "inside";
   }
 
@@ -236,14 +242,17 @@ export function moveComponentInHierarchy(
   const componentType = toHierarchyType(component.type);
   const nextParentType = toHierarchyType(nextParent.type);
   const isValidMove =
-    (componentType === "MenuItem" && nextParentType === "Menu") || (componentType === "Menu" && nextParentType === "MenuBar");
+    (componentType === "MenuItem" && nextParentType === "Menu") ||
+    (componentType === "Menu" && nextParentType === "MenuBar");
 
   if (!isValidMove) {
     return components;
   }
 
   const currentParentId = resolveParentId(componentId, components, componentsById);
-  const currentChildren = currentParentId ? getOrderedChildIds(currentParentId, components, componentsById) : [];
+  const currentChildren = currentParentId
+    ? getOrderedChildIds(currentParentId, components, componentsById)
+    : [];
   if (currentParentId && !currentChildren.includes(componentId)) {
     return components;
   }
@@ -254,7 +263,9 @@ export function moveComponentInHierarchy(
     : [];
   const targetChildrenBeforeInsert = sameParent
     ? sourceChildrenWithoutComponent
-    : getOrderedChildIds(nextParentId, components, componentsById).filter((childId) => childId !== componentId);
+    : getOrderedChildIds(nextParentId, components, componentsById).filter(
+        (childId) => childId !== componentId,
+      );
 
   const insertionIndex = clampIndex(nextIndex, targetChildrenBeforeInsert.length);
   const reorderedTargetChildren = [...targetChildrenBeforeInsert];
@@ -310,10 +321,16 @@ export function moveComponentInHierarchy(
   return didChange ? nextComponents : components;
 }
 
-export function useHierarchyDragDrop({ components, onMoveComponent }: UseHierarchyDragDropOptions): UseHierarchyDragDropResult {
+export function useHierarchyDragDrop({
+  components,
+  onMoveComponent,
+}: UseHierarchyDragDropOptions): UseHierarchyDragDropResult {
   const [draggingComponentId, setDraggingComponentId] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<HierarchyDropTarget | null>(null);
-  const componentsById = useMemo(() => new Map(components.map((component) => [component.id, component])), [components]);
+  const componentsById = useMemo(
+    () => new Map(components.map((component) => [component.id, component])),
+    [components],
+  );
 
   const isDraggableComponent = useCallback(
     (componentId: string): boolean => {
@@ -375,7 +392,9 @@ export function useHierarchyDragDrop({ components, onMoveComponent }: UseHierarc
       );
 
       if (!dropInstruction) {
-        setDropTarget((previous) => (previous?.componentId === targetComponentId ? null : previous));
+        setDropTarget((previous) =>
+          previous?.componentId === targetComponentId ? null : previous,
+        );
         return;
       }
 

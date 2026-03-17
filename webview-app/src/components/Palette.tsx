@@ -20,6 +20,7 @@ import {
   Wrench,
 } from "lucide-react";
 
+import { toSwingTypeLabel } from "@/lib/swingTypeLabels";
 import { cn } from "@/lib/utils";
 
 interface PaletteItem {
@@ -35,26 +36,26 @@ interface PaletteSection {
 }
 
 const COMPONENT_ITEMS: PaletteItem[] = [
-  { id: "JPanel", name: "JPanel", icon: LayoutPanelLeft },
-  { id: "JButton", name: "JButton", icon: Square },
-  { id: "JLabel", name: "JLabel", icon: Type },
-  { id: "JTextField", name: "JTextField", icon: Braces },
-  { id: "JTextArea", name: "JTextArea", icon: PanelTop },
-  { id: "JCheckBox", name: "JCheckBox", icon: Component },
-  { id: "JRadioButton", name: "JRadioButton", icon: Circle },
-  { id: "JComboBox", name: "JComboBox", icon: ChevronDown },
-  { id: "JList", name: "JList", icon: List },
-  { id: "JProgressBar", name: "JProgressBar", icon: Loader },
-  { id: "JSlider", name: "JSlider", icon: SlidersHorizontal },
-  { id: "JSpinner", name: "JSpinner", icon: Hash },
-  { id: "JSeparator", name: "JSeparator", icon: Minus },
+  { id: "JPanel", name: toSwingTypeLabel("JPanel"), icon: LayoutPanelLeft },
+  { id: "JButton", name: toSwingTypeLabel("JButton"), icon: Square },
+  { id: "JLabel", name: toSwingTypeLabel("JLabel"), icon: Type },
+  { id: "JTextField", name: toSwingTypeLabel("JTextField"), icon: Braces },
+  { id: "JTextArea", name: toSwingTypeLabel("JTextArea"), icon: PanelTop },
+  { id: "JCheckBox", name: toSwingTypeLabel("JCheckBox"), icon: Component },
+  { id: "JRadioButton", name: toSwingTypeLabel("JRadioButton"), icon: Circle },
+  { id: "JComboBox", name: toSwingTypeLabel("JComboBox"), icon: ChevronDown },
+  { id: "JList", name: toSwingTypeLabel("JList"), icon: List },
+  { id: "JProgressBar", name: toSwingTypeLabel("JProgressBar"), icon: Loader },
+  { id: "JSlider", name: toSwingTypeLabel("JSlider"), icon: SlidersHorizontal },
+  { id: "JSpinner", name: toSwingTypeLabel("JSpinner"), icon: Hash },
+  { id: "JSeparator", name: toSwingTypeLabel("JSeparator"), icon: Minus },
 ];
 
 const CONTAINER_ITEMS: PaletteItem[] = [
-  { id: "JMenuBar", name: "JMenuBar", icon: Rows3 },
-  { id: "JMenu", name: "JMenu", icon: SquareMenu },
-  { id: "JMenuItem", name: "JMenuItem", icon: ListTree },
-  { id: "JToolBar", name: "JToolBar", icon: Wrench },
+  { id: "JMenuBar", name: toSwingTypeLabel("JMenuBar"), icon: Rows3 },
+  { id: "JMenu", name: toSwingTypeLabel("JMenu"), icon: SquareMenu },
+  { id: "JMenuItem", name: toSwingTypeLabel("JMenuItem"), icon: ListTree },
+  { id: "JToolBar", name: toSwingTypeLabel("JToolBar"), icon: Wrench },
 ];
 
 const PALETTE_SECTIONS: PaletteSection[] = [

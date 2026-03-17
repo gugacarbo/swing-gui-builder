@@ -1,13 +1,19 @@
 import { useCallback, useMemo } from "react";
 
-import type { OutgoingExtensionMessage, StateChangedMessage, ToolbarCommand, ToolbarCommandMessage } from "@/types/messages";
+import type {
+  OutgoingExtensionMessage,
+  StateChangedMessage,
+  ToolbarCommand,
+  ToolbarCommandMessage,
+} from "@/types/messages";
 
 interface VsCodeApi {
   postMessage: (message: unknown) => void;
 }
 
 function getVsCodeApi(): VsCodeApi | null {
-  const maybeAcquire = (globalThis as typeof globalThis & { acquireVsCodeApi?: () => VsCodeApi }).acquireVsCodeApi;
+  const maybeAcquire = (globalThis as typeof globalThis & { acquireVsCodeApi?: () => VsCodeApi })
+    .acquireVsCodeApi;
   if (!maybeAcquire) {
     return null;
   }

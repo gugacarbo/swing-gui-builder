@@ -27,7 +27,9 @@ export function useCanvasState(initialComponents: CanvasComponent[] = []): UseCa
   }, []);
 
   const updateComponent = useCallback((id: string, updates: Partial<CanvasComponent>) => {
-    setComponents((previous) => previous.map((component) => (component.id === id ? { ...component, ...updates } : component)));
+    setComponents((previous) =>
+      previous.map((component) => (component.id === id ? { ...component, ...updates } : component)),
+    );
   }, []);
 
   const removeComponent = useCallback((id: string) => {
@@ -72,7 +74,8 @@ export function useCanvasState(initialComponents: CanvasComponent[] = []): UseCa
       const shouldAddChildToParent = !parentChildren.includes(childId);
       const shouldUpdateChildParent = child.parentId !== parentId;
       const previousParentId = child.parentId;
-      const shouldDetachFromPreviousParent = previousParentId !== undefined && previousParentId !== parentId;
+      const shouldDetachFromPreviousParent =
+        previousParentId !== undefined && previousParentId !== parentId;
 
       if (!shouldAddChildToParent && !shouldUpdateChildParent && !shouldDetachFromPreviousParent) {
         return previous;
@@ -166,7 +169,9 @@ export function useCanvasState(initialComponents: CanvasComponent[] = []): UseCa
 
   const getRootComponents = useCallback(() => {
     const componentIds = new Set(components.map((component) => component.id));
-    return components.filter((component) => !component.parentId || !componentIds.has(component.parentId));
+    return components.filter(
+      (component) => !component.parentId || !componentIds.has(component.parentId),
+    );
   }, [components]);
 
   const selectComponent = useCallback(
@@ -184,7 +189,10 @@ export function useCanvasState(initialComponents: CanvasComponent[] = []): UseCa
   );
 
   useEffect(() => {
-    if (selectedComponentId && !components.some((component) => component.id === selectedComponentId)) {
+    if (
+      selectedComponentId &&
+      !components.some((component) => component.id === selectedComponentId)
+    ) {
       setSelectedComponentId(null);
     }
   }, [components, selectedComponentId]);

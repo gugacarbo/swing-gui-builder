@@ -1,6 +1,11 @@
 import type { CanvasState, ConfigDefaults } from "@/types/canvas";
 
-export { IncomingExtensionMessageSchema, MessageSchema, OutgoingExtensionMessageSchema, ToolbarCommandSchema } from "@/schemas/messages";
+export {
+  IncomingExtensionMessageSchema,
+  MessageSchema,
+  OutgoingExtensionMessageSchema,
+  ToolbarCommandSchema,
+} from "@/schemas/messages";
 
 export type ToolbarCommand =
   | "newWindow"
@@ -44,5 +49,8 @@ export interface PreviewCodeResponseMessage {
 }
 
 export type OutgoingExtensionMessage = StateChangedMessage | ToolbarCommandMessage;
-export type IncomingExtensionMessage = LoadStateMessage | ConfigDefaultsMessage | PreviewCodeResponseMessage;
+export type IncomingExtensionMessage =
+  | LoadStateMessage
+  | ConfigDefaultsMessage
+  | PreviewCodeResponseMessage;
 export type Message = OutgoingExtensionMessage | IncomingExtensionMessage;

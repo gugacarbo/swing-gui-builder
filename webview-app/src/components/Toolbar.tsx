@@ -1,5 +1,5 @@
-import { Eye, WandSparkles, Undo2, Redo2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Eye, Redo2, Trash2, Undo2, WandSparkles } from "lucide-react";
 
 interface ToolbarProps {
   canUndo: boolean;
@@ -28,27 +28,61 @@ export function Toolbar({
 }: ToolbarProps) {
   return (
     <nav className="flex flex-wrap items-center gap-2" aria-label="Editor actions toolbar">
-      <Button type="button" variant="outline" size="sm" onClick={onUndo} disabled={!canUndo} aria-label="Undo">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={onUndo}
+        disabled={!canUndo}
+        aria-label="Undo"
+      >
         <Undo2 aria-hidden="true" />
         Undo
       </Button>
 
-      <Button type="button" variant="outline" size="sm" onClick={onRedo} disabled={!canRedo} aria-label="Redo">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={onRedo}
+        disabled={!canRedo}
+        aria-label="Redo"
+      >
         <Redo2 aria-hidden="true" />
         Redo
       </Button>
 
-      <Button type="button" variant="destructive" size="sm" onClick={onDelete} disabled={!canDelete} aria-label="Delete selected component">
+      <Button
+        type="button"
+        variant="destructive"
+        size="sm"
+        onClick={onDelete}
+        disabled={!canDelete}
+        aria-label="Delete selected component"
+      >
         <Trash2 aria-hidden="true" />
         Delete
       </Button>
 
-      <Button type="button" variant="outline" size="sm" onClick={onPreviewCode} disabled={!canPreview} aria-label="Preview generated Java code">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={onPreviewCode}
+        disabled={!canPreview}
+        aria-label="Preview generated Java code"
+      >
         <Eye aria-hidden="true" />
         Preview Code
       </Button>
 
-      <Button type="button" size="sm" onClick={onGenerate} disabled={!canGenerate} aria-label="Generate Java code">
+      <Button
+        type="button"
+        size="sm"
+        onClick={onGenerate}
+        disabled={!canGenerate}
+        aria-label="Generate Java code"
+      >
         <WandSparkles aria-hidden="true" />
         Generate
       </Button>

@@ -61,14 +61,7 @@ export function snapToGrid(value: number, gridSize = 1): number {
  * @returns A new rectangle representing the resized bounds.
  */
 export function calculateResize(startRect: Rect, options: ResizeOptions): Rect {
-  const {
-    handle,
-    deltaX,
-    deltaY,
-    minWidth = 1,
-    minHeight = 1,
-    gridSize = 1,
-  } = options;
+  const { handle, deltaX, deltaY, minWidth = 1, minHeight = 1, gridSize = 1 } = options;
 
   let nextX = startRect.x;
   let nextY = startRect.y;
@@ -114,5 +107,3 @@ export function calculateResize(startRect: Rect, options: ResizeOptions): Rect {
 export function isPointInRect(x: number, y: number, rect: Rect): boolean {
   return x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height;
 }
-
-

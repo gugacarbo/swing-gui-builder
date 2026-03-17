@@ -1,13 +1,25 @@
-import { z, type ZodError } from "zod";
+import { type ZodError, z } from "zod";
 
-import { CanvasComponentSchema, CanvasStateSchema, type CanvasComponent, type CanvasState } from "@/schemas/canvas";
-import { MessageSchema, type ExtensionMessage } from "@/schemas/messages";
+import {
+  type CanvasComponent,
+  CanvasComponentSchema,
+  type CanvasState,
+  CanvasStateSchema,
+} from "@/schemas/canvas";
+import { type ExtensionMessage, MessageSchema } from "@/schemas/messages";
 
-const HexColorSchema = z.string().trim().regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
-  message: "Color must be #RGB or #RRGGBB",
-});
+const HexColorSchema = z
+  .string()
+  .trim()
+  .regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+    message: "Color must be #RGB or #RRGGBB",
+  });
 
-const NumberInputSchema = z.string().trim().min(1, { message: "Value is required" }).transform((value) => Number(value));
+const NumberInputSchema = z
+  .string()
+  .trim()
+  .min(1, { message: "Value is required" })
+  .transform((value) => Number(value));
 
 function clampNumber(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -53,7 +65,13 @@ export function parseMessage(data: unknown): ExtensionMessage | null {
     const candidateType = (data as { type?: unknown }).type;
     if (
       typeof candidateType === "string" &&
-      !["stateChanged", "toolbarCommand", "loadState", "configDefaults", "previewCodeResponse"].includes(candidateType)
+      ![
+        "stateChanged",
+        "toolbarCommand",
+        "loadState",
+        "configDefaults",
+        "previewCodeResponse",
+      ].includes(candidateType)
     ) {
       console.warn("[zod] Unknown extension message type ignored", {
         type: candidateType,
@@ -73,7 +91,10 @@ export function parseMessage(data: unknown): ExtensionMessage | null {
   return result.data;
 }
 
-export function parseClampedNumericInput(rawValue: string, options: NumericInputOptions): number | null {
+export function parseClampedNumericInput(
+  rawValue: string,
+  options: NumericInputOptions,
+): number | null {
   const schema = NumberInputSchema.pipe(z.number().finite()).transform((value) => {
     const nextValue = options.integer ? Math.round(value) : value;
     return clampNumber(nextValue, options.min, options.max);

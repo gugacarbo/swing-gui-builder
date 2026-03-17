@@ -1,3 +1,4 @@
+import { DEFAULT_BG, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR } from "@/lib/constants";
 import { z } from "zod";
 
 export const ComponentTypeSchema = z.enum([
@@ -49,10 +50,10 @@ export const CanvasComponentSchema = z.object({
   width: z.number().finite().min(1),
   height: z.number().finite().min(1),
   text: z.string().default(""),
-  backgroundColor: z.string().default("#ffffff"),
-  textColor: z.string().default("#000000"),
-  fontFamily: z.string().default("Arial"),
-  fontSize: z.number().finite().min(1).default(12),
+  backgroundColor: z.string().default(DEFAULT_BG),
+  textColor: z.string().default(DEFAULT_TEXT_COLOR),
+  fontFamily: z.string().default(DEFAULT_FONT_FAMILY),
+  fontSize: z.number().finite().min(1).default(DEFAULT_FONT_SIZE),
   eventMethodName: z.string().default(""),
   selected: z.boolean().optional(),
   items: z.array(z.string()).optional(),

@@ -6,9 +6,9 @@ import { Palette } from "@/components/Palette";
 import { PreviewCodeModal } from "@/components/PreviewCodeModal";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { Toolbar } from "@/components/Toolbar";
-import { moveComponentInHierarchy } from "@/hooks/useHierarchyDragDrop";
 import { useCanvasState } from "@/hooks/useCanvasState";
 import { useExtensionListener } from "@/hooks/useExtensionListener";
+import { moveComponentInHierarchy } from "@/hooks/useHierarchyDragDrop";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { usePostMessage } from "@/hooks/usePostMessage";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
@@ -23,7 +23,8 @@ const INITIAL_CANVAS_STATE: CanvasState = {
 };
 
 function App() {
-  const { components, selectedComponent, selectedComponentId, setComponents, selectComponent } = useCanvasState([]);
+  const { components, selectedComponent, selectedComponentId, setComponents, selectComponent } =
+    useCanvasState([]);
   const [frameDimensions, setFrameDimensions] = useState({
     width: INITIAL_CANVAS_STATE.frameWidth,
     height: INITIAL_CANVAS_STATE.frameHeight,
@@ -67,7 +68,9 @@ function App() {
   const handleMoveComponent = useCallback(
     (id: string, x: number, y: number) => {
       updateComponents((current) =>
-        current.map((component) => (component.id === id ? { ...component, x: Math.round(x), y: Math.round(y) } : component)),
+        current.map((component) =>
+          component.id === id ? { ...component, x: Math.round(x), y: Math.round(y) } : component,
+        ),
       );
     },
     [updateComponents],
@@ -75,21 +78,31 @@ function App() {
 
   const handleResizeComponent = useCallback(
     (id: string, updates: Pick<CanvasComponent, "x" | "y" | "width" | "height">) => {
-      updateComponents((current) => current.map((component) => (component.id === id ? { ...component, ...updates } : component)));
+      updateComponents((current) =>
+        current.map((component) =>
+          component.id === id ? { ...component, ...updates } : component,
+        ),
+      );
     },
     [updateComponents],
   );
 
   const handleUpdateComponent = useCallback(
     (id: string, updates: Partial<CanvasComponent>) => {
-      updateComponents((current) => current.map((component) => (component.id === id ? { ...component, ...updates } : component)));
+      updateComponents((current) =>
+        current.map((component) =>
+          component.id === id ? { ...component, ...updates } : component,
+        ),
+      );
     },
     [updateComponents],
   );
 
   const handleMoveComponentInHierarchy = useCallback(
     (componentId: string, parentId: string, index: number) => {
-      updateComponents((current) => moveComponentInHierarchy(current, componentId, parentId, index));
+      updateComponents((current) =>
+        moveComponentInHierarchy(current, componentId, parentId, index),
+      );
     },
     [updateComponents],
   );
@@ -99,7 +112,9 @@ function App() {
       return;
     }
 
-    updateComponents((current) => current.filter((component) => component.id !== selectedComponentId));
+    updateComponents((current) =>
+      current.filter((component) => component.id !== selectedComponentId),
+    );
     selectComponent(null);
   }, [selectComponent, selectedComponentId, updateComponents]);
 
@@ -203,7 +218,10 @@ function App() {
           </div>
         </aside>
 
-        <section className="min-h-0 border-r border-vscode-panel-border bg-vscode-background" aria-label="Canvas panel">
+        <section
+          className="min-h-0 border-r border-vscode-panel-border bg-vscode-background"
+          aria-label="Canvas panel"
+        >
           <Canvas
             frameWidth={frameDimensions.width}
             frameHeight={frameDimensions.height}
@@ -217,7 +235,10 @@ function App() {
         </section>
 
         <aside className="min-h-0 bg-vscode-panel-background">
-          <PropertiesPanel component={selectedComponent} onUpdateComponent={handleUpdateComponent} />
+          <PropertiesPanel
+            component={selectedComponent}
+            onUpdateComponent={handleUpdateComponent}
+          />
 
           <div className="mx-4 mb-4 rounded-md border border-vscode-panel-border bg-vscode-background/40 p-3 text-xs text-muted-foreground">
             <p>Selected node: {selectedComponentId ?? "None"}</p>

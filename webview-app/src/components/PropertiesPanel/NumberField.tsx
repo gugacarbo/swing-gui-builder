@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { FormField } from "@/components/PropertiesPanel/FormField";
-import { parseClampedNumericInput, type NumericInputOptions } from "@/schemas/parsers";
 import { cn } from "@/lib/utils";
+import { type NumericInputOptions, parseClampedNumericInput } from "@/schemas/parsers";
 
 interface NumberFieldProps {
   label: string;

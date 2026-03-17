@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { useHierarchyDragDrop, type HierarchyDropTarget } from "@/hooks/useHierarchyDragDrop";
+import { toSwingTypeLabel } from "@/lib/swingTypeLabels";
 import { cn } from "@/lib/utils";
 import type { CanvasComponent } from "@/types/canvas";
 
@@ -33,29 +34,6 @@ interface HierarchyTreeNodeProps {
   onDragEnd: () => void;
 }
 
-const SWING_TYPE_LABELS: Record<string, string> = {
-  Panel: "JPanel",
-  Button: "JButton",
-  Label: "JLabel",
-  TextField: "JTextField",
-  PasswordField: "JPasswordField",
-  TextArea: "JTextArea",
-  CheckBox: "JCheckBox",
-  RadioButton: "JRadioButton",
-  ComboBox: "JComboBox",
-  List: "JList",
-  ProgressBar: "JProgressBar",
-  Slider: "JSlider",
-  Spinner: "JSpinner",
-  Separator: "JSeparator",
-  MenuBar: "JMenuBar",
-  JMenuBar: "JMenuBar",
-  Menu: "JMenu",
-  JMenu: "JMenu",
-  MenuItem: "JMenuItem",
-  JMenuItem: "JMenuItem",
-};
-
 const HIERARCHY_COLLAPSED_STORAGE_KEY = "swing-gui-builder.sidebar.hierarchy-collapsed";
 
 function getInitialHierarchyCollapsedState(): boolean {
@@ -69,14 +47,6 @@ function getInitialHierarchyCollapsedState(): boolean {
     console.warn("[HierarchyPanel] Failed to read persisted collapse state", error);
     return false;
   }
-}
-
-function toSwingTypeLabel(type: string): string {
-  if (type in SWING_TYPE_LABELS) {
-    return SWING_TYPE_LABELS[type];
-  }
-
-  return type.startsWith("J") ? type : `J${type}`;
 }
 
 function getComponentName(component: CanvasComponent): string {

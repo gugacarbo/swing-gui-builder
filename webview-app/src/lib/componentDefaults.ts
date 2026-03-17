@@ -1,10 +1,11 @@
+import { DEFAULT_BG, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_TEXT_COLOR } from "@/lib/constants";
 import type { CanvasComponent, ComponentProps, ComponentType } from "@/types/canvas";
 
 const BASE_DEFAULT_PROPS: Omit<ComponentProps, "text"> = {
-  backgroundColor: "#ffffff",
-  textColor: "#000000",
-  fontFamily: "Arial",
-  fontSize: 12,
+  backgroundColor: DEFAULT_BG,
+  textColor: DEFAULT_TEXT_COLOR,
+  fontFamily: DEFAULT_FONT_FAMILY,
+  fontSize: DEFAULT_FONT_SIZE,
   eventMethodName: "",
 };
 

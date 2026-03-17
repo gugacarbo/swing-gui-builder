@@ -37,7 +37,13 @@ export function useCanvasZoomPan(): UseCanvasZoomPanResult {
     event.preventDefault();
 
     if (event.ctrlKey) {
-      setZoom((previousZoom) => clamp(roundZoom(previousZoom + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP)), ZOOM_MIN, ZOOM_MAX));
+      setZoom((previousZoom) =>
+        clamp(
+          roundZoom(previousZoom + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP)),
+          ZOOM_MIN,
+          ZOOM_MAX,
+        ),
+      );
       return;
     }
 
