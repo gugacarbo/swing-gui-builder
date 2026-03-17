@@ -7,3 +7,15 @@
 ## Last Run:
 
 ## Notes:
+
+- US-022 (Criar mapeamentos de tipos Swing): concluída. Criado webview-app/src/lib/swingTypeLabels.ts, mapeamento removido de HierarchyPanel, imports/uso atualizados em HierarchyPanel.tsx e Palette.tsx, typecheck webview-app OK.
+- SQL todo status: UPDATE todos SET status='done' WHERE id='us-022-create-swing-type-label-mapping';
+
+## [2026-03-16T21:05:31.7957534-03:00] - US-010
+Story: US-010
+Result: SUCCESS
+Summary: Criado src/generator/codeHelpers.ts e extraídos helpers de código/formatação (hexToRgb, capitalize, isCustomComponent, escapeJava, supportsTextConstructor, getComponentInitCode, getComponentPropsCode, getListenerCode, applyInlineStyleCode). JavaGenerator.ts atualizado para importar os helpers mantendo comportamento.
+Files: src/generator/codeHelpers.ts; src/generator/JavaGenerator.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm exec biome check src/generator/JavaGenerator.ts src/generator/codeHelpers.ts PASS; pnpm run compile PASS; pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts src/generator/JavaGenerator.parity.test.ts PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-010-extract-java-code-helpers';
+---

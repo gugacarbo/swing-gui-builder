@@ -150,8 +150,8 @@
                 "Typecheck passes"
             ],
             "priority": 10,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Criado src/generator/codeHelpers.ts com helpers extraídos (hexToRgb, capitalize, isCustomComponent e utilitários de formatação/geração). JavaGenerator.ts atualizado para importar os helpers mantendo comportamento. Validação: biome check focal, pnpm run compile e testes JavaGenerator passaram."
         },
         {
             "id": "US-011",
