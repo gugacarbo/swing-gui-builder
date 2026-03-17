@@ -1,24 +1,8 @@
-export type ComponentType =
-  | "Panel"
-  | "Button"
-  | "Label"
-  | "TextField"
-  | "PasswordField"
-  | "TextArea"
-  | "CheckBox"
-  | "RadioButton"
-  | "ComboBox"
-  | "List"
-  | "ProgressBar"
-  | "Slider"
-  | "Spinner"
-  | "Separator"
-  | "MenuBar"
-  | "Menu"
-  | "MenuItem"
-  | "ToolBar";
+export type { ComponentType, CanvasComponent, CanvasState } from "@shared/types/canvas";
 
-export type ComponentPosition = "top" | "bottom" | "left" | "right" | "north" | "south" | "east" | "west";
+import type { CanvasComponent, CanvasState } from "@shared/types/canvas";
+
+export type ComponentPosition = NonNullable<CanvasComponent["position"]>;
 
 export interface HierarchicalComponent {
   children?: string[];
@@ -26,42 +10,10 @@ export interface HierarchicalComponent {
   position?: ComponentPosition;
 }
 
-export interface CanvasComponent extends HierarchicalComponent {
-  id: string;
-  type: ComponentType;
-  variableName: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  text: string;
-  backgroundColor: string;
-  textColor: string;
-  fontFamily: string;
-  fontSize: number;
-  eventMethodName: string;
-  selected?: boolean;
-  items?: string[];
-  value?: number;
-  min?: number;
-  max?: number;
-  orientation?: "horizontal" | "vertical";
-}
-
 export type ComponentProps = Pick<
   CanvasComponent,
   "text" | "backgroundColor" | "textColor" | "fontFamily" | "fontSize" | "eventMethodName"
 >;
-
-/**
- * Serializable layout state shared with the VS Code extension.
- */
-export interface CanvasState {
-  className: string;
-  frameWidth: number;
-  frameHeight: number;
-  components: CanvasComponent[];
-}
 
 /**
  * UI-focused state used by the React app.

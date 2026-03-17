@@ -1,50 +1,9 @@
-export type ComponentType =
-  | "Panel"
-  | "Button"
-  | "Label"
-  | "TextField"
-  | "PasswordField"
-  | "TextArea"
-  | "CheckBox"
-  | "RadioButton"
-  | "ComboBox"
-  | "List"
-  | "ProgressBar"
-  | "Slider"
-  | "Spinner"
-  | "Separator";
+// @ts-ignore TS6059: shared type module is intentionally outside src
+import type { CanvasComponent, CanvasState, ComponentType } from "@shared/types/canvas";
 
-export interface ComponentModel {
-  id: string;
-  type: ComponentType;
-  variableName: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  text: string;
-  backgroundColor: string;
-  textColor: string;
-  fontFamily: string;
-  fontSize: number;
-  eventMethodName: string;
-  selected?: boolean;
-  items?: string[];
-  value?: number;
-  min?: number;
-  max?: number;
-  orientation?: "horizontal" | "vertical";
-  children?: string[];
-  parentId?: string;
-  position?: "top" | "bottom" | "left" | "right";
-}
+export type { CanvasState, ComponentType };
 
-export interface CanvasState {
-  className: string;
-  frameWidth: number;
-  frameHeight: number;
-  components: ComponentModel[];
-}
+export type ComponentModel = CanvasComponent;
 
 export const DEFAULT_COMPONENT_SIZES: Record<ComponentType, { width: number; height: number }> = {
   Panel: { width: 200, height: 150 },
@@ -61,4 +20,8 @@ export const DEFAULT_COMPONENT_SIZES: Record<ComponentType, { width: number; hei
   Slider: { width: 150, height: 45 },
   Spinner: { width: 100, height: 30 },
   Separator: { width: 150, height: 10 },
+  MenuBar: { width: 400, height: 32 },
+  Menu: { width: 140, height: 28 },
+  MenuItem: { width: 140, height: 28 },
+  ToolBar: { width: 400, height: 40 },
 };
