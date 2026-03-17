@@ -1,18 +1,18 @@
 [
     {
-        "label": "Coverage Total",
+        "label": "Total",
         "source": "./coverage/combined/coverage-summary.json",
         "attribute": "total.statements.pct",
         "outputDir": "./media/coverage-badges"
     },
     {
-        "label": "Tests Ext",
+        "label": "Extension",
         "source": "./coverage/vitest-summary.json",
         "attribute": "numTotalTests",
         "outputDir": "./media/coverage-badges"
     },
     {
-        "label": "Tests Webview",
+        "label": "Webview",
         "source": "./webview-app/coverage/vitest-summary.json",
         "attribute": "numTotalTests",
         "outputDir": "./media/coverage-badges"
