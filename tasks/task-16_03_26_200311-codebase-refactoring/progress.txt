@@ -100,3 +100,142 @@ Files: tsconfig.json; webview-app/tsconfig.json; src/components/ComponentModel.t
 Validation: pnpm exec tsc -p . --noEmit PASS; pnpm exec tsc -p . PASS; pnpm --dir webview-app typecheck PASS; pnpm --dir webview-app build PASS.
 SQL todo status: UPDATE todos SET status='done' WHERE id='us-004-tsconfig-path-alias';
 ---
+
+## [2026-03-16T21:31:00.1381742-03:00] - US-018
+Story: US-018
+Result: SUCCESS
+Summary: Criado webview-app/src/components/CanvasComponent/previewRenderers.tsx e extraída a função renderComponentPreview com toda a lógica de preview por tipo. CanvasComponent.tsx foi simplificado para importar e usar o renderer extraído, sem mudança de comportamento visual.
+Files: webview-app/src/components/CanvasComponent/previewRenderers.tsx; webview-app/src/components/CanvasComponent.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+Browser check: não executado neste ambiente.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-018-extract-preview-renderers';
+---
+
+## [2026-03-16T21:32:13.1466559-03:00] - US-012
+Story: US-012
+Result: SUCCESS
+Summary: Criado webview-app/src/components/Canvas/fixedZoneHelpers.ts e extraídos normalizeToolBarPosition, getOrderedChildren, collectDescendantIds e getStackExtent de Canvas.tsx. Canvas.tsx atualizado para importar os helpers, preservando o comportamento de MenuBar/ToolBar e cálculo de zonas fixas.
+Files: webview-app/src/components/Canvas/fixedZoneHelpers.ts; webview-app/src/components/Canvas.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+Browser check: não executado neste ambiente (sem dev-browser).
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-012-extract-canvas-fixed-zone-helpers';
+---
+
+## [2026-03-16T21:31:42.5817818-03:00] - US-006
+Story: US-006
+Result: SUCCESS
+Summary: Criado src/commands/saveCommand.ts com a lógica de salvamento extraída de src/extension.ts. extension.ts passou a registrar swingGuiBuilder.save via registerSaveCommand(), mantendo o comportamento original.
+Files: src/commands/saveCommand.ts; src/extension.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm run compile PASS; pnpm exec tsc -p . --noEmit PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-006-extract-save-command';
+---
+
+## [2026-03-17T21:34:00Z] - US-011
+Story: US-011
+Result: SUCCESS
+Summary: Criado src/generator/componentGenerators.ts e extraída a lógica de geração específica de componentes/hierarquia para generateComponentCode e generateHierarchicalCode. JavaGenerator.ts atualizado para importar os geradores extraídos mantendo ordem e comportamento de geração.
+Files: src/generator/componentGenerators.ts; src/generator/JavaGenerator.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts src/generator/JavaGenerator.parity.test.ts PASS; pnpm run compile PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-011-extract-component-generators';
+---
+
+## [2026-03-16T21:38:31.3731883-03:00] - US-007
+Story: US-007
+Result: SUCCESS
+Summary: Criado src/commands/openCommand.ts com a lógica de abertura extraída de src/extension.ts. extension.ts foi atualizado para importar e registrar o comando via registerOpenCommand(context, outputChannel), mantendo o fluxo de open inalterado.
+Files: src/commands/openCommand.ts; src/extension.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm run compile PASS; pnpm exec tsc -p . --noEmit PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-007-extract-open-command';
+---
+## [2026-03-16T21:39:23.1289586-03:00] - US-021
+Story: US-021
+Result: SUCCESS
+Summary: Consolidado módulo de constantes em webview-app/src/lib/constants.ts com prefixos padronizados (DEFAULT_BG, DEFAULT_TEXT_COLOR, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE). Atualizados webview-app/src/lib/componentDefaults.ts e webview-app/src/schemas/canvas.ts para consumir as constantes centralizadas, removendo literais duplicados e preservando comportamento.
+Files: webview-app/src/lib/constants.ts; webview-app/src/lib/componentDefaults.ts; webview-app/src/schemas/canvas.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-021-consolidate-central-constants';
+---
+
+## [2026-03-16T21:42:53.3966673-03:00] - US-020
+Story: US-020
+Result: SUCCESS
+Summary: Refatorado webview-app/src/components/CanvasComponent.tsx para composição com módulos extraídos. Criado webview-app/src/components/CanvasComponent/componentView.tsx com a renderização do container principal, handlers de pointer/captura e integração com ResizeHandles; extraída para minSizes.ts a função getComponentMinSize (incluindo regra de Separator vertical), removendo lógica inline residual da tela principal.
+Files: webview-app/src/components/CanvasComponent.tsx; webview-app/src/components/CanvasComponent/componentView.tsx; webview-app/src/components/CanvasComponent/minSizes.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+Browser check: não executado neste ambiente.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-020-refactor-canvascomponent-main';
+---
+
+## [2026-03-16T21:43:30.1288605-03:00] - US-013
+Story: US-013
+Result: SUCCESS
+Summary: Criado webview-app/src/components/Canvas/MenuBarZone.tsx para renderização dedicada da zona de menu bar (menus, menu items e dropdown preview). Canvas.tsx foi atualizado para importar e usar MenuBarZone, preservando seleção de componentes e estado de expansão de menu.
+Files: webview-app/src/components/Canvas/MenuBarZone.tsx; webview-app/src/components/Canvas.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+Browser check: não executado neste ambiente (sem dev-browser).
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-013-extract-menubar-zone-component';
+---
+
+## [2026-03-17T21:46:00Z] - US-008
+Story: US-008
+Result: SUCCESS
+Summary: extension.ts foi refatorado para orquestração apenas de registro de comandos. Criados src/commands/newWindowCommand.ts, src/commands/previewCodeCommand.ts e src/commands/initConfigCommand.ts para remover lógica inline restante e manter comportamento/IDs de comandos.
+Files: src/extension.ts; src/commands/newWindowCommand.ts; src/commands/previewCodeCommand.ts; src/commands/initConfigCommand.ts; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm exec biome check src/extension.ts src/commands/newWindowCommand.ts src/commands/previewCodeCommand.ts src/commands/initConfigCommand.ts PASS; pnpm exec tsc -p . --noEmit PASS; pnpm run compile PASS; pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts src/generator/JavaGenerator.parity.test.ts PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-008-refactor-extension-main';
+---
+
+## [2026-03-16T21:50:59.0970459-03:00] - US-014
+Story: US-014
+Result: SUCCESS
+Summary: Criado webview-app/src/components/Canvas/ToolBarZone.tsx para renderização dedicada das tool bars (north/south/east/west), incluindo seleção do ToolBar, seleção de botões filhos e botão de preview quando vazio. Canvas.tsx foi atualizado para importar e usar ToolBarZone, removendo a renderização inline e preservando o comportamento visual/funcional.
+Files: webview-app/src/components/Canvas/ToolBarZone.tsx; webview-app/src/components/Canvas.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+Browser check: não executado neste ambiente (sem dev-browser).
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-014-extract-toolbar-zone-component';
+---
+## [2026-03-16T21:56:46.3768178-03:00] - US-016
+Story: US-016
+Result: SUCCESS
+Summary: Refatorado webview-app/src/components/Canvas.tsx para delegar a lógica de layout de MenuBar/ToolBar para o novo helper webview-app/src/components/Canvas/fixedZoneLayout.ts (buildFixedZoneLayout + getComponentLabel), removendo cálculo inline das zonas fixas no componente principal e preservando renderização/seleção.
+Files: webview-app/src/components/Canvas.tsx; webview-app/src/components/Canvas/fixedZoneLayout.ts; webview-app/src/components/Canvas/MenuBarZone.tsx; webview-app/src/components/Canvas/ToolBarZone.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json
+Validation: pnpm --dir webview-app typecheck PASS.
+Browser check: não executado neste ambiente.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-016-refactor-canvas-main';
+---
+## [2026-03-17T00:59:06.7131185Z] - US-023
+Story: US-023
+Result: SUCCESS
+Summary: Executada validação por fase do JavaGenerator com foco em paridade e ordering. Não foram detectadas regressões, então nenhuma correção de código foi necessária.
+Files: tasks/task-16_03_26_200311-codebase-refactoring/prd.json; tasks/task-16_03_26_200311-codebase-refactoring/progress.txt
+Validation: pnpm exec tsc -p . --noEmit PASS; pnpm exec vitest run src/generator/JavaGenerator.parity.test.ts PASS (2 testes); pnpm exec vitest run src/generator/JavaGenerator.ordering.test.ts PASS (2 testes).
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-023-run-validation-tests';
+---
+
+## [2026-03-16T22:11:01.5369802-03:00] - US-024
+Story: US-024
+Result: BLOCKED
+Summary: Executada validação máxima possível em modo não interativo. A cobertura automatizada confirmou integridade de build/tipos e geração de código, mas não foi possível concluir testes de fluxo completo da extensão (abrir canvas, adicionar componentes no webview e salvar projeto) por ausência de interação manual do VS Code e falha da infraestrutura de automação de browser neste ambiente.
+Files: tasks/task-16_03_26_200311-codebase-refactoring/prd.json; tasks/task-16_03_26_200311-codebase-refactoring/progress.txt
+Validation: pnpm run lint-all PASS; pnpm exec tsc -p . --noEmit PASS; pnpm --dir webview-app typecheck PASS; pnpm exec vitest run src/generator/JavaGenerator.parity.test.ts src/generator/JavaGenerator.ordering.test.ts PASS (4 testes); pnpm run compile PASS; pnpm exec vitest run FAIL (suites fora de escopo: out/generator/*.test.js com erro CJS+Vitest e .agents/skills/dev-browser/src/snapshot/__tests__/snapshot.test.ts com módulo faltante do Playwright).
+Limitations: Sem execução manual de comandos da extensão em janela VS Code no ambiente atual; tentativa de automação com dev-browser falhou ao iniciar por módulos ausentes (resolve-pkg-maps/dist/index.cjs e playwright-core/lib/inprocess).
+SQL todo status: UPDATE todos SET status='blocked' WHERE id='us-024-test-end-to-end-extension-flow';
+---
+
+## [2026-03-17T01:20:21Z] - US-025
+Story: US-025
+Result: SUCCESS
+Summary: Revisados imports gerados na refatoração e removidos bindings órfãos de runtime em módulos onde os símbolos eram usados apenas como tipo. Os imports de fixedZoneLayout e react foram convertidos para `import type`, mantendo o comportamento e limpando os imports.
+Files: webview-app/src/components/Canvas/ToolBarZone.tsx; webview-app/src/components/Canvas/MenuBarZone.tsx; webview-app/src/components/CanvasComponent/previewRenderers.tsx; tasks/task-16_03_26_200311-codebase-refactoring/prd.json; tasks/task-16_03_26_200311-codebase-refactoring/progress.txt
+Validation: pnpm exec biome lint webview-app/src/components/Canvas/ToolBarZone.tsx webview-app/src/components/Canvas/MenuBarZone.tsx webview-app/src/components/CanvasComponent/previewRenderers.tsx --only=lint/style/useImportType PASS; pnpm run lint-all PASS; pnpm exec tsc -p . --noEmit PASS; pnpm --dir webview-app typecheck PASS; pnpm run compile PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-025-clean-unused-imports';
+---
+
+## [2026-03-17T01:26:39.1653939Z] - US-026
+Story: US-026
+Result: SUCCESS
+Summary: Criado docs/architecture.md com a estrutura final pós-refatoração, incluindo mapa de pastas atualizado (extensão, shared e webview), convenções adotadas (separação por responsabilidade, aliases, hooks, validação por schemas e import type) e diagrama ASCII de arquitetura.
+Files: docs/architecture.md; tasks/task-16_03_26_200311-codebase-refactoring/prd.json; tasks/task-16_03_26_200311-codebase-refactoring/progress.txt
+Validation: pnpm exec tsc -p . --noEmit PASS; pnpm --dir webview-app typecheck PASS.
+SQL todo status: UPDATE todos SET status='done' WHERE id='us-026-document-final-architecture';
+---
