@@ -7,7 +7,7 @@
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gugacarbo/swing-gui-builder/test.yml?branch=main)
 
-![Coverage Total](./media/coverage-badges/coverage-total.svg) ![Tests Ext](./media/coverage-badges/tests-ext.svg) ![Tests Webview](./media/coverage-badges/tests-webview.svg)
+![Coverage Total](./media/coverage-badges/coverage_total.svg) ![Tests Ext](./media/coverage-badges/tests_ext.svg) ![Tests Webview](./media/coverage-badges/tests_webview.svg)
 
 
 
