@@ -201,7 +201,7 @@ function App() {
         />
       </header>
 
-      <section className="grid min-h-0 flex-1 grid-cols-[260px_1fr_300px]">
+      <section className="flex min-h-0 flex-1 overflow-hidden">
         <Sidebar
           components={components}
           selectedComponentId={selectedComponentId}
@@ -209,34 +209,36 @@ function App() {
           onMoveComponent={handleMoveComponentInHierarchy}
         />
 
-        <section
-          className="min-h-0 border-r border-vscode-panel-border bg-vscode-background"
-          aria-label="Canvas panel"
-        >
-          <Canvas
-            frameWidth={frameDimensions.width}
-            frameHeight={frameDimensions.height}
-            components={components}
-            selectedComponentId={selectedComponentId}
-            onSelectComponent={selectComponent}
-            onAddComponent={handleAddComponent}
-            onMoveComponent={handleMoveComponent}
-            onResizeComponent={handleResizeComponent}
-          />
+        <section className="flex min-h-0 min-w-0 flex-1">
+          <section
+            className="min-h-0 min-w-0 flex-1 border-r border-vscode-panel-border bg-vscode-background"
+            aria-label="Canvas panel"
+          >
+            <Canvas
+              frameWidth={frameDimensions.width}
+              frameHeight={frameDimensions.height}
+              components={components}
+              selectedComponentId={selectedComponentId}
+              onSelectComponent={selectComponent}
+              onAddComponent={handleAddComponent}
+              onMoveComponent={handleMoveComponent}
+              onResizeComponent={handleResizeComponent}
+            />
+          </section>
+
+          <aside className="min-h-0 w-[300px] shrink-0 bg-vscode-panel-background">
+            <PropertiesPanel
+              component={selectedComponent}
+              onUpdateComponent={handleUpdateComponent}
+            />
+
+            <div className="mx-4 mb-4 rounded-md border border-vscode-panel-border bg-vscode-background/40 p-3 text-xs text-muted-foreground">
+              <p>Selected node: {selectedComponentId ?? "None"}</p>
+              <p>History position: {history.past.length}</p>
+              <p>History length: {history.past.length + history.future.length}</p>
+            </div>
+          </aside>
         </section>
-
-        <aside className="min-h-0 bg-vscode-panel-background">
-          <PropertiesPanel
-            component={selectedComponent}
-            onUpdateComponent={handleUpdateComponent}
-          />
-
-          <div className="mx-4 mb-4 rounded-md border border-vscode-panel-border bg-vscode-background/40 p-3 text-xs text-muted-foreground">
-            <p>Selected node: {selectedComponentId ?? "None"}</p>
-            <p>History position: {history.past.length}</p>
-            <p>History length: {history.past.length + history.future.length}</p>
-          </div>
-        </aside>
       </section>
 
       <PreviewCodeModal

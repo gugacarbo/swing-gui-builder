@@ -16,7 +16,7 @@ export function Sidebar({
   onMoveComponent,
 }: SidebarProps) {
   return (
-    <aside className="flex min-h-0 flex-col border-r border-vscode-panel-border bg-vscode-panel-background">
+    <aside className="flex h-full min-h-0 w-[260px] shrink-0 flex-col border-r border-vscode-panel-border bg-vscode-panel-background">
       <HierarchyPanel
         components={components}
         selectedComponentId={selectedComponentId}
