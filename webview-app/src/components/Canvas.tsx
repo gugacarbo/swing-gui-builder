@@ -57,7 +57,7 @@ export function Canvas({
       x: pan.x,
       y: pan.y + FRAME_TITLE_BAR_HEIGHT * zoom,
     },
-    componentsCount: components.length,
+    components,
     onAddComponent,
     onSelectComponent,
   });

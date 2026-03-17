@@ -28,6 +28,10 @@ export const ComponentTypeSchema = z.enum([
 ]);
 
 const OrientationSchema = z.enum(["horizontal", "vertical"]);
+const ParentOffsetSchema = z.object({
+  x: z.number().finite(),
+  y: z.number().finite(),
+});
 
 const PositionSchema = z
   .enum(["top", "bottom", "left", "right", "north", "south", "east", "west"])
@@ -68,6 +72,7 @@ export const CanvasComponentSchema = z.object({
   orientation: OrientationSchema.optional(),
   children: z.array(z.string()).optional(),
   parentId: z.string().optional(),
+  parentOffset: ParentOffsetSchema.optional(),
   position: PositionSchema.optional(),
 });
 
