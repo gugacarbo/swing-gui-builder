@@ -1,0 +1,80 @@
+name: Deploy coverage to Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "coverage/**"
+      - "webview-app/coverage/**"
+      - "src/**"
+      - "webview-app/src/**"
+      - "shared/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-coverage
+  cancel-in-progress: true
+
+jobs:
+  deploy-coverage:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline --recursive
+
+      - name: Ensure webview-app dependencies
+        run: pnpm --filter ./webview-app install --frozen-lockfile --prefer-offline
+
+      - name: Run tests with coverage
+        run: pnpm --workspace-concurrency=2 --filter . --filter ./shared --filter ./webview-app --if-present test:coverage
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Create index.html for coverage
+        run: |
+          cat > coverage/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta http-equiv="refresh" content="0; url=lcov-report/index.html">
+          </head>
+          <body>
+            <p>Redirecting to <a href="lcov-report/index.html">Coverage Report</a></p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload coverage artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: coverage/lcov-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
