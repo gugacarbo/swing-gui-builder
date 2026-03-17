@@ -32,8 +32,11 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: Install dependencies (workspace)
+        run: pnpm install --frozen-lockfile --prefer-offline --recursive
+
+      - name: Ensure webview-app dependencies
+        run: pnpm --filter ./webview-app install --frozen-lockfile --prefer-offline
 
       - name: Run typecheck
         run: pnpm run typecheck
