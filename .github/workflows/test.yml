@@ -44,13 +44,13 @@ jobs:
       - name: Run tests with coverage (workspace)
         run: pnpm --workspace-concurrency=2 --filter . --filter ./shared --filter ./webview-app --if-present test:coverage
 
-      - name: Upload coverage artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-${{ github.run_id }}-${{ github.run_attempt }}
-          if-no-files-found: error
-          retention-days: 7
-          path: |
-            coverage
-            webview-app/coverage
+      # - name: Upload coverage artifacts
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: coverage-${{ github.run_id }}-${{ github.run_attempt }}
+      #     if-no-files-found: error
+      #     retention-days: 7
+      #     path: |
+      #       coverage
+      #       webview-app/coverage
