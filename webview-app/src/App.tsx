@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { Canvas } from "@/components/Canvas";
-import { HierarchyPanel } from "@/components/HierarchyPanel";
-import { Palette } from "@/components/Palette";
 import { PreviewCodeModal } from "@/components/PreviewCodeModal";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
+import { Sidebar } from "@/components/Sidebar";
 import { Toolbar } from "@/components/Toolbar";
 import { useCanvasState } from "@/hooks/useCanvasState";
 import { useExtensionListener } from "@/hooks/useExtensionListener";
@@ -203,20 +202,12 @@ function App() {
       </header>
 
       <section className="grid min-h-0 flex-1 grid-cols-[260px_1fr_300px]">
-        <aside className="flex min-h-0 flex-col border-r border-vscode-panel-border bg-vscode-panel-background">
-          <div className="min-h-0 flex-1">
-            <Palette />
-          </div>
-
-          <div className="max-h-[45%] min-h-0 border-t border-vscode-panel-border">
-            <HierarchyPanel
-              components={components}
-              selectedComponentId={selectedComponentId}
-              onSelectComponent={selectComponent}
-              onMoveComponent={handleMoveComponentInHierarchy}
-            />
-          </div>
-        </aside>
+        <Sidebar
+          components={components}
+          selectedComponentId={selectedComponentId}
+          onSelectComponent={selectComponent}
+          onMoveComponent={handleMoveComponentInHierarchy}
+        />
 
         <section
           className="min-h-0 border-r border-vscode-panel-border bg-vscode-background"

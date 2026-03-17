@@ -45,8 +45,8 @@
                 "Verify in browser using dev-browser skill: sidebar renderiza corretamente com dois painéis"
             ],
             "priority": 3,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Sidebar component criado em webview-app/src/components/Sidebar.tsx com HierarchyPanel no topo e Palette abaixo. Validado com lint/typecheck/compile e verificação via dev-browser em http://127.0.0.1:4173. Retry 2/3 revalidado em 2026-03-17T15:53:50Z com checklist de render/collapse/scroll independente no navegador."
         },
         {
             "id": "US-004",
