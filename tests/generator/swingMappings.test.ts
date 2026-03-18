@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { ComponentModel, ComponentType } from "../components/ComponentModel";
-import { getComponentSwingType, getSwingClass } from "./swingMappings";
+import type { ComponentModel, ComponentType } from "../../src/components/ComponentModel";
+import { getComponentSwingType, getSwingClass } from "../../src/generator/swingMappings";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;
@@ -42,12 +42,14 @@ describe("swingMappings", () => {
       expect(getSwingClass(componentType)).toBe(swingClass);
     });
 
-    it.each(["MenuBar", "Menu", "MenuItem", "ToolBar"] as const)(
-      "falls back to JButton for unmapped type %s",
-      (componentType) => {
-        expect(getSwingClass(componentType)).toBe("JButton");
-      },
-    );
+    it.each([
+      "MenuBar",
+      "Menu",
+      "MenuItem",
+      "ToolBar",
+    ] as const)("falls back to JButton for unmapped type %s", (componentType) => {
+      expect(getSwingClass(componentType)).toBe("JButton");
+    });
 
     it("falls back to JButton for unknown runtime values", () => {
       expect(getSwingClass("UnknownComponent" as ComponentType)).toBe("JButton");

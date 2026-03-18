@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { CanvasState, ComponentModel } from "../components/ComponentModel";
-import { generateJavaFiles, generatePreviewJavaFiles } from "./JavaGenerator";
+import type { CanvasState, ComponentModel } from "../../src/components/ComponentModel";
+import { generateJavaFiles, generatePreviewJavaFiles } from "../../src/generator/JavaGenerator";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;

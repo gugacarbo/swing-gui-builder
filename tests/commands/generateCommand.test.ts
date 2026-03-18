@@ -1,6 +1,6 @@
 import * as path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CanvasState, ComponentModel } from "../components/ComponentModel";
+import type { CanvasState, ComponentModel } from "../../src/components/ComponentModel";
 
 const mocks = vi.hoisted(() => ({
   commandHandlers: new Map<string, () => Promise<void>>(),
@@ -48,27 +48,27 @@ vi.mock("vscode", () => ({
   },
 }));
 
-vi.mock("../config/ConfigReader", () => ({
+vi.mock("../../src/config/ConfigReader", () => ({
   getOutputDirectory: () => "src/main/java",
 }));
 
-vi.mock("../utils/JavaProjectDetector", () => ({
+vi.mock("../../src/utils/JavaProjectDetector", () => ({
   detectJavaProject: () => undefined,
 }));
 
-vi.mock("../utils/JavaPackageInference", () => ({
+vi.mock("../../src/utils/JavaPackageInference", () => ({
   inferJavaPackage: () => undefined,
   resolveOutputDirectory: (configuredDir: string) => configuredDir,
 }));
 
-vi.mock("../canvas/CanvasPanel", () => ({
+vi.mock("../../src/canvas/CanvasPanel", () => ({
   CanvasPanel: {
     currentPanel: undefined,
   },
 }));
 
-import { CanvasPanel } from "../canvas/CanvasPanel";
-import { registerGenerateCommand } from "./generateCommand";
+import { CanvasPanel } from "../../src/canvas/CanvasPanel";
+import { registerGenerateCommand } from "../../src/commands/generateCommand";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;

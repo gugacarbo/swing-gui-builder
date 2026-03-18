@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { ComponentModel } from "../components/ComponentModel";
-import { generateComponentCode } from "./componentGenerators";
+import type { ComponentModel } from "../../src/components/ComponentModel";
+import { generateComponentCode } from "../../src/generator/componentGenerators";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;

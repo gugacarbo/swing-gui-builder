@@ -90,7 +90,11 @@ describe("useCanvasState", () => {
       hook.result.current.updateComponent("button-1", { x: 80, text: "Updated label" });
     });
 
-    expect(hook.result.current.components[0]).toMatchObject({ id: "button-1", x: 80, text: "Updated label" });
+    expect(hook.result.current.components[0]).toMatchObject({
+      id: "button-1",
+      x: 80,
+      text: "Updated label",
+    });
   });
 
   it("deletes component and clears selected state when removed", () => {
@@ -138,7 +142,9 @@ describe("useCanvasState + useUndoRedo key flows", () => {
       const canvas = useCanvasState(components);
       const history = useUndoRedo<CanvasComponent[]>(components);
 
-      const pushState = (next: CanvasComponent[] | ((current: CanvasComponent[]) => CanvasComponent[])) => {
+      const pushState = (
+        next: CanvasComponent[] | ((current: CanvasComponent[]) => CanvasComponent[]),
+      ) => {
         history.set((current) => (typeof next === "function" ? next(current) : next));
       };
 
@@ -161,24 +167,36 @@ describe("useCanvasState + useUndoRedo key flows", () => {
     act(() => {
       hook.result.current.pushState((current) => [...current, createComponent("button-2")]);
     });
-    expect(hook.result.current.components.map((component) => component.id)).toEqual(["button-1", "button-2"]);
+    expect(hook.result.current.components.map((component) => component.id)).toEqual([
+      "button-1",
+      "button-2",
+    ]);
 
     act(() => {
       hook.result.current.pushState((current) =>
-        current.map((component) => (component.id === "button-2" ? { ...component, text: "Renamed" } : component)),
+        current.map((component) =>
+          component.id === "button-2" ? { ...component, text: "Renamed" } : component,
+        ),
       );
     });
-    expect(hook.result.current.components.find((component) => component.id === "button-2")?.text).toBe("Renamed");
+    expect(
+      hook.result.current.components.find((component) => component.id === "button-2")?.text,
+    ).toBe("Renamed");
 
     act(() => {
-      hook.result.current.pushState((current) => current.filter((component) => component.id !== "button-1"));
+      hook.result.current.pushState((current) =>
+        current.filter((component) => component.id !== "button-1"),
+      );
     });
     expect(hook.result.current.components.map((component) => component.id)).toEqual(["button-2"]);
 
     act(() => {
       hook.result.current.undo();
     });
-    expect(hook.result.current.components.map((component) => component.id)).toEqual(["button-1", "button-2"]);
+    expect(hook.result.current.components.map((component) => component.id)).toEqual([
+      "button-1",
+      "button-2",
+    ]);
 
     act(() => {
       hook.result.current.redo();

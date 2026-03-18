@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CanvasState, ComponentModel } from "../components/ComponentModel";
-import type { JavaProjectStructure } from "../utils/JavaProjectDetector";
+import type { CanvasState, ComponentModel } from "../../src/components/ComponentModel";
+import type { JavaProjectStructure } from "../../src/utils/JavaProjectDetector";
 
 const mocks = vi.hoisted(() => ({
   commandHandlers: new Map<string, () => Promise<void>>(),
@@ -53,23 +53,23 @@ vi.mock("vscode", () => ({
   },
 }));
 
-vi.mock("../canvas/CanvasPanel", () => ({
+vi.mock("../../src/canvas/CanvasPanel", () => ({
   CanvasPanel: {
     currentPanel: undefined,
   },
 }));
 
-vi.mock("../config/ConfigReader", () => ({
+vi.mock("../../src/config/ConfigReader", () => ({
   getOutputDirectory: mocks.getOutputDirectory,
 }));
 
-vi.mock("../utils/JavaProjectDetector", () => ({
+vi.mock("../../src/utils/JavaProjectDetector", () => ({
   detectJavaProject: mocks.detectJavaProject,
 }));
 
-import { CanvasPanel, type PreviewCodeFile } from "../canvas/CanvasPanel";
-import { registerGenerateCommand } from "../commands/generateCommand";
-import { registerPreviewCodeCommand } from "../commands/previewCodeCommand";
+import { CanvasPanel, type PreviewCodeFile } from "../../src/canvas/CanvasPanel";
+import { registerGenerateCommand } from "../../src/commands/generateCommand";
+import { registerPreviewCodeCommand } from "../../src/commands/previewCodeCommand";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;
@@ -261,13 +261,24 @@ describe("integration full generation flow", () => {
     const previewFiles = previewPayloads[0];
     const generatedByName = getGeneratedByFileName();
     const expectedPackage = "package com.acme.generated.ui;";
-    const outputRoot = path.join("C:\\workspace", "src", "main", "java", "com", "acme", "generated", "ui");
+    const outputRoot = path.join(
+      "C:\\workspace",
+      "src",
+      "main",
+      "java",
+      "com",
+      "acme",
+      "generated",
+      "ui",
+    );
     const mainContent = generatedByName.get("ComplexFlowFrame.java")?.content;
 
     expect(previewPayloads).toHaveLength(1);
     expect(previewFiles.length).toBe(3);
     expect(previewFiles.every((file) => file.content.startsWith(expectedPackage))).toBe(true);
-    expect([...generatedByName.keys()].sort()).toEqual(previewFiles.map((file) => file.fileName).sort());
+    expect([...generatedByName.keys()].sort()).toEqual(
+      previewFiles.map((file) => file.fileName).sort(),
+    );
 
     for (const previewFile of previewFiles) {
       expect(generatedByName.get(previewFile.fileName)?.content).toBe(previewFile.content);

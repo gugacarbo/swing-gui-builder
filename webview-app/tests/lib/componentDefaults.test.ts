@@ -1,12 +1,12 @@
+import { describe, expect, it } from "vitest";
+import type { ComponentType } from "@/types/canvas";
+import { getDefaultProps, getDefaultSize } from "@/lib/componentDefaults";
 import {
   DEFAULT_BG,
   DEFAULT_FONT_FAMILY,
   DEFAULT_FONT_SIZE,
   DEFAULT_TEXT_COLOR,
-} from "./constants";
-import { getDefaultProps, getDefaultSize } from "./componentDefaults";
-import type { ComponentType } from "../types/canvas";
-import { describe, expect, it } from "vitest";
+} from "@/lib/constants";
 
 const EXPECTED_LABEL_BY_TYPE: Record<ComponentType, string> = {
   Panel: "Panel",
@@ -51,7 +51,9 @@ const EXPECTED_SIZE_BY_TYPE: Record<ComponentType, { width: number; height: numb
 };
 
 describe("getDefaultProps", () => {
-  it.each(Object.entries(EXPECTED_LABEL_BY_TYPE))("returns defaults for %s", (type, expectedText) => {
+  it.each(
+    Object.entries(EXPECTED_LABEL_BY_TYPE),
+  )("returns defaults for %s", (type, expectedText) => {
     const props = getDefaultProps(type as ComponentType);
 
     expect(props.text).toBe(expectedText);
@@ -92,7 +94,9 @@ describe("getDefaultProps", () => {
 });
 
 describe("getDefaultSize", () => {
-  it.each(Object.entries(EXPECTED_SIZE_BY_TYPE))("returns expected size for %s", (type, expectedSize) => {
+  it.each(
+    Object.entries(EXPECTED_SIZE_BY_TYPE),
+  )("returns expected size for %s", (type, expectedSize) => {
     expect(getDefaultSize(type as ComponentType)).toEqual(expectedSize);
   });
 
@@ -100,4 +104,3 @@ describe("getDefaultSize", () => {
     expect(getDefaultSize("NotAComponent" as ComponentType)).toBeUndefined();
   });
 });
-

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ComponentModel } from "../components/ComponentModel";
+import type { ComponentModel } from "../../src/components/ComponentModel";
 import {
   DEFAULT_BG,
   DEFAULT_FONT_FAMILY,
@@ -9,7 +9,7 @@ import {
   hexToRgb,
   isCustomComponent,
   supportsTextConstructor,
-} from "./codeHelpers";
+} from "../../src/generator/codeHelpers";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;

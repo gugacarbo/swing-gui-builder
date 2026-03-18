@@ -1,7 +1,7 @@
 import * as path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CanvasState, ComponentModel } from "../components/ComponentModel";
-import type { JavaProjectStructure } from "../utils/JavaProjectDetector";
+import type { CanvasState, ComponentModel } from "../../src/components/ComponentModel";
+import type { JavaProjectStructure } from "../../src/utils/JavaProjectDetector";
 
 const mocks = vi.hoisted(() => ({
   commandHandlers: new Map<string, () => Promise<void>>(),
@@ -17,7 +17,7 @@ const mocks = vi.hoisted(() => ({
   showInformationMessage: vi.fn(),
   showInputBox: vi.fn<(options?: unknown) => Promise<string | undefined>>(async () => undefined),
   showOpenDialog: vi.fn(async () => undefined),
-  getOutputDirectory: vi.fn(() => "swing/components/"),
+  getOutputDirectory: vi.fn(() => "src/main/java"),
   detectJavaProject: vi.fn<(workspaceRoot: string) => JavaProjectStructure | undefined>(
     () => undefined,
   ),
@@ -53,23 +53,23 @@ vi.mock("vscode", () => ({
   },
 }));
 
-vi.mock("../canvas/CanvasPanel", () => ({
+vi.mock("../../src/canvas/CanvasPanel", () => ({
   CanvasPanel: {
     currentPanel: undefined,
   },
 }));
 
-vi.mock("../config/ConfigReader", () => ({
+vi.mock("../../src/config/ConfigReader", () => ({
   getOutputDirectory: mocks.getOutputDirectory,
 }));
 
-vi.mock("../utils/JavaProjectDetector", () => ({
+vi.mock("../../src/utils/JavaProjectDetector", () => ({
   detectJavaProject: mocks.detectJavaProject,
 }));
 
-import { CanvasPanel, type PreviewCodeFile } from "../canvas/CanvasPanel";
-import { registerGenerateCommand } from "../commands/generateCommand";
-import { registerPreviewCodeCommand } from "../commands/previewCodeCommand";
+import { CanvasPanel, type PreviewCodeFile } from "../../src/canvas/CanvasPanel";
+import { registerGenerateCommand } from "../../src/commands/generateCommand";
+import { registerPreviewCodeCommand } from "../../src/commands/previewCodeCommand";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;
@@ -107,59 +107,58 @@ function getCommandHandler(commandId: string): () => Promise<void> {
   return handler;
 }
 
-function getGeneratedContentsByFileName(): Map<string, string> {
-  const generatedFiles = new Map<string, string>();
-  for (const call of mocks.writeFile.mock.calls) {
-    const targetPath = (call[0] as { fsPath: string }).fsPath;
-    if (!targetPath.endsWith(".java")) {
-      continue;
-    }
-
-    generatedFiles.set(
-      path.basename(targetPath),
-      Buffer.from(call[1] as Uint8Array).toString("utf-8"),
-    );
+function getGeneratedContent(fileName: string): string {
+  const output = mocks.writeFile.mock.calls.find((call) =>
+    (call[0] as { fsPath: string }).fsPath.endsWith(fileName),
+  );
+  if (!output) {
+    throw new Error(`File ${fileName} was not generated`);
   }
 
-  return generatedFiles;
+  return Buffer.from(output[1] as Uint8Array).toString("utf-8");
 }
 
-describe("integration package inference", () => {
+describe("integration panel children generation", () => {
   beforeEach(() => {
     mocks.commandHandlers.clear();
     vi.clearAllMocks();
 
     mocks.workspaceFolders[0].uri = { fsPath: "C:\\workspace" };
     mocks.stat.mockRejectedValue(new Error("File not found"));
-    mocks.getOutputDirectory.mockReturnValue("swing/components/");
-    mocks.detectJavaProject.mockReturnValue({
-      type: "maven-gradle",
-      sourceRoot: path.join("src", "main", "java"),
-      suggestedOutputFolder: path.join("src", "main", "java", "com", "acme", "generated"),
-    });
-    mocks.showInputBox.mockResolvedValue(path.join("src", "main", "java", "com", "acme", "generated"));
+    mocks.getOutputDirectory.mockReturnValue("src/main/java");
+    mocks.detectJavaProject.mockReturnValue(undefined);
+    mocks.showInputBox.mockResolvedValue("src/main/java");
 
     CanvasPanel.currentPanel = undefined;
   });
 
-  it("keeps inferred package consistent between preview and generate", async () => {
+  it("creates panel subfolder output and keeps panel child bounds relative", async () => {
     const state: CanvasState = {
-      className: "PackageConsistencyFrame",
+      className: "PanelChildrenFrame",
       frameWidth: 900,
       frameHeight: 700,
       components: [
         createComponent({
-          id: "saveButton",
-          type: "Button",
-          variableName: "saveButton",
-          text: "Save",
-          backgroundColor: "#336699",
+          id: "parentPanel",
+          type: "Panel",
+          variableName: "mainPanel",
+          x: 100,
+          y: 80,
+          width: 320,
+          height: 240,
         }),
         createComponent({
-          id: "statusLabel",
-          type: "Label",
-          variableName: "statusLabel",
-          text: "Ready",
+          id: "childButton",
+          type: "Button",
+          variableName: "childButton",
+          parentId: "parentPanel",
+          x: 138,
+          y: 126,
+          width: 130,
+          height: 34,
+          parentOffset: { x: 38, y: 46 },
+          text: "Child",
+          backgroundColor: "#336699",
         }),
       ],
     };
@@ -179,19 +178,24 @@ describe("integration package inference", () => {
     await getCommandHandler("swingGuiBuilder.previewCode")();
     await getCommandHandler("swingGuiBuilder.generate")();
 
-    const previewFiles = previewPayloads[0];
-    const generatedByName = getGeneratedContentsByFileName();
-    const expectedPackage = "package com.acme.generated;";
+    const outputRoot = path.join("C:\\workspace", "src/main/java");
+    const createDirectoryTargets = mocks.createDirectory.mock.calls.map(
+      (call) => (call[0] as { fsPath: string }).fsPath,
+    );
+    const writeTargets = mocks.writeFile.mock.calls.map(
+      (call) => (call[0] as { fsPath: string }).fsPath,
+    );
+    const mainFileContent = getGeneratedContent("PanelChildrenFrame.java");
 
     expect(previewPayloads).toHaveLength(1);
-    expect(previewFiles.length).toBeGreaterThan(0);
-    expect(previewFiles.every((file) => file.content.startsWith(expectedPackage))).toBe(true);
-
-    for (const previewFile of previewFiles) {
-      expect(generatedByName.get(previewFile.fileName)).toBe(previewFile.content);
-    }
-
-    expect(mocks.getOutputDirectory).toHaveBeenCalledTimes(2);
-    expect(mocks.detectJavaProject).toHaveBeenCalledTimes(2);
+    expect(createDirectoryTargets).toContain(outputRoot);
+    expect(createDirectoryTargets).toContain(path.join(outputRoot, "mainPanel"));
+    expect(writeTargets).toContain(path.join(outputRoot, "mainPanel", "CustomButton1.java"));
+    expect(mainFileContent).toContain("    mainPanel.setBounds(100, 80, 320, 240);");
+    expect(mainFileContent).toContain("    mainPanel.setLayout(null);");
+    expect(mainFileContent).toContain("    childButton.setBounds(38, 46, 130, 34);");
+    expect(mainFileContent).toContain("    mainPanel.add(childButton);");
+    expect(mainFileContent).not.toContain("    this.add(childButton);");
+    expect(mainFileContent).not.toContain("    childButton.setBounds(138, 126, 130, 34);");
   });
 });

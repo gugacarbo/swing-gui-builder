@@ -15,8 +15,8 @@
             ],
             "priority": 1,
             "group": "A",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Estrutura tests/ criada no root e no webview-app com READMEs mínimos; typecheck validado com pnpm run typecheck."
         },
         {
             "id": "US-002",
@@ -30,8 +30,8 @@
             ],
             "priority": 2,
             "group": "A",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Includes confirmados: root vitest.config.ts -> tests/**/*.test.ts e webview-app/vitest.config.ts -> tests/**/*.test.{ts,tsx}. Validação concluída com sucesso: pnpm typecheck e pnpm lint (após correções apenas de formatação/import order em arquivos de teste preexistentes)."
         },
         {
             "id": "US-003",
@@ -46,8 +46,8 @@
             ],
             "priority": 3,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Migrados 13 testes de src/* para tests/* (commands, utils, integration, generator) com imports ajustados para ../../src/*. Validacao: pnpm test e pnpm typecheck passaram."
         },
         {
             "id": "US-004",
@@ -61,8 +61,8 @@
             ],
             "priority": 4,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Migrados 4 testes de webview-app/src/* para webview-app/tests/* com imports ajustados. Validacao: pnpm --dir webview-app test e typecheck passaram; verificacao visual realizada com dev-browser em http://127.0.0.1:4173/."
         },
         {
             "id": "US-005",
@@ -77,8 +77,8 @@
             ],
             "priority": 5,
             "group": "C",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Thresholds de coverage ajustados para 95 nos vitest.config.ts (root e webview). Validacao: pnpm test:coverage (Statements 99.77, Lines 100, Functions 100, Branches 97.58) e pnpm --dir webview-app test:coverage (Statements 100, Lines 100, Functions 100, Branches 96.37), alem de typecheck/tests/lint/compile ok."
         }
     ]
 }

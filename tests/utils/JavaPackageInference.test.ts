@@ -3,8 +3,8 @@ import {
   DEFAULT_OUTPUT_DIRECTORY,
   inferJavaPackage,
   resolveOutputDirectory,
-} from "./JavaPackageInference";
-import type { JavaProjectStructure } from "./JavaProjectDetector";
+} from "../../src/utils/JavaPackageInference";
+import type { JavaProjectStructure } from "../../src/utils/JavaProjectDetector";
 
 const mavenProject: JavaProjectStructure = {
   type: "maven-gradle",
@@ -23,6 +23,10 @@ describe("JavaPackageInference", () => {
     expect(resolveOutputDirectory(DEFAULT_OUTPUT_DIRECTORY, mavenProject)).toBe(
       "src/main/java/components",
     );
+  });
+
+  it("keeps default output directory when project structure is unavailable", () => {
+    expect(resolveOutputDirectory(DEFAULT_OUTPUT_DIRECTORY)).toBe(DEFAULT_OUTPUT_DIRECTORY);
   });
 
   it("infers package from output directory under source root", () => {

@@ -4,10 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { CanvasComponent } from "@/types/canvas";
 import {
-  useCanvasDragDrop,
   type UseCanvasDragDropOptions,
   type UseCanvasDragDropResult,
-} from "./useCanvasDragDrop";
+  useCanvasDragDrop,
+} from "@/hooks/useCanvasDragDrop";
 
 interface HarnessProps {
   options: UseCanvasDragDropOptions;
