@@ -40,7 +40,7 @@
     "test:watch": "vitest",
     "coverage": "pnpm run test:coverage && pnpm --dir webview-app test:coverage && pnpm run coverage:badges",
     "test:coverage": "vitest run --coverage --reporter=default --reporter=json --outputFile.json=coverage/vitest-summary.json",
-    "coverage:merge": "shx rm -rf .nyc_output coverage/combined && shx mkdir -p .nyc_output coverage/combined && shx cp coverage/coverage-final.json .nyc_output/extension-coverage.json && shx cp webview-app/coverage/coverage-final.json .nyc_output/webview-coverage.json && nyc report --temp-dir .nyc_output --reporter json-summary --report-dir coverage/combined && shx rm -rf .nyc_output",
+    "coverage:merge": "shx rm -rf .nyc_output coverage/combined && shx mkdir -p .nyc_output coverage/combined && shx cp coverage/coverage-final.json .nyc_output/extension-coverage.json && shx cp webview-app/coverage/coverage-final.json .nyc_output/webview-coverage.json && nyc report --temp-dir .nyc_output --reporter json-summary --reporter html --report-dir coverage/combined && shx rm -rf .nyc_output",
     "coverage:badges": "shx rm -f media/coverage-badges/*.svg && pnpm run coverage:merge && coverage-badges --config .coveragebadgesrc",
     "compile": "pnpm run build:shared && pnpm run build:webview && pnpm run build:extension",
     "build:extension": "tsc -p ./",
