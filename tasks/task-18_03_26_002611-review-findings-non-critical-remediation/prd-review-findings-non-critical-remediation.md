@@ -126,10 +126,15 @@ Principais evidencias mapeadas:
 **Group:** C
 
 **Acceptance Criteria:**
-- [ ] Definir template minimo por story com: arquivos alterados, comandos executados, resultado observavel.
-- [ ] Aplicar o template nas tasks com rastreabilidade fraca apontadas pela revisao.
-- [ ] Validar que os registros permitem auditoria sem buscar contexto fora da task.
-- [ ] Padrao publicado e reutilizavel para proximas tasks.
+- [x] Definir template minimo por story com: arquivos alterados, comandos executados, resultado observavel.
+- [x] Aplicar o template nas tasks com rastreabilidade fraca apontadas pela revisao.
+- [x] Validar que os registros permitem auditoria sem buscar contexto fora da task.
+- [x] Padrao publicado e reutilizavel para proximas tasks.
+
+**Evidencia aplicada (US-006):**
+- `tasks/[DONE] task-16_03_26_183407-components-preview/prd.json` + `progress.txt` (backfill US-001..US-019 com template minimo).
+- `tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json` + `progress.txt` (normalizacao US-002/US-003 + reconciliacao de bloqueios temporarios).
+- `tasks/AGENTS.md` (publicacao do padrao reutilizavel para novas tasks).
 
 ### US-007: Vincular itens Deferred/Split a backlog interno padrao FUP
 **Description:** Como gestor de backlog, eu quero referencias padronizadas para itens nao fechados no ciclo para garantir continuidade com ownership.
@@ -142,16 +147,36 @@ Principais evidencias mapeadas:
 - [ ] Nao existe finding em estado aberto sem referencia de continuidade.
 - [ ] A matriz final aponta para cada item FUP associado.
 
+**Registro normalizado de continuidade (US-007):**
+
+| Finding | Status final | Referencia FUP | Owner | Racional | Proximo passo acionavel |
+| --- | --- | --- | --- | --- | --- |
+| `CF-07` | Split to Follow-up | `FUP-07` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Owner da task `webview-with-react-vite` | A contradicao documental exige governanca permanente de status unico na trilha de migracao. | Revalidar narrativa de status contra evidencias entregues e manter snapshot final unico em `progress`. |
+| `CF-08` | Split to Follow-up | `FUP-08` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Frontend/Webview Maintainer | O alinhamento documental foi concluido, mas a reducao adicional de tamanho segue como escopo residual. | Definir metas mensuraveis de reducao para `Canvas.tsx`, `PropertiesPanel/index.tsx` e `App.tsx`, executando ou ajustando meta formalmente. |
+| `CF-09` | Split to Follow-up | `FUP-09` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Tech Lead da refatoracao estrutural | Historico de fechamento apresentou narrativa conflitante entre bloqueio e conclusao. | Auditar registros de fechamento e publicar decisao final unica em `progress` e `prd`. |
+| `CF-10` | Split to Follow-up | `FUP-10` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | QA Lead + Product Owner | A decisao ampliada de execucao E2E foi intencionalmente diferida neste ciclo. | Aprovar decisao explicita unica de inclusao/exclusao E2E nos artefatos de `automated-tests` (`req`/`prd`/AC). |
+| `CF-11` | Split to Follow-up | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | PMO/Process Owner + owners das tasks | Rastreabilidade fraca por story afeta multiplos artefatos e requer padrao unico. | Aplicar template de evidencia (`files`, `commands`, `results`, `date`) antes de novos fechamentos com `passes: true`. |
+| `CF-12` | Split to Follow-up | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | PMO/Process Owner + owners das tasks | Trilha ambigua compartilha a mesma causa-raiz de `CF-11` (falta de padrao minimo). | Aplicar o mesmo template a historicos de bloqueio temporario, vinculando cada bloqueio ao resultado final resolvido. |
+
+- Verificacao de cobertura: todos os findings abertos em escopo (`CF-07`, `CF-08`, `CF-09`, `CF-10`, `CF-11`, `CF-12`) possuem referencia de continuidade com owner/racional/proximo passo.
+- Verificacao de matriz: todos os FUPs associados estao apontados (`FUP-07`, `FUP-08`, `FUP-09`, `FUP-10`, `FUP-11`).
+
 ### US-008: Executar refinamentos UX/docs obrigatorios (CF-14)
 **Description:** Como maintainer do webview, eu quero concluir os refinamentos UX/docs de baixo risco para encerrar o escopo nao-critico deste ciclo.
 
 **Group:** D
 
 **Acceptance Criteria:**
-- [ ] Implementar ajustes de UX/docs de CF-14 que sao viaveis no ciclo atual.
-- [ ] Atualizar documentacao e registros de entrega correspondentes.
-- [ ] Se algum item residual permanecer, registrar `Split to Follow-up` com FUP-xx e criterio de aceite.
-- [ ] Verificar no browser usando dev-browser skill quando houver mudanca visual.
+- [x] Implementar ajustes de UX/docs de CF-14 que sao viaveis no ciclo atual.
+- [x] Atualizar documentacao e registros de entrega correspondentes.
+- [x] Se algum item residual permanecer, registrar `Split to Follow-up` com FUP-xx e criterio de aceite (nenhum residual remanescente apos execucao).
+- [x] Verificar no browser usando dev-browser skill quando houver mudanca visual.
+
+**Evidencia aplicada (US-008):**
+- `webview-app/src/components/Sidebar.tsx`: ordem lateral ajustada para `Palette` acima de `Hierarchy`, aderente ao requisito textual da task de componentes preview.
+- `webview-app/src/components/CanvasComponent/previewRenderers.tsx`: renderer dedicado para `PasswordField` com visual mascarado (sem fallback generico para este tipo).
+- Verificacao visual com dev-browser: `temp/dev-browser/us008-ux-verification.png`.
+- Resultado final: `CF-14` fechado como `Resolved` neste ciclo, sem novo split/follow-up.
 
 ### US-009: Validar fechamento de escopo sem dependencia critica
 **Description:** Como aprovador, eu quero validar gates finais para confirmar que a task nao-critica fecha sem depender de CF-01..CF-06.

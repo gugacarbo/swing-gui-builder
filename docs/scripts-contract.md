@@ -17,10 +17,10 @@ Use these commands as the only public interface:
 
 ## Compatibility matrix (legacy command strategy)
 
-| Legacy command | Compatibility role | Migration guidance |
-| --- | --- | --- |
-| `compile` | Temporary alias to `build` | Replace references with `build` |
-| `check` | Temporary alias to `verify` (or nearest equivalent gate during migration) | Replace references with `verify` |
+| Legacy command | Compatibility role                                                        | Migration guidance               |
+| -------------- | ------------------------------------------------------------------------- | -------------------------------- |
+| `compile`      | Temporary alias to `build`                                                | Replace references with `build`  |
+| `check`        | Temporary alias to `verify` (or nearest equivalent gate during migration) | Replace references with `verify` |
 
 Deprecation window for legacy aliases: **90 days or two minor releases (whichever is longer)**, then aliases can be removed after CI/docs migration is complete.
 

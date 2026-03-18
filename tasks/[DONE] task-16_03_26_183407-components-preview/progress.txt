@@ -3,3 +3,41 @@
 - Validations: lint ✅, typecheck ✅, build ✅, compile ✅, parity test ✅.
 - Final state: all stories complete (19/19 marked pass=true in prd.json).
 
+## Story Evidence Template (US-006 / CF-11 remediation backfill)
+
+- Changed files: exact paths touched by the story implementation (code and/or task artifacts).
+- Commands run: concrete commands used to validate the story delivery.
+- Observable results: objective outcomes verifiable from files, tests, or browser behavior.
+
+## Story Evidence Backfill (US-001..US-019)
+
+| Story | Changed files | Commands run | Observable results |
+| --- | --- | --- | --- |
+| US-001 | `shared/types/messages.ts`; `webview-app/src/types/messages.ts` | `pnpm run typecheck` | `previewCode` message contracts were introduced without breaking existing toolbar commands. |
+| US-002 | `src/commands/previewCodeCommand.ts`; `src/canvas/CanvasPanel.ts`; `src/extension.ts` | `pnpm run typecheck`; `pnpm run build:extension` | Preview payload is generated in memory and returned to webview without disk writes. |
+| US-003 | `webview-app/src/hooks/usePostMessage.ts` | `pnpm --dir webview-app typecheck` | Webview dispatches `previewCode` command from toolbar flow. |
+| US-004 | `webview-app/src/hooks/useExtensionListener.ts`; `webview-app/src/App.tsx` | `pnpm --dir webview-app typecheck` | Preview response is captured in state and empty payload path does not break UI. |
+| US-005 | `webview-app/src/components/Toolbar.tsx`; `webview-app/src/App.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Toolbar exposes `Preview Code` action and keeps `Generate` flow intact. |
+| US-006 | `webview-app/src/components/PreviewCodeModal.tsx`; `webview-app/src/App.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Preview modal opens on payload receipt and closes without mutating canvas state. |
+| US-007 | `webview-app/src/components/PreviewCodeModal.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | File tree panel renders and auto-selects first file when data exists. |
+| US-008 | `webview-app/src/components/PreviewCodeModal.tsx`; `webview-app/src/components/Toolbar.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Read-only code viewer updates on file selection and supports real generate action. |
+| US-009 | `webview-app/src/components/Canvas.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Canvas displays explicit JFrame frame and title bar based on frame dimensions. |
+| US-010 | `webview-app/src/components/Canvas.tsx`; `webview-app/src/components/Canvas/MenuBarZone.tsx`; `webview-app/src/components/Canvas/ToolBarZone.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | MenuBar and ToolBar are anchored to frame coordinates (not viewport top). |
+| US-011 | `webview-app/src/components/Canvas.tsx`; `webview-app/src/components/CanvasComponent.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Zoom/pan/selection/drag/resize remained stable after frame-container changes. |
+| US-012 | `webview-app/src/components/CanvasComponent/previewRenderers.tsx`; `webview-app/src/components/CanvasComponent/componentView.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Dedicated renderers for `JLabel`, `JButton`, `JTextField`, `JTextArea`. |
+| US-013 | `webview-app/src/components/CanvasComponent/previewRenderers.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Dedicated renderers for `JCheckBox`, `JRadioButton`, `JComboBox`, `JList`. |
+| US-014 | `webview-app/src/components/CanvasComponent/previewRenderers.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Dedicated renderers for `JProgressBar`, `JSlider`, `JSpinner`, `JSeparator`, `JPanel`. |
+| US-015 | `webview-app/src/components/CanvasComponent/previewRenderers.tsx`; `webview-app/src/lib/componentDefaults.ts` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Minimum-size safeguards avoid unreadable component shapes during resize. |
+| US-016 | `webview-app/src/components/Palette.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Palette collapse state persists and `aria-expanded` stays consistent. |
+| US-017 | `webview-app/src/components/HierarchyPanel.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | Hierarchy collapse state persists independently with internal scroll preserved. |
+| US-018 | `webview-app/src/hooks/useKeyboardShortcuts.ts`; `webview-app/src/App.tsx` | `pnpm --dir webview-app typecheck`; `pnpm run compile` | `Delete` removes selected component; `Backspace` and editable fields are guarded. |
+| US-019 | `tests/generator/JavaGenerator.parity.test.ts`; `src/commands/previewCodeCommand.ts`; `src/commands/generateCommand.ts` | `pnpm run test`; `pnpm run typecheck` | Preview and generate maintain parity for file list/content under equivalent state. |
+
+## Auditability Validation (CF-11)
+
+- `prd.json` now includes the minimum evidence fields for all stories (`US-001`..`US-019`).
+- This `progress.txt` mirrors the same story-level evidence schema, enabling audit without external review threads.
+- Verification commands:
+  - `node scripts/validatePrdNotes.mjs tasks/[DONE] task-16_03_26_183407-components-preview/prd.json`
+  - `rg "Changed files:|Commands run:|Observable results:" tasks/[DONE] task-16_03_26_183407-components-preview/prd.json`
+

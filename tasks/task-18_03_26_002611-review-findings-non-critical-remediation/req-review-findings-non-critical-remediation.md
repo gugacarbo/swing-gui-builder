@@ -72,16 +72,37 @@ Close medium/low findings with objective documentation and scoped technical foll
 - Owner for deferred scope: QA Lead + Product Owner.
 - Acceptance target for deferred scope: `task-17_03_26_140000-automated-tests` scope documents (`req`, `prd`, acceptance criteria) must state one explicit E2E inclusion/exclusion decision with no ambiguity.
 
+#### Deferred/Split Continuity Register (US-007)
+
+| Finding | Final Status | FUP Reference | Owner | Rationale | Next Actionable Step |
+| --- | --- | --- | --- | --- | --- |
+| `CF-07` | Split to Follow-up | `FUP-07` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Owner da task `webview-with-react-vite` | Documentary contradiction requires sustained single-status governance in migration records. | Revalidate migration status narrative against delivered evidence and preserve one final progress state snapshot. |
+| `CF-08` | Split to Follow-up | `FUP-08` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Frontend/Webview Maintainer | Simplification alignment is documented, but additional reduction remains as residual scope. | Define measurable reduction targets for `Canvas.tsx`, `PropertiesPanel/index.tsx`, and `App.tsx`, then execute or formally adjust targets. |
+| `CF-09` | Split to Follow-up | `FUP-09` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Tech Lead da refatoracao estrutural | Structural-refactor closure had contradictory blocked/completed narrative history. | Audit closure records and publish one official final decision in both `progress` and `prd` artifacts. |
+| `CF-10` | Split to Follow-up | `FUP-10` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | QA Lead + Product Owner | Broader E2E execution decision is intentionally deferred from this cycle. | Approve one explicit E2E inclusion/exclusion decision in automated-tests scope documents (`req`/`prd`/acceptance criteria). |
+| `CF-11` | Split to Follow-up | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | PMO/Process Owner + task owners | Weak story-level traceability spans multiple tasks and needs standardized enforcement. | Initial rollout completed in US-006 (components-preview evidence backfill); enforce template for future `passes: true` stories. |
+| `CF-12` | Split to Follow-up | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | PMO/Process Owner + task owners | Ambiguous documentary trail shares the same root cause as CF-11. | Applied in US-006 for fixes-and-improvements US-002/US-003; keep using template to reconcile temporary blockers with final outcomes. |
+
+- Coverage check: all open in-scope findings (`CF-07`, `CF-08`, `CF-09`, `CF-10`, `CF-11`, `CF-12`) have explicit continuity references with owner/rationale/next step.
+- FUP coverage check: associated continuity items are fully represented (`FUP-07`, `FUP-08`, `FUP-09`, `FUP-10`, `FUP-11`).
+
 ### R3 - Improve Story-Level Traceability Pattern (`CF-11`, `CF-12`)
 
-- [ ] Standardize evidence granularity for impacted tasks (file, command, result).
-- [ ] Apply the pattern to at least the tasks flagged with weak/ambiguous traceability.
-- [ ] Ensure updated records are auditable without external assumptions.
+- [x] Standardize evidence granularity for impacted tasks (file, command, result).
+- [x] Apply the pattern to at least the tasks flagged with weak/ambiguous traceability.
+- [x] Ensure updated records are auditable without external assumptions.
 
 ### R4 - Execute Non-Blocking Swing UX/Docs Refinements (`CF-14`)
 
-- [ ] Address pending low-risk UX/documentation refinements for Swing component preview where feasible.
-- [ ] Record residual items explicitly as backlog if not completed in this cycle.
+- [x] Address pending low-risk UX/documentation refinements for Swing component preview where feasible.
+- [x] Record residual items explicitly as backlog if not completed in this cycle (no residual remained after US-008 execution).
+
+#### CF-14 execution evidence (US-008)
+
+- `webview-app/src/components/Sidebar.tsx`: sidebar order aligned to requirement (`Palette` above `Hierarchy`, with hierarchy panel rendered below component menu).
+- `webview-app/src/components/CanvasComponent/previewRenderers.tsx`: added dedicated `PasswordField` preview renderer (masked visual treatment) to avoid generic fallback for this pending type.
+- Browser verification (dev-browser skill): screenshot evidence captured at `temp/dev-browser/us008-ux-verification.png`.
+- Final status for `CF-14`: `Resolved` in this cycle (no new `Split to Follow-up` item required).
 
 ## Acceptance Criteria
 
@@ -96,7 +117,7 @@ Close medium/low findings with objective documentation and scoped technical foll
 
 ### AC-03 - Traceability Quality
 
-- [ ] Updated stories include minimum evidence entries: changed files, commands run, and outcomes.
+- [x] Updated stories include minimum evidence entries: changed files, commands run, and outcomes.
 
 ### AC-04 - Controlled Scope
 

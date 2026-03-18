@@ -7,6 +7,15 @@ function getDisplayText(component: CanvasComponentModel, fallback: string): stri
   return value.length > 0 ? value : fallback;
 }
 
+function getPasswordDisplayText(component: CanvasComponentModel): string {
+  const value = component.text.trim();
+  if (value.length === 0) {
+    return "••••••";
+  }
+
+  return "•".repeat(Math.min(value.length, 12));
+}
+
 function getRangeMetrics(component: CanvasComponentModel): {
   min: number;
   max: number;
@@ -55,6 +64,15 @@ export function renderComponentPreview(
           style={frameStyle}
         >
           <span className="truncate">{getDisplayText(component, "TextField")}</span>
+        </div>
+      );
+    case "PasswordField":
+      return (
+        <div
+          className="pointer-events-none flex h-full w-full items-center rounded-sm border border-vscode-panel-border px-2 text-left"
+          style={frameStyle}
+        >
+          <span className="truncate tracking-[0.08em]">{getPasswordDisplayText(component)}</span>
         </div>
       );
     case "TextArea":

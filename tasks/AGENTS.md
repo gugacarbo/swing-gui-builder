@@ -51,3 +51,4 @@ tasks/
 - Keep `schemas/swingbuilder.schema.json` component keys aligned with `src/config/ConfigReader.ts` `COMPONENT_TYPES` to avoid runtime/schema drift.
 - Official repository scripts contract is `build`/`verify`; treat `compile`/`check` as temporary legacy aliases during migration.
 - For historical `prd.json` backfills, store an immutable pre-change snapshot under `tasks/<active-task>/backfill/<story-id>/before/` and link both before/after artifacts in evidence docs.
+- Story-level evidence must use a minimum template in `prd.json` notes and `progress.txt`: `Changed files`, `Commands run`, `Observable results`. Apply this before setting `passes: true`.

@@ -15,7 +15,7 @@
       ],
       "priority": 1,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: shared/types/messages.ts, webview-app/src/types/messages.ts. Commands run: pnpm run typecheck. Observable results: previewCode command and preview response payload contracts are defined and compatible with existing toolbar commands."
     },
     {
       "id": "US-002",
@@ -30,7 +30,7 @@
       ],
       "priority": 2,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: src/commands/previewCodeCommand.ts, src/canvas/CanvasPanel.ts, src/extension.ts. Commands run: pnpm run typecheck, pnpm run build:extension. Observable results: extension returns preview files in memory without writing artifacts to disk."
     },
     {
       "id": "US-003",
@@ -43,7 +43,7 @@
       ],
       "priority": 3,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/hooks/usePostMessage.ts. Commands run: pnpm --dir webview-app typecheck. Observable results: webview can dispatch previewCode action from the toolbar flow."
     },
     {
       "id": "US-004",
@@ -57,7 +57,7 @@
       ],
       "priority": 4,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/hooks/useExtensionListener.ts, webview-app/src/App.tsx. Commands run: pnpm --dir webview-app typecheck. Observable results: preview payload is stored in UI state and empty payload is handled without breaking the screen."
     },
     {
       "id": "US-005",
@@ -72,7 +72,7 @@
       ],
       "priority": 5,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/Toolbar.tsx, webview-app/src/App.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: Preview Code button is available in toolbar and opens preview flow in browser validation."
     },
     {
       "id": "US-006",
@@ -87,7 +87,7 @@
       ],
       "priority": 6,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/PreviewCodeModal.tsx, webview-app/src/App.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: modal opens when preview data arrives and closes without mutating canvas component state."
     },
     {
       "id": "US-007",
@@ -102,7 +102,7 @@
       ],
       "priority": 7,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/PreviewCodeModal.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: left panel lists generated files and auto-selects the first file when data is available."
     },
     {
       "id": "US-008",
@@ -117,7 +117,7 @@
       ],
       "priority": 8,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/PreviewCodeModal.tsx, webview-app/src/components/Toolbar.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: selected file content is rendered read-only and modal exposes secondary action to trigger real generate."
     },
     {
       "id": "US-009",
@@ -132,7 +132,7 @@
       ],
       "priority": 9,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/Canvas.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: canvas renders explicit JFrame border and title bar using frame dimensions."
     },
     {
       "id": "US-010",
@@ -147,7 +147,7 @@
       ],
       "priority": 10,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/Canvas.tsx, webview-app/src/components/Canvas/MenuBarZone.tsx, webview-app/src/components/Canvas/ToolBarZone.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: MenuBar and ToolBar are anchored to frame coordinates instead of raw viewport top."
     },
     {
       "id": "US-011",
@@ -162,7 +162,7 @@
       ],
       "priority": 11,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/Canvas.tsx, webview-app/src/components/CanvasComponent.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: zoom, pan, selection, drag, and resize continue to work after frame container changes."
     },
     {
       "id": "US-012",
@@ -177,7 +177,7 @@
       ],
       "priority": 12,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/CanvasComponent/previewRenderers.tsx, webview-app/src/components/CanvasComponent/componentView.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: JLabel, JButton, JTextField, and JTextArea use dedicated preview renderers."
     },
     {
       "id": "US-013",
@@ -192,7 +192,7 @@
       ],
       "priority": 13,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/CanvasComponent/previewRenderers.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: JCheckBox, JRadioButton, JComboBox, and JList render with dedicated visual treatment."
     },
     {
       "id": "US-014",
@@ -207,7 +207,7 @@
       ],
       "priority": 14,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/CanvasComponent/previewRenderers.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: JProgressBar, JSlider, JSpinner, JSeparator, and JPanel render with dedicated visuals."
     },
     {
       "id": "US-015",
@@ -222,7 +222,7 @@
       ],
       "priority": 15,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/CanvasComponent/previewRenderers.tsx, webview-app/src/lib/componentDefaults.ts. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: minimum-size guards prevent unreadable component shapes during resize."
     },
     {
       "id": "US-016",
@@ -237,7 +237,7 @@
       ],
       "priority": 16,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/Palette.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: Palette section supports collapse and persistence with aria-expanded aligned to state."
     },
     {
       "id": "US-017",
@@ -253,7 +253,7 @@
       ],
       "priority": 17,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/components/HierarchyPanel.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: Hierarchy section supports independent collapse and persistence with internal scroll preserved."
     },
     {
       "id": "US-018",
@@ -269,7 +269,7 @@
       ],
       "priority": 18,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: webview-app/src/hooks/useKeyboardShortcuts.ts, webview-app/src/App.tsx. Commands run: pnpm --dir webview-app typecheck, pnpm run compile. Observable results: Delete removes selected component, while Backspace and editable-input focus do not trigger removal."
     },
     {
       "id": "US-019",
@@ -283,7 +283,7 @@
       ],
       "priority": 19,
       "passes": true,
-      "notes": ""
+      "notes": "Changed files: tests/generator/JavaGenerator.parity.test.ts, src/commands/previewCodeCommand.ts, src/commands/generateCommand.ts. Commands run: pnpm run test, pnpm run typecheck. Observable results: preview and generate maintain parity for file list and content under equivalent canvas state."
     }
   ]
 }

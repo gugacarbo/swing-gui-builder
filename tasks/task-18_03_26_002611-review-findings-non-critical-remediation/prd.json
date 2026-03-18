@@ -90,8 +90,8 @@
             ],
             "priority": 6,
             "group": "C",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Defined and published a minimum story evidence template (changed files, commands run, observable results) in remediation artifacts and tasks/AGENTS.md. Applied concrete backfill to weak-traceability findings: components-preview (US-001..US-019 notes and progress evidence matrix) and fixes-and-improvements (standardized US-002/US-003 notes plus reconciled evidence block in progress). Audited records with explicit local commands/results and validated documentation integrity with pnpm run verify and validatePrdNotes for all touched PRDs."
         },
         {
             "id": "US-007",
@@ -105,8 +105,8 @@
             ],
             "priority": 7,
             "group": "C",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Normalized Deferred/Split continuity references across req/prd/progress artifacts with a standardized US-007 continuity register and updated closure matrix. Every open in-scope finding (CF-07, CF-08, CF-09, CF-10, CF-11, CF-12, CF-14) now points to FUP-07..FUP-12 and includes owner, rationale, and explicit next actionable step. Updated matrix integrity checks to assert no open finding lacks continuity reference and that all associated FUP items are covered. Validation: pnpm run verify PASS; continuity coverage scan (rg for CF/FUP mappings + next-step column) PASS."
         },
         {
             "id": "US-008",
@@ -120,8 +120,8 @@
             ],
             "priority": 8,
             "group": "D",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Implemented feasible CF-14 refinements in this cycle: reordered sidebar sections to keep Palette above Hierarchy (`webview-app/src/components/Sidebar.tsx`) and added a dedicated masked PasswordField preview renderer (`webview-app/src/components/CanvasComponent/previewRenderers.tsx`). Updated req/prd/progress closure records to mark CF-14 as Resolved with evidence references and dev-browser visual verification screenshot (`temp/dev-browser/us008-ux-verification.png`). No residual remained after implementation, so no new Split-to-Follow-up item was required. Validation: pnpm run verify PASS."
         },
         {
             "id": "US-009",

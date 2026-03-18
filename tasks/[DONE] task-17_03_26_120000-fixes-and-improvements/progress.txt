@@ -431,9 +431,32 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 
 
 
+## Reconciliation Note - CF-12 (temporary blockers vs final resolution)
+- US-002 teve bloqueio temporário de validação (`Status: FAILED` na correção de validação) causado por formatação em arquivos paralelos fora do escopo da story; a resolução foi concluída no Attempt 2/3 com validação limpa.
+- US-003 registrou `Status: TIMEOUT` por cancelamento do worker após implementação inicial, mas a story foi revalidada e encerrada com `Status: COMPLETE` no Attempt 2/3.
+- Resultado final autoritativo desta task permanece `ALL SUCCESS` (US-001..US-013 com `passes: true` em `prd.json`), e os bloqueios temporários acima devem ser lidos apenas como eventos transitórios já resolvidos.
+
 ## [2026-03-17T16:53:14Z] - TASK COMPLETION
 Stories: US-001 .. US-013
 Result: ALL SUCCESS
 Group Status: COMPLETE
 Final Validation: lint, typecheck, compile, test passed
 ---
+
+## Story Evidence Standardization (CF-12 remediation via US-006)
+
+### Minimum evidence template
+- Changed files
+- Commands run
+- Observable results
+
+### Applied records (weak-traceability stories)
+
+| Story | Changed files | Commands run | Observable results |
+| --- | --- | --- | --- |
+| US-002 | `src/generator/JavaGenerator.ts`; task artifacts (`prd.json`, `progress.txt`) | `pnpm exec biome check src/generator/JavaGenerator.ts`; `pnpm run typecheck`; `pnpm run compile` | `GeneratedFileWithPath` contract is present and the temporary validation blocker is explicitly reconciled to a successful retry outcome. |
+| US-003 | `webview-app/src/components/Sidebar.tsx`; `webview-app/src/App.tsx`; task artifacts (`prd.json`, `progress.txt`) | `pnpm --dir webview-app lint`; `pnpm --dir webview-app typecheck`; `pnpm run compile`; browser verification at `http://127.0.0.1:4173` | Sidebar behavior (Hierarchy + Palette collapse/scroll) is validated and the timeout event is explicitly linked to the later successful retry evidence. |
+
+### Auditability check
+- Temporary blocker/timeout events are linked to final successful outcomes in both `progress.txt` and `prd.json`.
+- Story records now follow the same minimum evidence schema used for CF-11 remediation.

@@ -64,6 +64,7 @@
     "@types/vscode": "^1.110.0",
     "@vitest/coverage-v8": "^4.1.0",
     "@vscode/vsce": "^3.7.1",
+    "ajv": "^8.18.0",
     "coverage-badges": "^1.0.7",
     "nyc": "^15.1.0",
     "shx": "^0.4.0",

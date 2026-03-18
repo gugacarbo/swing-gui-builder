@@ -40,22 +40,24 @@ Current Story: US-001 - Define closure vocabulary for findings
 
 ## Single Finding Closure Matrix (US-002)
 
-| Finding | Owner | Final Status | Expected Evidence | Follow-up Reference | Rationale (for Deferred/Split) |
-| --- | --- | --- | --- | --- | --- |
-| CF-07 | Owner da task `webview-with-react-vite` | Split to Follow-up | `tasks/[DONE] task-12_03_26_201338-webview-with-react-vite/progress.txt` (status/table/summary synchronized + reconciliation note CF-07)<br>`tasks/[DONE] task-12_03_26_201338-webview-with-react-vite/prd.json` (US-001..US-035 with `passes: true`) | `FUP-07` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Documentary contradiction belongs to a targeted task-level reconciliation step and needs isolated execution/evidence. |
-| CF-08 | Frontend/Webview Maintainer | Split to Follow-up | US-004 decision record aligns simplification statements with current delivered state (`Canvas.tsx=370`, `PropertiesPanel/index.tsx=218`, `App.tsx=355`) and scopes residual reduction work. | `FUP-08` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Docs were aligned to current architecture; additional code-size reduction remains as controlled follow-up scope. |
-| CF-09 | Tech Lead da refatoracao estrutural | Split to Follow-up | `tasks/[DONE] task-16_03_26_200311-codebase-refactoring/progress.txt` (US-024 temporary blocker reconciled to final COMPLETE disposition)<br>`tasks/[DONE] task-16_03_26_200311-codebase-refactoring/prd.json` (US-024 notes aligned with reconciliation + `FUP-09`) | `FUP-09` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Inconsistency is specific to structural-refactor closure records and requires focused status correction. |
-| CF-10 | QA Lead | Split to Follow-up | `req`/`prd`/`progress` now state the same official E2E scope decision for this cycle (documentary harmonization only). | `FUP-10` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Residual scope (broader E2E inclusion/exclusion execution) is deferred to FUP-10 with owner QA Lead + Product Owner and acceptance target of unambiguous E2E scope language in automated-tests artifacts. |
-| CF-11 | PMO/Process Owner | Split to Follow-up | Story-level entries include changed files, executed commands, and observable outcomes in affected tasks. | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Traceability gap spans multiple artifacts and depends on rollout of a standardized evidence template. |
-| CF-12 | PMO/Process Owner | Split to Follow-up | `tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/progress.txt` (reconciliation note links temporary blockers to final ALL SUCCESS outcome)<br>`tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json` (US-002/US-003 notes synchronized with resolved retries) | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Ambiguous trail must be fixed with the same traceability standard used for CF-11 to keep audit consistency. |
-| CF-13 | Frontend/Webview Maintainer | Resolved | Non-goal divergence closed by justified exception record: extracted `resizeHandles.tsx` is accepted as delivered architecture and referenced in decision evidence. | N/A | Exception accepted with owner and technical rationale; no rollback or implementation revert required. |
-| CF-14 | Frontend/Webview Maintainer | Deferred | UX/docs refinement batch completed with before/after evidence (or split residual with acceptance target). | `FUP-12` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Low-priority UX/documentation refinements are intentionally queued in dedicated backlog batch for controlled delivery. |
+| Finding | Owner | Final Status | Expected Evidence | Follow-up Reference | Rationale (for Deferred/Split) | Next Actionable Step |
+| --- | --- | --- | --- | --- | --- | --- |
+| CF-07 | Owner da task `webview-with-react-vite` | Split to Follow-up | `tasks/[DONE] task-12_03_26_201338-webview-with-react-vite/progress.txt` (status/table/summary synchronized + reconciliation note CF-07)<br>`tasks/[DONE] task-12_03_26_201338-webview-with-react-vite/prd.json` (US-001..US-035 with `passes: true`) | `FUP-07` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Documentary contradiction belongs to a targeted task-level reconciliation step and needs isolated execution/evidence. | Revalidate migration progress narrative against actual delivery evidence and keep one final status snapshot (no mixed "Not Started" vs completed state). |
+| CF-08 | Frontend/Webview Maintainer | Split to Follow-up | US-004 decision record aligns simplification statements with current delivered state (`Canvas.tsx=370`, `PropertiesPanel/index.tsx=218`, `App.tsx=355`) and scopes residual reduction work. | `FUP-08` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Docs were aligned to current architecture; additional code-size reduction remains as controlled follow-up scope. | Open a reduction-planning pass with measurable targets for `Canvas.tsx`, `PropertiesPanel/index.tsx`, and `App.tsx`, then execute/record the chosen reduction or target-adjustment decision. |
+| CF-09 | Tech Lead da refatoracao estrutural | Split to Follow-up | `tasks/[DONE] task-16_03_26_200311-codebase-refactoring/progress.txt` (US-024 temporary blocker reconciled to final COMPLETE disposition)<br>`tasks/[DONE] task-16_03_26_200311-codebase-refactoring/prd.json` (US-024 notes aligned with reconciliation + `FUP-09`) | `FUP-09` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Inconsistency is specific to structural-refactor closure records and requires focused status correction. | Audit blocked-vs-complete story records for the refactor task and publish one official closure decision in both `progress.txt` and `prd.json`. |
+| CF-10 | QA Lead + Product Owner | Split to Follow-up | `req`/`prd`/`progress` now state the same official E2E scope decision for this cycle (documentary harmonization only). | `FUP-10` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Residual scope (broader E2E inclusion/exclusion execution) is deferred to FUP-10 with owner QA Lead + Product Owner and acceptance target of unambiguous E2E scope language in automated-tests artifacts. | Approve one explicit E2E inclusion/exclusion decision in `task-17_03_26_140000-automated-tests` (`req`, `prd`, and acceptance criteria) and remove any conflicting wording. |
+| CF-11 | PMO/Process Owner + task owners | Split to Follow-up | `tasks/[DONE] task-16_03_26_183407-components-preview/progress.txt` (US-001..US-019 evidence backfill table)<br>`tasks/[DONE] task-16_03_26_183407-components-preview/prd.json` (all stories with `Changed files / Commands run / Observable results`) | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Traceability gap spans multiple artifacts and depends on rollout of a standardized evidence template. | Initial rollout completed in US-006 for components-preview; enforce the same template before future `passes: true` updates. |
+| CF-12 | PMO/Process Owner + task owners | Split to Follow-up | `tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/progress.txt` (CF-12 standardized evidence table for US-002/US-003)<br>`tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json` (US-002/US-003 notes normalized to template fields) | `FUP-11` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) | Ambiguous trail must be fixed with the same traceability standard used for CF-11 to keep audit consistency. | Applied in US-006 by linking blocker/timeout events to validated final outcomes with the shared evidence template. |
+| CF-13 | Frontend/Webview Maintainer | Resolved | Non-goal divergence closed by justified exception record: extracted `resizeHandles.tsx` is accepted as delivered architecture and referenced in decision evidence. | N/A | Exception accepted with owner and technical rationale; no rollback or implementation revert required. | N/A (closed in current cycle). |
+| CF-14 | Frontend/Webview Maintainer | Resolved | `webview-app/src/components/Sidebar.tsx` (sidebar order aligned with Palette above Hierarchy)<br>`webview-app/src/components/CanvasComponent/previewRenderers.tsx` (dedicated PasswordField renderer)<br>Browser evidence: `temp/dev-browser/us008-ux-verification.png` | N/A | Low-risk UX/docs refinements from CF-14 were executed in this cycle with visual verification evidence and no pending residual. | N/A (closed in current cycle). |
 
 ### Matrix Integrity Checks
 
 - Findings covered exactly once: `CF-07`, `CF-08`, `CF-09`, `CF-10`, `CF-11`, `CF-12`, `CF-13`, `CF-14`.
 - Each finding has exactly one final decision (`Resolved`, `Split to Follow-up`, or `Deferred`).
-- All `Deferred`/`Split to Follow-up` entries include rationale and backlog reference (`FUP-07`..`FUP-12`).
+- All `Deferred`/`Split to Follow-up` entries include owner, rationale, backlog reference, and next actionable step.
+- No open finding remains without continuity reference: `CF-07`, `CF-08`, `CF-09`, `CF-10`, `CF-11`, and `CF-12` all point to a `FUP-xx`.
+- Closure matrix points to all associated continuity items: `FUP-07`, `FUP-08`, `FUP-09`, `FUP-10`, `FUP-11`.
 - Impacted tasks for CF-07/CF-09/CF-12 now have aligned `progress.txt` and `prd.json` conclusions with explicit reconciliation notes for temporary blockers.
 
 ## Official E2E Scope Decision (US-005 / CF-10)
@@ -72,6 +74,28 @@ Current Story: US-001 - Define closure vocabulary for findings
 | --- | --- | --- | --- | --- |
 | CF-08 | Docs fix | Frontend/Webview Maintainer | Original simplification targets were explicitly documented, but current delivered state shows larger file sizes after subsequent feature growth (`Canvas.tsx=370`, `PropertiesPanel/index.tsx=218`, `App.tsx=355`) while preserving hook/lib/component modularization gains. | Split to Follow-up (`FUP-08`) |
 | CF-13 | Justified exception + docs fix | Frontend/Webview Maintainer | Former non-goal "nao extrair ResizeHandles" diverges from delivered implementation; extracted `webview-app/src/components/CanvasComponent/resizeHandles.tsx` (used by `componentView.tsx`) is accepted as stable modularization with no regression evidence. | Resolved |
+
+## Story Evidence Pattern (US-006 / CF-11, CF-12)
+
+### Minimum story evidence template
+
+- Changed files: exact files touched by the story (code and/or artifact updates).
+- Commands run: concrete validation commands executed for the story.
+- Observable results: objective behavior/output proving AC fulfillment.
+
+### Applied remediation evidence
+
+| Finding | Task | Applied artifact evidence | Audit outcome |
+| --- | --- | --- | --- |
+| CF-11 | `tasks/[DONE] task-16_03_26_183407-components-preview` | Added template backfill to all story notes (`prd.json` US-001..US-019) and mirrored story evidence matrix in `progress.txt`. | Auditable by task artifacts only (no external thread dependency). |
+| CF-12 | `tasks/[DONE] task-17_03_26_120000-fixes-and-improvements` | Standardized US-002/US-003 records in `prd.json` and added dedicated CF-12 evidence normalization block in `progress.txt`. | Temporary blocker/timeout history now explicitly reconciled to final successful validation evidence. |
+
+### Documentation integrity checks
+
+- `pnpm run verify` -> PASS
+- `node scripts/validatePrdNotes.mjs tasks/[DONE] task-16_03_26_183407-components-preview/prd.json` -> PASS
+- `node scripts/validatePrdNotes.mjs tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json` -> PASS
+- `node scripts/validatePrdNotes.mjs tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd.json` -> PASS
 
 ## [2026-03-18T12:35:00Z] - US-002
 - Status: COMPLETE
@@ -141,3 +165,65 @@ Current Story: US-001 - Define closure vocabulary for findings
   - `pnpm run verify` -> PASS
   - Evidence check (`Get-Content ... | Measure-Object -Line` + `Select-String resizeHandles`) -> PASS
 - [DONE] US-004: Align simplification and non-goals scope — 2026-03-18T13:20:00Z
+
+## [2026-03-18T13:45:00Z] - US-007
+- Status: COMPLETE
+- What was implemented:
+  - Normalized Deferred/Split continuity references across non-critical remediation artifacts (`req`, `prd`, `progress`) using the internal `FUP-xx` convention.
+  - Expanded the closure matrix to include explicit next actionable steps for every open (`Deferred`/`Split`) finding, while preserving owner and rationale.
+  - Added explicit integrity checks confirming that no in-scope open finding is left without continuity mapping and that all associated FUP items are represented (`FUP-07`..`FUP-12`).
+- Files changed:
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/req-review-findings-non-critical-remediation.md
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd-review-findings-non-critical-remediation.md
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/progress.txt
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd.json
+- Validation:
+  - `pnpm run verify` -> PASS
+  - Continuity coverage scan (`rg "CF-0(7|8|9|10|11|12|14)|FUP-0(7|8|9|10|11|12)|Next Actionable Step"` in task artifacts) -> PASS
+- [DONE] US-007: Link Deferred/Split items to FUP backlog — 2026-03-18T13:45:00Z
+
+## [2026-03-18T14:40:00Z] - US-006
+- Status: COMPLETE
+- What was implemented:
+  - Defined and published the minimum story evidence template (`Changed files`, `Commands run`, `Observable results`) in this task progress and `tasks/AGENTS.md`.
+  - Applied the template to CF-11 weak-traceability task (`task-16_03_26_183407-components-preview`) by backfilling story-level evidence for `US-001..US-019` in both `prd.json` and `progress.txt`.
+  - Applied the template to CF-12 ambiguous-traceability task (`task-17_03_26_120000-fixes-and-improvements`) by normalizing US-002/US-003 notes in `prd.json` and appending standardized evidence records in `progress.txt`.
+  - Updated closure-matrix evidence pointers for CF-11 and CF-12 to the concrete normalized artifact sections.
+- Files changed:
+  - tasks/[DONE] task-16_03_26_183407-components-preview/prd.json
+  - tasks/[DONE] task-16_03_26_183407-components-preview/progress.txt
+  - tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json
+  - tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/progress.txt
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/progress.txt
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd.json
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/req-review-findings-non-critical-remediation.md
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd-review-findings-non-critical-remediation.md
+  - tasks/AGENTS.md
+- Validation:
+  - `pnpm run verify` -> PASS
+  - `node scripts/validatePrdNotes.mjs tasks/[DONE] task-16_03_26_183407-components-preview/prd.json` -> PASS
+  - `node scripts/validatePrdNotes.mjs tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json` -> PASS
+  - `node scripts/validatePrdNotes.mjs tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd.json` -> PASS
+  - Template field coverage scan (`rg "Changed files:|Commands run:|Observable results:"` on targeted PRDs) -> PASS
+- [DONE] US-006: Standardize story-level evidence pattern — 2026-03-18T14:40:00Z
+
+## [2026-03-18T16:15:00Z] - US-008
+- Status: COMPLETE
+- What was implemented:
+  - Executed CF-14 low-risk UX/docs refinements in webview code:
+    - Sidebar order aligned to requirement by rendering `Palette` above `Hierarchy`.
+    - Added dedicated `PasswordField` renderer in preview pipeline to avoid generic fallback for this pending type.
+  - Updated non-critical remediation artifacts (`req`, `prd`, `progress`) to record CF-14 closure as `Resolved`.
+  - Recorded dev-browser visual verification evidence for the sidebar/preview updates.
+  - Residual handling: no remaining residual item after execution, so no new `Split to Follow-up` record was required.
+- Files changed:
+  - webview-app/src/components/Sidebar.tsx
+  - webview-app/src/components/CanvasComponent/previewRenderers.tsx
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/req-review-findings-non-critical-remediation.md
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd-review-findings-non-critical-remediation.md
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/progress.txt
+  - tasks/task-18_03_26_002611-review-findings-non-critical-remediation/prd.json
+- Validation:
+  - `pnpm run verify` -> PASS
+  - Browser verification via dev-browser script -> PASS (`temp/dev-browser/us008-ux-verification.png`)
+- [DONE] US-008: Execute mandatory UX/docs refinements — 2026-03-18T16:15:00Z

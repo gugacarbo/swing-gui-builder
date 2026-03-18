@@ -29,7 +29,7 @@
             ],
             "priority": 2,
             "passes": true,
-            "notes": "GeneratedFileWithPath adicionada em src/generator/JavaGenerator.ts com fileName, content e subfolder opcional."
+            "notes": "Changed files: src/generator/JavaGenerator.ts, tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/progress.txt, tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json. Commands run: pnpm exec biome check src/generator/JavaGenerator.ts, pnpm run typecheck, pnpm run compile. Observable results: GeneratedFileWithPath contract (fileName, content, optional subfolder) is available and the temporary validation blocker was resolved on retry with clean checks."
         },
         {
             "id": "US-003",
@@ -46,7 +46,7 @@
             ],
             "priority": 3,
             "passes": true,
-            "notes": "Sidebar component criado em webview-app/src/components/Sidebar.tsx com HierarchyPanel no topo e Palette abaixo. Validado com lint/typecheck/compile e verificação via dev-browser em http://127.0.0.1:4173. Retry 2/3 revalidado em 2026-03-17T15:53:50Z com checklist de render/collapse/scroll independente no navegador."
+            "notes": "Changed files: webview-app/src/components/Sidebar.tsx, webview-app/src/App.tsx, tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/progress.txt, tasks/[DONE] task-17_03_26_120000-fixes-and-improvements/prd.json. Commands run: pnpm --dir webview-app lint, pnpm --dir webview-app typecheck, pnpm run compile, browser verification at http://127.0.0.1:4173. Observable results: sidebar renders Hierarchy and Palette with independent collapse/scroll; timeout event was reconciled by successful retry evidence."
         },
         {
             "id": "US-004",
