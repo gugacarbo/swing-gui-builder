@@ -1,6 +1,6 @@
  ![Version Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgugacarbo%2Fswing-gui-builder%2Frefs%2Fheads%2Fmain%2Fpackage.json&query=%24.version&suffix=-beta&style=flat&label=version&cacheSeconds=3600) ![GitHub License](https://img.shields.io/github/license/gugacarbo/swing-gui-builder) ![Visual Studio Marketplace Last Updated](https://img.shields.io/visual-studio-marketplace/last-updated/gugacarbo.swing-gui-builder)
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gugacarbo/swing-gui-builder/test.yml?branch=main&label=Tests) ![Coverage Total](./media/coverage-badges/total.svg) ![Tests Ext](./media/coverage-badges/extension.svg) ![Tests Webview](./media/coverage-badges/webview.svg)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/gugacarbo/swing-gui-builder/test.yml?branch=main&label=Tests)](https://gugacarbo.github.io/swing-gui-builder/) [![Coverage Total](./media/coverage-badges/total.svg)](https://gugacarbo.github.io/swing-gui-builder/) [![Tests Ext](./media/coverage-badges/extension.svg)](https://gugacarbo.github.io/swing-gui-builder/) [![Tests Webview](./media/coverage-badges/webview.svg)](https://gugacarbo.github.io/swing-gui-builder/)
 
 # IN DEVELOPMENT - Vibe Code Experiment
 
