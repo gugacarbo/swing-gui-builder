@@ -32,10 +32,16 @@ jobs:
       - name: Download coverage artifacts
         uses: actions/download-artifact@v8
         with:
-          path: github-pages
+          path: coverage/report
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+
+      - name: Upload coverage artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: coverage/report
 
       - name: Deploy to GitHub Pages
         id: deployment
