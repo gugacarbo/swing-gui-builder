@@ -15,8 +15,8 @@
             ],
             "priority": 1,
             "group": "A",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Published official closure vocabulary (`Resolved`, `Deferred`, `Split to Follow-up`) with objective usage rules and concrete examples in req/prd/progress artifacts. Added cross-sync checklist for req/prd/progress before closure and validated repository gates (`pnpm run lint`, `pnpm run typecheck`) as PASS."
         },
         {
             "id": "US-002",
@@ -30,8 +30,8 @@
             ],
             "priority": 2,
             "group": "A",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Created centralized CF-07..CF-14 closure matrix in progress.txt with owner, final status, expected evidence, follow-up reference, and rationale for all Deferred/Split decisions (FUP-07..FUP-12). Added explicit integrity checks to guarantee one final decision per finding."
         },
         {
             "id": "US-003",
@@ -45,8 +45,8 @@
             ],
             "priority": 3,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Reconciled contradictory narratives for CF-07, CF-09 and CF-12 by updating impacted task artifacts: synchronized stale status board in webview-with-react-vite progress, reconciled US-024 temporary blocker vs final closure in codebase-refactoring progress/prd, and added explicit temporary-blocker-to-resolution note in fixes-and-improvements progress with matching PRD story notes. Closure matrix now links finding-level evidence to concrete artifact paths for CF-07/CF-09/CF-12, and progress/PRD conclusions are aligned for each impacted task. Validation: pnpm run verify PASS."
         },
         {
             "id": "US-004",
@@ -60,8 +60,8 @@
             ],
             "priority": 4,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Aligned CF-08 simplification statements with current delivered state by documenting current file-size evidence (Canvas.tsx=370, PropertiesPanel/index.tsx=218, App.tsx=355) and explicitly splitting residual reduction scope to FUP-08 (owner: Frontend/Webview Maintainer). Resolved CF-13 with an explicit justified exception for extracted resizeHandles.tsx (docs fix, no rollback) including owner and technical rationale. Updated closure matrix to keep one final destination per item: CF-08=Split to Follow-up, CF-13=Resolved."
         },
         {
             "id": "US-005",
@@ -75,8 +75,8 @@
             ],
             "priority": 5,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Defined a single official E2E scope decision for this cycle: documentary harmonization only across req/prd/progress (no E2E expansion execution in this non-critical task). Updated req/prd/progress artifacts to use the same CF-10 statement and consolidated follow-up references to FUP-10. Deferred residual scope is explicitly linked to FUP-10 with owner QA Lead + Product Owner and acceptance target of unambiguous E2E inclusion/exclusion language in automated-tests req/prd/acceptance criteria."
         },
         {
             "id": "US-006",

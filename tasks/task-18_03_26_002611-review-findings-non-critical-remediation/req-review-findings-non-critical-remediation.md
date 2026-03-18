@@ -54,6 +54,24 @@ Close medium/low findings with objective documentation and scoped technical foll
 - [ ] Reconcile non-goal statements with actual delivered changes.
 - [ ] If any item remains deferred, register owner, rationale, and next-step backlog reference.
 
+#### Official Webview Simplification + Non-Goal Decisions (US-004 / `CF-08`, `CF-13`)
+
+- `CF-08` decision type: **docs fix** (current-state alignment) + **Split to Follow-up**.
+  - Owner: Frontend/Webview Maintainer.
+  - Technical rationale: the refactor delivered architectural extraction (hooks/libs/components), but current file sizes remain above original reduction targets due subsequent feature growth (`Canvas.tsx=370`, `PropertiesPanel/index.tsx=218`, `App.tsx=355`).
+  - Final destination: `Split to Follow-up` with continuity in `FUP-08` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`) for additional reduction work.
+- `CF-13` decision type: **justified exception** + **docs fix**.
+  - Owner: Frontend/Webview Maintainer.
+  - Technical rationale: the former non-goal "do not extract ResizeHandles" diverged from delivered architecture (`webview-app/src/components/CanvasComponent/resizeHandles.tsx` extracted and reused in `componentView.tsx`), and this extraction is now accepted as a stable modularization outcome.
+  - Final destination: `Resolved` in this cycle (no rollback/implementation revert required).
+
+#### Official E2E Scope Decision (US-005 / `CF-10`)
+
+- Current cycle decision: this non-critical remediation cycle closes only documentary harmonization for E2E scope statements (`req`/`prd`/`progress`), with no net-new E2E implementation expansion in this task.
+- Deferred residual scope: define and approve broader E2E inclusion/exclusion execution for automated-tests artifacts in `FUP-10` (`tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`).
+- Owner for deferred scope: QA Lead + Product Owner.
+- Acceptance target for deferred scope: `task-17_03_26_140000-automated-tests` scope documents (`req`, `prd`, acceptance criteria) must state one explicit E2E inclusion/exclusion decision with no ambiguity.
+
 ### R3 - Improve Story-Level Traceability Pattern (`CF-11`, `CF-12`)
 
 - [ ] Standardize evidence granularity for impacted tasks (file, command, result).
@@ -105,6 +123,24 @@ Close medium/low findings with objective documentation and scoped technical foll
 2. Assign a single owner per finding group before implementation starts.
 3. Require cross-document sync checks before setting task status to completed.
 4. If low-priority UX changes are deferred, create explicit backlog items with references.
+
+## Closure Governance Baseline (US-001)
+
+### Official Closure Vocabulary for Findings
+
+| Status | Objective usage rule | Concrete example |
+| --- | --- | --- |
+| `Resolved` | Use only when the finding scope is fully remediated in the current cycle, with objective evidence (`file changed`, `command run`, `observable result`) and no residual action pending in backlog. | `CF-07` is `Resolved` only after all contradictory status statements are removed from impacted artifacts and the final narrative is coherent in task records. |
+| `Deferred` | Use only when remediation is intentionally postponed to a future cycle. Must include `FUP-xx`, owner, rationale, and next action/acceptance target. | `CF-14` is `Deferred` when a low-priority UX polish is intentionally postponed and linked to `FUP-03` with owner and acceptance target. |
+| `Split to Follow-up` | Use only when part of the finding is completed now and a clearly delimited residual scope is moved to follow-up. Must explicitly separate what is closed now vs what moved to `FUP-xx`. | `CF-10` is `Split to Follow-up` when scope statement harmonization is done now, while any additional E2E expansion decision is moved to `FUP-10` (owner: QA Lead + Product Owner; acceptance target: automated-tests scope documents become unambiguous about E2E inclusion/exclusion). |
+
+### Cross-Sync Checklist Before Marking Done (req/prd/progress)
+
+- [ ] `req`: final finding statuses use only `Resolved`, `Deferred`, or `Split to Follow-up` with matching rules.
+- [ ] `prd` (`prd-review...md` and `prd.json` notes/matrix): each finding status and rationale matches `req`.
+- [ ] `progress.txt`: closure narrative and evidence (`files`, `commands`, `results`) match `req` + `prd`.
+- [ ] Every `Deferred`/`Split` item includes `FUP-xx`, owner, rationale, and next actionable step.
+- [ ] Repository gates executed before closure: `pnpm run lint` and `pnpm run typecheck`.
 
 ## Open Questions
 

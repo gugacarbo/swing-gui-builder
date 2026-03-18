@@ -41,6 +41,22 @@ Principais evidencias mapeadas:
 - [ ] Publicar checklist de sincronizacao cruzada entre req/prd/progress antes de marcar concluido.
 - [ ] Typecheck/lint do repositorio permanece verde apos atualizacao documental.
 
+**US-001 Delivery Contract (Closure Vocabulary + Sync Gate):**
+
+| Status | Regra objetiva de uso | Exemplo concreto |
+| --- | --- | --- |
+| `Resolved` | Aplicar somente quando o finding estiver totalmente remediado no ciclo atual, com evidencias objetivas (`arquivo`, `comando`, `resultado`) e sem pendencia residual em backlog. | `CF-07` fica `Resolved` apenas quando os estados contraditorios forem removidos dos artefatos impactados e restar uma narrativa final unica. |
+| `Deferred` | Aplicar somente quando a remediacao for deliberadamente postergada. Exige referencia `FUP-xx`, owner, racional e proximo passo com alvo de aceite. | `CF-14` fica `Deferred` quando um ajuste UX de baixa prioridade e transferido para `FUP-03` com owner e criterio de aceite. |
+| `Split to Follow-up` | Aplicar somente quando parte do finding for concluida agora e o escopo residual for desmembrado para follow-up identificado. Deve separar explicitamente o que fechou agora vs o que migrou para `FUP-xx`. | `CF-10` fica `Split to Follow-up` quando a harmonizacao de escopo E2E fecha no ciclo atual e a expansao adicional de cobertura fica para `FUP-10` (owner: QA Lead + Product Owner; alvo de aceite: documentos de escopo de testes automatizados sem ambiguidade sobre inclusao/exclusao de E2E). |
+
+**Cross-sync checklist before done (req/prd/progress):**
+
+- [ ] `req-review-findings-non-critical-remediation.md` esta alinhado ao vocabulario oficial e regras de uso.
+- [ ] `prd-review-findings-non-critical-remediation.md` e `prd.json` refletem os mesmos status finais/racionais.
+- [ ] `progress.txt` registra trilha de evidencia coerente com req/prd (`files`, `commands`, `results`).
+- [ ] Todo item `Deferred`/`Split` aponta para `FUP-xx` com owner, racional e proximo passo.
+- [ ] Gates tecnicos executados antes de fechamento: `pnpm run lint` e `pnpm run typecheck`.
+
 ### US-002: Montar matriz de fechamento por finding
 **Description:** Como reviewer, eu quero uma matriz unica de decisao por finding para validar rapidamente owner, evidencias e resultado final.
 
@@ -74,6 +90,17 @@ Principais evidencias mapeadas:
 - [ ] Cada decisao inclui owner e justificativa tecnica curta.
 - [ ] Nenhum item fica sem destino claro (resolved/deferred/split).
 
+**Registro oficial de decisao de simplificacao/non-goals (ciclo atual):**
+
+- `CF-08` -> **docs fix** + `Split to Follow-up`
+  - Owner: Frontend/Webview Maintainer.
+  - Justificativa tecnica: a simplificacao estrutural foi entregue (hooks/libs/componentizacao), mas os arquivos chave seguem acima das metas de reducao originais no estado atual (`Canvas.tsx=370`, `PropertiesPanel/index.tsx=218`, `App.tsx=355`), portanto o alvo de reducao adicional permanece como residual planejado.
+  - Destino final: `Split to Follow-up` com referencia `FUP-08`.
+- `CF-13` -> **justified exception** + `Resolved`
+  - Owner: Frontend/Webview Maintainer.
+  - Justificativa tecnica: o non-goal "nao extrair ResizeHandles" divergiu do entregue e foi superado por modularizacao valida (`resizeHandles.tsx` extraido e reutilizado em `componentView.tsx`), sem necessidade de rollback tecnico.
+  - Destino final: `Resolved` nesta task (com excecao justificada registrada).
+
 ### US-005: Harmonizar escopo E2E entre req/prd/progress (CF-10)
 **Description:** Como QA owner, eu quero uma decisao unica sobre E2E para que aceite e evidencias de testes nao sejam ambiguos.
 
@@ -84,6 +111,14 @@ Principais evidencias mapeadas:
 - [ ] Atualizar req/prd/progress relevantes para refletir a mesma decisao.
 - [ ] Quando E2E for diferido, incluir referencia de backlog com owner e criterio de aceite.
 - [ ] Nao restam conflitos textuais de escopo E2E nos artefatos revisados.
+
+**Registro de decisao oficial de escopo E2E (ciclo atual):**
+
+- Nesta task nao-critica, o escopo fechado para `CF-10` e apenas a harmonizacao documental da declaracao de escopo E2E entre `req`/`prd`/`progress`.
+- Nao ha expansao de implementacao/cobertura E2E nesta story; esse residual fica formalmente desmembrado para `FUP-10`.
+- Backlog de continuidade: `FUP-10` em `tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-followups.md`.
+- Owner do item diferido: QA Lead + Product Owner.
+- Alvo de aceite do item diferido: artefatos de `task-17_03_26_140000-automated-tests` (`req`, `prd` e criterios de aceite) devem explicitar uma unica decisao de inclusao/exclusao de E2E, sem ambiguidade.
 
 ### US-006: Padronizar trilha minima por story (CF-11, CF-12)
 **Description:** Como auditor tecnico, eu quero um padrao de evidencia por story para validar qualquer entrega sem suposicoes externas.
