@@ -16,21 +16,26 @@ const mocks = vi.hoisted(() => ({
   ),
   writeFile: vi.fn<(uri: { fsPath: string }, content: Uint8Array) => Promise<void>>(async () => {}),
   showErrorMessage: vi.fn(),
-  showWarningMessage: vi.fn<
-    (message: string, ...items: string[]) => Promise<string | undefined>
-  >(async () => undefined),
+  showWarningMessage: vi.fn<(message: string, ...items: string[]) => Promise<string | undefined>>(
+    async () => undefined,
+  ),
   showInformationMessage: vi.fn(),
   showInputBox: vi.fn(async () => "src/main/java"),
-  showOpenDialog: vi.fn<
-    (options: unknown) => Promise<Array<{ fsPath: string }> | undefined>
-  >(async () => undefined),
+  showOpenDialog: vi.fn<(options: unknown) => Promise<Array<{ fsPath: string }> | undefined>>(
+    async () => undefined,
+  ),
   getOutputDirectory: vi.fn(() => "src/main/java"),
   detectJavaProject: vi.fn(() => undefined),
   resolveOutputDirectory: vi.fn((configuredDir: string) => configuredDir),
   inferJavaPackage: vi.fn(() => undefined),
   generateJavaFiles: vi.fn<
-    (state: CanvasState, packageName?: string) => Array<{ fileName: string; content: string; subfolder?: string }>
-  >(() => [{ fileName: "MainFrame.java", content: "public class MainFrame {}", subfolder: undefined }]),
+    (
+      state: CanvasState,
+      packageName?: string,
+    ) => Array<{ fileName: string; content: string; subfolder?: string }>
+  >(() => [
+    { fileName: "MainFrame.java", content: "public class MainFrame {}", subfolder: undefined },
+  ]),
 }));
 
 vi.mock("vscode", () => ({
