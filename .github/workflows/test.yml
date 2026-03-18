@@ -44,14 +44,3 @@ jobs:
       - name: Run tests with coverage (workspace)
         run: pnpm --workspace-concurrency=2 --filter . --filter ./shared --filter ./webview-app --if-present test:coverage
 
-      - name: Merge coverage reports
-        run: pnpm run coverage:merge
-
-      - name: Upload coverage artifacts
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: coverage-report
-          if-no-files-found: error
-          retention-days: 7
-          path: coverage/combined
