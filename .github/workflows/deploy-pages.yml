@@ -34,12 +34,16 @@ jobs:
         with:
           name: coverage-report
 
+      - name: List files for debugging
+        run: ls -R coverage/combined
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-
       - name: Upload coverage artifact
         uses: actions/upload-pages-artifact@v4
+        with:
+          name: coverage-report
 
       - name: Deploy to GitHub Pages
         id: deployment
