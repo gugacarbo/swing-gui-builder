@@ -235,9 +235,10 @@ describe("registerGenerateCommand branch coverage", () => {
 
     expect(mocks.showOpenDialog).toHaveBeenCalled();
     expect(mocks.showInputBox).not.toHaveBeenCalled();
-    expect(mocks.createDirectory).toHaveBeenCalledWith({
-      fsPath: path.join("C:\\workspace", "src", "generated", "ui"),
-    });
+    expect(mocks.createDirectory).toHaveBeenCalled();
+    const actualFsPath = mocks.createDirectory.mock.calls[0][0].fsPath.replace(/\\/g, "/");
+    const expectedFsPath = ["C:", "workspace", "src", "generated", "ui"].join("/");
+    expect(actualFsPath).toBe(expectedFsPath);
   });
 
   it("logs a note when output directory creation fails", async () => {
