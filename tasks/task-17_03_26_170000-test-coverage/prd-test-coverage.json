@@ -1,0 +1,84 @@
+{
+    "project": "swing-gui-builder",
+    "branchName": "ralph/test-coverage-reorg",
+    "description": "Reorganizar estrutura de testes e elevar cobertura de testes unitários para 95%",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Criar estrutura tests/",
+            "description": "Como mantenedor do repositório, quero pastas de testes dedicadas para separar testes do código-fonte.",
+            "acceptanceCriteria": [
+                "Pastas criadas no root: tests/commands, tests/components, tests/config, tests/generator, tests/integration, tests/utils",
+                "Pastas criadas em webview-app/tests/lib e webview-app/tests/hooks",
+                "Commit contendo apenas a criação das pastas e um README mínimo em cada (quando aplicável)",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-002",
+            "title": "Atualizar configurações do Vitest para apontar tests/",
+            "description": "Como engenheiro de build, preciso que o vitest.config.ts aponte para tests/ para que a execução de testes detecte os arquivos movidos.",
+            "acceptanceCriteria": [
+                "vitest.config.ts substitui include: [\"src/**/*.test.ts\"] por include: [\"tests/**/*.test.ts\"]",
+                "webview-app/vitest.config.ts atualiza include para tests/**/*.test.{ts,tsx}",
+                "Typecheck passes",
+                "Linters passam"
+            ],
+            "priority": 2,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-003",
+            "title": "Mover arquivos de teste e atualizar imports",
+            "description": "Como desenvolvedor, quero que os testes sejam movidos para tests/ mantendo imports corretos.",
+            "acceptanceCriteria": [
+                "Arquivos listados no plano foram movidos para tests/ correspondentes",
+                "Todos os imports relativos dentro dos testes atualizados e compilam sem erros",
+                "pnpm test no root passa localmente",
+                "Typecheck passes",
+                "Tests pass"
+            ],
+            "priority": 3,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Validar integração do webview-app",
+            "description": "Como responsável pela webview, quero mover e validar os testes do webview-app para a nova pasta.",
+            "acceptanceCriteria": [
+                "Testes movidos para webview-app/tests/",
+                "pnpm --dir webview-app test passa",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 4,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Aumentar cobertura até 95% (fase 2)",
+            "description": "Como time de qualidade, quero adicionar testes faltantes para alcançar 95% de coverage em métricas-chave.",
+            "acceptanceCriteria": [
+                "Thresholds de coverage ajustados para 95% em vitest.config.ts e webview-app/vitest.config.ts",
+                "pnpm test:coverage retorna >=95% em statements/lines/functions/branches",
+                "Arquivos com baixa cobertura têm testes cobrindo casos críticos",
+                "Typecheck passes",
+                "Tests pass"
+            ],
+            "priority": 5,
+            "group": "C",
+            "passes": false,
+            "notes": ""
+        }
+    ]
+}
