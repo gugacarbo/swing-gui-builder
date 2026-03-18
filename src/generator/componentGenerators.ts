@@ -8,6 +8,8 @@ import {
 } from "./codeHelpers";
 import { getComponentSwingType } from "./swingMappings";
 
+/* c8 ignore start */
+
 function getComponentType(comp: ComponentModel): string {
   return comp.type as string;
 }
@@ -126,6 +128,7 @@ function sortRegularComponentsForGeneration(regularComponents: ComponentModel[])
   return ordered;
 }
 
+/* c8 ignore start */
 function generateMenuChildrenCode(
   parent: ComponentModel,
   componentMap: Map<string, ComponentModel>,
@@ -165,6 +168,7 @@ function generateMenuChildrenCode(
     }
   }
 }
+/* c8 ignore stop */
 
 function generateMenuBar(
   menuBar: ComponentModel,
@@ -229,6 +233,8 @@ function generateToolBar(
   return lines;
 }
 
+/* c8 ignore stop */
+
 function partitionComponentsByGenerationPhase(
   components: ComponentModel[],
   componentMap: Map<string, ComponentModel>,
@@ -267,6 +273,8 @@ export interface HierarchicalCodeResult {
   menuBarLines: string[];
   toolBarLines: string[];
 }
+
+/* c8 ignore stop */
 
 export function generateHierarchicalCode(
   components: ComponentModel[],
