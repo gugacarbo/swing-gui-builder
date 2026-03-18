@@ -8,13 +8,13 @@
     {
         "label": "Extension",
         "source": "./coverage/vitest-summary.json",
-        "attribute": "numTotalTests",
+        "attribute": "total.statements.pct",
         "outputDir": "./media/coverage-badges"
     },
     {
         "label": "Webview",
         "source": "./webview-app/coverage/vitest-summary.json",
-        "attribute": "numTotalTests",
+        "attribute": "total.statements.pct",
         "outputDir": "./media/coverage-badges"
     }
 ]
