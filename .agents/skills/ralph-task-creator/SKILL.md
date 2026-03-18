@@ -1,12 +1,12 @@
 ---
 name: ralph-task-creator
-description: "Creates a new task structure following the swing-gui-builder project pattern. Use when the user asks to create a new task, feature, or increment the project. Triggers: create a task, new task, criar task, nova feature, adicionar feature, incrementar projeto, new feature, add feature."
+description: "Creates a new task structure following the swing-gui-builder project pattern. When invoked, the skill performs a brief research about the task topic and the user's request, identifies gaps, and returns actionable suggestions. Use when the user asks to create a new task, feature, or increment the project. Triggers: create a task, new task, criar task, nova feature, adicionar feature, incrementar projeto, new feature, add feature."
 user-invocable: true
 ---
 
 # Task Scaffold Generator
 
-Creates the directory and file structure for a new task following the swing-gui-builder project pattern.
+Creates the directory and file structure for a new task following the swing-gui-builder project pattern, and improves the requirements documentation process. This skill is triggered when the user asks to create a new task, feature, or increment the project. Additionally, when invoked it will perform a short research and gap-analysis step to help improve requirement quality and surface missing context.
 
 ---
 
@@ -14,10 +14,10 @@ Creates the directory and file structure for a new task following the swing-gui-
 
 1. Receive the task name/title from the user
 2. Create the directory structure in the format `task-DD_MM_YY_HHMMss-[task-name]`
-3. Create the required files:
+3. Create the required file:
    - `req-[task-name].md` - Requirements and conversation history
-   - `plan-[task-name].md` - Implementation plan
-
+4. Improve the requirements provided by the user, ensuring they are clear, actionable, and follow the project standards.
+5. Perform a brief research and gap analysis about the task topic and the user's request, listing missing information, risks, and concrete suggestions to improve the requirements.
 **Important:** Do NOT start implementing. Just create the structure.
 
 ---
@@ -36,6 +36,12 @@ Ask the user:
 
 1. Task name/title (in English, kebab-case)
 2. Brief description of what needs to be implemented
+
+Additional questions to enable research and gap analysis:
+
+- Do you allow a brief research (repo + quick web search) to look for examples, similar tasks, or missing context? (yes/no)
+- Provide any links, specs, prototypes, or related issues that help contextualize the task.
+- Who is the main stakeholder and what is the success criteria?
 
 ---
 
@@ -70,18 +76,21 @@ Create in `tasks/task-{timestamp}-{name}/`:
 - [ ] Requirement 2
 ```
 
-### plan-{name}.md
-
-```markdown
-# Plan: {Title}
-
-## Steps
-
-1. [ ] Step 1
-2. [ ] Step 2
-```
-
-1. Ask the user for the task name
+1. Ask the user for the task name and suggest some examples.
 2. Generate the current date
 3. Create the directories and files
-4. Show the user the created structure with the file paths
+4. If research is allowed: perform a short research and gap-analysis (see guidance below).
+5. Ask the user gap-filling questions based on the findings and suggestions.
+6. Show the user the created structure with the file paths
+
+---
+
+## Guidance: Brief Research & Gap Analysis
+
+- Scope: short, focused (5–10 minutes). Prefer repo context first, then quick external searches only when needed.
+- Outputs: 3 sections added to `req-{name}.md`:
+   - `Findings`: summary of relevant references, examples, or conflicts.
+   - `Gaps & Risks`: missing information, unclear requirements, or potential blockers.
+   - `Suggestions`: prioritized, actionable fixes or clarifying questions for the author.
+- If web searches are used, cite sources or links in `Findings`.
+- If user disallows research, skip this step and note it in `req-{name}.md`.
