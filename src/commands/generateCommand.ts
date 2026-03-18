@@ -8,7 +8,6 @@ import { detectJavaProject } from "../utils/JavaProjectDetector";
 
 export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vscode.Disposable {
   return vscode.commands.registerCommand("swingGuiBuilder.generate", async () => {
-    /* c8 ignore start */
     if (!CanvasPanel.currentPanel) {
       vscode.window.showErrorMessage("No canvas is open. Open a canvas first.");
       return;
@@ -38,7 +37,6 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
 
     let outputDir: string | undefined;
 
-    /* c8 ignore start */
     if (!projectStructure && configuredDir === "swing/components/") {
       // No structure detected, no config override — show folder picker
       const pickerResult = await vscode.window.showOpenDialog({
@@ -56,7 +54,6 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
       const workspacePath = workspaceFolders[0].uri.fsPath;
       outputDir = path.relative(workspacePath, selectedPath);
     } else {
-      /* c8 ignore stop */
       outputDir = await vscode.window.showInputBox({
         prompt: "Output directory for generated Java files (relative to workspace)",
         value: defaultDir,
@@ -164,6 +161,5 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
     vscode.window.showInformationMessage(
       `Generated ${generatedFiles.length} Java file(s) in ${outputDir}`,
     );
-    /* c8 ignore stop */
   });
 }
