@@ -45,7 +45,11 @@
         "ProgressBar": { "$ref": "#/definitions/componentDefaults" },
         "Slider": { "$ref": "#/definitions/componentDefaults" },
         "Spinner": { "$ref": "#/definitions/componentDefaults" },
-        "Separator": { "$ref": "#/definitions/componentDefaults" }
+        "Separator": { "$ref": "#/definitions/componentDefaults" },
+        "MenuBar": { "$ref": "#/definitions/componentDefaults" },
+        "Menu": { "$ref": "#/definitions/componentDefaults" },
+        "MenuItem": { "$ref": "#/definitions/componentDefaults" },
+        "ToolBar": { "$ref": "#/definitions/componentDefaults" }
       },
       "additionalProperties": false
     }

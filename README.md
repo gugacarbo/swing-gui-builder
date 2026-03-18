@@ -69,8 +69,15 @@ Run **Init Project Config** to generate a `.swingbuilder.json` file in your work
 - `defaultTextColor` — default text color for new components
 - `defaultFontFamily` — default font family (e.g. `"Arial"`)
 - `defaultFontSize` — default font size in points
+- `components.MenuBar`, `components.Menu`, `components.MenuItem`, `components.ToolBar` — hierarchical defaults used by the generation pipeline
 
 The schema is automatically validated by VS Code when the file is open.
+
+Hierarchy-related component defaults use the following fields:
+
+- `children: string[]` — ordered child component IDs
+- `parentId: string` — parent component ID
+- `position: "top" | "bottom" | "left" | "right"` — fixed toolbar position (for `ToolBar`)
 
 ### VS Code Settings
 

@@ -1,0 +1,160 @@
+{
+    "project": "swing-gui-builder-vscode",
+    "branchName": "ralph/review-findings-remediation",
+    "description": "Complete remediation of critical and high-priority findings CF-01..CF-06, with automated validations, contract alignment, and auditable evidence.",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Define minimum evidence template",
+            "description": "As a maintainer, I want a standard evidence template so each remediation item can be audited consistently.",
+            "group": "A",
+            "acceptanceCriteria": [
+                "Create template with mandatory fields: files_changed, commands, command_output, and links",
+                "Save the template in a versioned path for the current task",
+                "Include one completed example for a finding",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": "Created versioned template at tasks/task-18_03_26_001314-review-findings-remediation/evidence/v1/minimum-evidence-template.md with mandatory fields (files_changed, commands, command_output, links) and a completed CF-01 example; validation: pnpm run typecheck (pass)."
+        },
+        {
+            "id": "US-002",
+            "title": "Formalize evidence examples in requirements",
+            "description": "As a reviewer, I want concrete evidence examples in the requirement document so acceptance is objective per finding.",
+            "group": "A",
+            "acceptanceCriteria": [
+                "Update req-review-findings-remediation.md with an evidence examples section per finding",
+                "Cover CF-01..CF-06 with expected evidence per finding",
+                "Include a verifiable acceptance checklist per finding",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": "Added 'Evidence Examples by Finding' to req-review-findings-remediation.md with CF-01..CF-06 sections, each containing expected evidence examples and a verifiable checklist. Validation: pnpm run typecheck (pass)."
+        },
+        {
+            "id": "US-003",
+            "title": "Block passes=true without notes",
+            "description": "As a quality gate owner, I want an automated PRD validator so invalid approvals are rejected early.",
+            "group": "A",
+            "acceptanceCriteria": [
+                "Implement a script that fails when passes=true and notes is empty",
+                "Expose a verification command in the official scripts contract under verify",
+                "Create automated tests for valid and invalid scenarios",
+                "Tests pass",
+                "Typecheck passes"
+            ],
+            "priority": 3,
+            "passes": true,
+            "notes": "Added scripts/validatePrdNotes.mjs to fail when passes=true has empty notes, exposed verify + verify:prd in package.json, added tests/integration/validatePrdNotes.test.ts (valid/invalid cases), and validated with pnpm run test, pnpm run typecheck, and pnpm run verify:prd."
+        },
+        {
+            "id": "US-004",
+            "title": "Audit schema vs ConfigReader",
+            "description": "As a developer, I want a documented schema-to-runtime audit so contract mismatches are visible.",
+            "group": "B",
+            "acceptanceCriteria": [
+                "Compare schemas/swingbuilder.schema.json with real usage in the config reader and templates",
+                "Record discrepancies with file evidence and expected behavior",
+                "Publish an audit document with an actionable list of adjustments",
+                "Typecheck passes"
+            ],
+            "priority": 4,
+            "passes": true,
+            "notes": "Published audit at tasks/task-18_03_26_001314-review-findings-remediation/evidence/v1/us-004-schema-vs-configreader-audit.md comparing schemas/swingbuilder.schema.json against src/config/ConfigReader.ts, src/config/initConfigCommand.ts, and generator/webview template flows with file-line evidence, expected behavior, and prioritized actionable adjustments; validation: pnpm run typecheck (pass)."
+        },
+        {
+            "id": "US-005",
+            "title": "Fix hierarchy support in schema",
+            "description": "As a config author, I want explicit support for hierarchical structures with tests so complex configs remain valid.",
+            "group": "B",
+            "acceptanceCriteria": [
+                "Update the schema to represent the hierarchies required by the requirements",
+                "Add integration tests for valid and invalid hierarchical examples",
+                "Ensure compatibility with current runtime usage or document a controlled breaking change",
+                "Tests pass",
+                "Typecheck passes"
+            ],
+            "priority": 5,
+            "passes": true,
+            "notes": "Updated schemas/swingbuilder.schema.json to include hierarchical component keys (MenuBar/Menu/MenuItem/ToolBar), added integration validation tests in tests/integration/schema-hierarchy-validation.test.ts for valid/invalid hierarchy examples, and documented hierarchy fields + compatibility in README. Validation: pnpm run test, pnpm run typecheck, pnpm run check (all pass). Change is additive and runtime-compatible with ConfigReader hierarchy support."
+        },
+        {
+            "id": "US-006",
+            "title": "Define official scripts contract",
+            "description": "As a contributor, I want one official scripts contract so build and verification are consistent across docs and CI.",
+            "group": "C",
+            "acceptanceCriteria": [
+                "Record an architectural decision standardizing the contract as build/verify",
+                "Document trade-offs and the compatibility strategy for legacy commands",
+                "Publish the contract document under docs",
+                "Typecheck passes"
+            ],
+            "priority": 6,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Apply scripts contract in repository",
+            "description": "As a maintainer, I want scripts and documentation aligned with the official contract so local and CI workflows are predictable.",
+            "group": "C",
+            "acceptanceCriteria": [
+                "Update scripts in the root package.json according to the official contract",
+                "Adjust references in README and task files related to the contract",
+                "Validate execution of core build and verify commands without regression",
+                "Typecheck passes"
+            ],
+            "priority": 7,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Publish coverage artifacts in CI",
+            "description": "As a reviewer, I want coverage artifacts uploaded in CI so quality evidence is available after every successful run.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "Update the test workflow to upload coverage/lcov-report and coverage/coverage-summary.json on successful runs",
+                "Standardize and document artifact name and location",
+                "Validate in CI execution that expected artifacts exist",
+                "Typecheck passes"
+            ],
+            "priority": 8,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Mandatory backfill of historical notes",
+            "description": "As a quality auditor, I want backfill for historical entries with passes=true and no notes to restore traceability.",
+            "group": "E",
+            "acceptanceCriteria": [
+                "Identify historical entries with passes=true and missing or empty notes",
+                "Create backfill evidence in the task structure with before/after links",
+                "Associate owner and status for each backfill item",
+                "Typecheck passes"
+            ],
+            "priority": 9,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-010",
+            "title": "Reconcile PRD vs implementation",
+            "description": "As a tech lead, I want a reconciliation report so each documented divergence has an owner and resolution path.",
+            "group": "E",
+            "acceptanceCriteria": [
+                "Create reconciliation.md with divergences between PRD and implementation",
+                "For each divergence, record the decision to fix code, fix documentation, or accept a justified exception",
+                "Define owner and deadline for each open item",
+                "Do not leave critical divergences without a resolution plan",
+                "Typecheck passes"
+            ],
+            "priority": 10,
+            "passes": false,
+            "notes": ""
+        }
+    ]
+}
