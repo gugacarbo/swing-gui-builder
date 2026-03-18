@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 20
     env:
       CI: true
+      COVERAGE_ARTIFACT_NAME: test-coverage-report
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -43,4 +44,20 @@ jobs:
 
       - name: Run tests with coverage (workspace)
         run: pnpm --workspace-concurrency=2 --filter . --filter ./shared --filter ./webview-app --if-present test:coverage
+
+      - name: Validate coverage artifacts
+        if: success()
+        run: |
+          test -d coverage/lcov-report
+          test -f coverage/coverage-summary.json
+
+      - name: Upload coverage artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.COVERAGE_ARTIFACT_NAME }}
+          path: |
+            coverage/lcov-report
+            coverage/coverage-summary.json
+          if-no-files-found: error
 

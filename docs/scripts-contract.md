@@ -29,6 +29,9 @@ Deprecation window for legacy aliases: **90 days or two minor releases (whicheve
 - Required pipeline stages should invoke:
   - `pnpm run build`
   - `pnpm run verify`
+- Test workflow coverage evidence is published as artifact `test-coverage-report` from:
+  - `coverage/lcov-report/`
+  - `coverage/coverage-summary.json`
 - Pipelines still using `compile`/`check` should be considered transitional and scheduled for update.
 
 ## Architectural decision

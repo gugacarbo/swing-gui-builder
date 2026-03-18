@@ -1,0 +1,142 @@
+{
+    "project": "swing-gui-builder-vscode",
+    "branchName": "ralph/review-findings-non-critical-remediation",
+    "description": "Remediation of non-critical review findings CF-07..CF-14 with full documentary consistency, story-level traceability, scoped UX/docs refinements, and controlled closure governance.",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Define closure vocabulary for findings",
+            "description": "As a governance owner, I want one official closure vocabulary so that status for CF-07..CF-14 is consistent and auditable.",
+            "acceptanceCriteria": [
+                "Document official statuses: Resolved, Deferred, Split to Follow-up",
+                "Define objective usage rule for each status with one concrete example",
+                "Publish cross-sync checklist for req/prd/progress before done",
+                "Typecheck/lint remains green after documentation update"
+            ],
+            "priority": 1,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-002",
+            "title": "Create single finding closure matrix",
+            "description": "As a reviewer, I want one closure matrix so that owner, evidence and final decision are visible for each finding.",
+            "acceptanceCriteria": [
+                "Create matrix for CF-07..CF-14 with finding, owner, final status, expected evidence, follow-up reference",
+                "Each finding has exactly one final decision",
+                "Deferred/Split entries include rationale and backlog reference",
+                "Matrix is hosted in the non-critical remediation task artifacts"
+            ],
+            "priority": 2,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-003",
+            "title": "Reconcile contradictory status narratives",
+            "description": "As a maintainer, I want contradictory status entries removed so each impacted task has one coherent completion narrative.",
+            "acceptanceCriteria": [
+                "Update artifacts impacted by CF-07, CF-09 and CF-12 to remove conflicting states",
+                "Add reconciliation note when temporary blocker later became resolved",
+                "Progress and PRD conclusion are aligned for each impacted task",
+                "Finding-level evidence is linked in the closure matrix"
+            ],
+            "priority": 3,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Align simplification and non-goals scope",
+            "description": "As a scope owner, I want simplification and non-goals aligned with the real delivered state to prevent renewed drift.",
+            "acceptanceCriteria": [
+                "Align webview simplification statements with current documented state",
+                "Resolve non-goal divergence with explicit decision: docs fix, implementation fix, or justified exception",
+                "Each decision includes owner and technical rationale",
+                "No item remains without final destination (resolved/deferred/split)"
+            ],
+            "priority": 4,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Harmonize E2E scope statements",
+            "description": "As a QA owner, I want one official E2E scope decision so acceptance and evidence are unambiguous across artifacts.",
+            "acceptanceCriteria": [
+                "Define official E2E scope decision for this cycle",
+                "Apply the same E2E scope statement across req/prd/progress artifacts",
+                "If deferred, include backlog reference with owner and acceptance target",
+                "No conflicting E2E scope statement remains in reviewed artifacts"
+            ],
+            "priority": 5,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-006",
+            "title": "Standardize story-level evidence pattern",
+            "description": "As a technical auditor, I want a minimum evidence template per story so each remediation record can be verified without assumptions.",
+            "acceptanceCriteria": [
+                "Define minimum story evidence template: changed files, commands run, observable results",
+                "Apply template to tasks flagged with weak traceability (CF-11, CF-12)",
+                "Validate records are auditable without external context",
+                "Publish reusable pattern for future tasks"
+            ],
+            "priority": 6,
+            "group": "C",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Link Deferred/Split items to FUP backlog",
+            "description": "As a backlog manager, I want standardized references for non-closed items so continuity has ownership and actionability.",
+            "acceptanceCriteria": [
+                "Every Deferred or Split item references internal backlog in tasks/ using FUP-xx convention",
+                "Each reference includes owner, rationale, and next actionable step",
+                "No in-scope finding remains open without continuity reference",
+                "Closure matrix points to all associated FUP items"
+            ],
+            "priority": 7,
+            "group": "C",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Execute mandatory UX/docs refinements",
+            "description": "As a webview maintainer, I want low-risk UX/docs refinements from CF-14 completed so non-critical scope can close this cycle.",
+            "acceptanceCriteria": [
+                "Implement feasible CF-14 UX/docs refinements in this cycle",
+                "Update related documentation and completion records",
+                "If residual remains, register Split to Follow-up with FUP-xx and acceptance target",
+                "Verify in browser using dev-browser skill for visual changes"
+            ],
+            "priority": 8,
+            "group": "D",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Run final controlled closure validation",
+            "description": "As an approver, I want final closure gates validated so this non-critical task finishes without unresolved dependency on critical findings.",
+            "acceptanceCriteria": [
+                "Confirm 100% of CF-07..CF-14 with valid final status in matrix",
+                "Confirm no unresolved dependency on CF-01..CF-06 for acceptance",
+                "Validate AC-01..AC-04 checklist from requirement document",
+                "Record final approval with date and owner"
+            ],
+            "priority": 9,
+            "group": "E",
+            "passes": false,
+            "notes": ""
+        }
+    ]
+}

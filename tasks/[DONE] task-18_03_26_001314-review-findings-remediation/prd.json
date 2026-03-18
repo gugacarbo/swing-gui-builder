@@ -78,7 +78,7 @@
             ],
             "priority": 5,
             "passes": true,
-            "notes": "Updated schemas/swingbuilder.schema.json to include hierarchical component keys (MenuBar/Menu/MenuItem/ToolBar), added integration validation tests in tests/integration/schema-hierarchy-validation.test.ts for valid/invalid hierarchy examples, and documented hierarchy fields + compatibility in README. Validation: pnpm run test, pnpm run typecheck, pnpm run check (all pass). Change is additive and runtime-compatible with ConfigReader hierarchy support."
+            "notes": "Updated schemas/swingbuilder.schema.json to include hierarchical component keys (MenuBar/Menu/MenuItem/ToolBar), added integration validation tests in tests/integration/schema-hierarchy-validation.test.ts for valid/invalid hierarchy examples, and documented hierarchy fields + compatibility in README. Validation: pnpm run test, pnpm run typecheck, pnpm run verify (legacy alias: pnpm run check) (all pass). Change is additive and runtime-compatible with ConfigReader hierarchy support."
         },
         {
             "id": "US-006",
@@ -107,8 +107,8 @@
                 "Typecheck passes"
             ],
             "priority": 7,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Aligned root scripts to the official build/verify contract in package.json (added canonical build/verify, mapped compile/check as temporary aliases, updated vscode:prepublish), updated README and task requirement references to the canonical contract, and validated with pnpm run build, pnpm run verify, and pnpm run typecheck (all pass)."
         },
         {
             "id": "US-008",
@@ -122,8 +122,8 @@
                 "Typecheck passes"
             ],
             "priority": 8,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Updated .github/workflows/test.yml to standardize COVERAGE_ARTIFACT_NAME=test-coverage-report, validate expected CI outputs (`test -d coverage/lcov-report` and `test -f coverage/coverage-summary.json`), and upload coverage artifacts with actions/upload-artifact@v4 on successful runs. Documented artifact name and paths in README.md and docs/scripts-contract.md. Direct CI triggering is not available in this environment; deterministic validation was executed locally with `pnpm run typecheck` and `pnpm --workspace-concurrency=2 --filter . --filter ./shared --filter ./webview-app --if-present test:coverage`, followed by existence checks for `coverage\\lcov-report` and `coverage\\coverage-summary.json` (pass)."
         },
         {
             "id": "US-009",
@@ -137,8 +137,8 @@
                 "Typecheck passes"
             ],
             "priority": 9,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Identified 17 historical entries with passes=true and empty notes in tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/prd.json, backfilled notes for US-001..US-017, and stored auditable evidence at tasks/task-18_03_26_001314-review-findings-remediation/backfill/us-009/historical-notes-backfill.md with before/after links plus owner/status per item; validation: node ./scripts/validatePrdNotes.mjs on before snapshot (fail expected), on updated PRD (pass), and pnpm run typecheck (pass)."
         },
         {
             "id": "US-010",
@@ -153,8 +153,8 @@
                 "Typecheck passes"
             ],
             "priority": 10,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Created tasks/task-18_03_26_001314-review-findings-remediation/reconciliation.md with PRD-vs-implementation divergences, per-item decision (fix code or accepted exception), owner/deadline for open items, and explicit resolution plans for all high-priority divergences (no critical divergence left without plan); validation: pnpm run typecheck (pass)."
         }
     ]
 }

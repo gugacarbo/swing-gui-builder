@@ -137,19 +137,21 @@ pnpm install
    pnpm --dir webview-app build
    ```
 
-3. Compile extension sources:
+3. Build extension + workspace artifacts:
 
    ```bash
-   pnpm run compile
+   pnpm run build
    ```
 
 ### Build and validation commands
 
 ```bash
-pnpm run typecheck
 pnpm run build
-pnpm run compile
+pnpm run verify
+pnpm run typecheck
 ```
+
+Legacy aliases (`pnpm run compile` and `pnpm run check`) are still available during the migration window, but new usage should prefer `build`/`verify`.
 
 ## Testing
 
@@ -163,6 +165,10 @@ pnpm --workspace-concurrency=1 --filter . --filter ./shared --filter ./webview-a
 ```
 
 Coverage artifacts are generated in `coverage/` (extension) and `webview-app/coverage/`.
+In CI (`.github/workflows/test.yml`), the standardized coverage artifact is `test-coverage-report`, containing:
+
+- `coverage/lcov-report/`
+- `coverage/coverage-summary.json`
 
 ## License
 

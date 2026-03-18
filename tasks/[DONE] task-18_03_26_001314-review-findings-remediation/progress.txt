@@ -1,0 +1,180 @@
+=== RALPH ORCHESTRATOR SESSION ===
+Task: task-18_03_26_001314-review-findings-remediation
+Status: COMPLETED
+Last Updated: 2026-03-18T15:17:24Z
+Current Group: E
+Current Story: US-010 - Reconcile PRD vs implementation
+Parallel Stories: none
+Attempts: 1/3
+Worker Timeout: 1800
+
+Execution Summary:
+- Completed: 10 / 10
+- In Progress: none
+- Current Group: E (2/2 complete)
+- Failed: 0
+- Blocked: 0
+=== END HEADER ===
+
+## [2026-03-18T11:40:32.3467721-03:00] - US-001
+- Status: COMPLETE
+- What was implemented:
+  - Added a versioned minimum evidence template at tasks/task-18_03_26_001314-review-findings-remediation/evidence/v1/minimum-evidence-template.md.
+  - Included mandatory fields: files_changed, commands, command_output, and links.
+  - Added one completed example for finding CF-01.
+  - Updated tasks/task-18_03_26_001314-review-findings-remediation/prd.json (passes=true and evidence notes).
+- Files changed:
+  - tasks/task-18_03_26_001314-review-findings-remediation/evidence/v1/minimum-evidence-template.md
+  - tasks/task-18_03_26_001314-review-findings-remediation/prd.json
+- Validation:
+  - pnpm run typecheck -> PASS (exit code 0)
+- Learnings for future iterations:
+  - Store evidence templates in task-local versioned paths (evidence/vN/) to enable evolvable audit contracts.
+- [DONE] US-001: Define minimum evidence template — 2026-03-18T11:40:32.3467721-03:00
+
+## [2026-03-18T14:44:14Z] - Group A Execution
+Stories: US-001, US-002, US-003 (parallel)
+Results:
+  - US-001: SUCCESS - versioned evidence template with required fields and CF-01 example; typecheck PASS
+  - US-002: SUCCESS - requirement evidence examples + checklists for CF-01..CF-06; typecheck PASS
+  - US-003: SUCCESS - PRD notes validator + tests + verify script contract wiring; tests/typecheck/verify PASS
+Group Status: COMPLETE
+---
+
+## [2026-03-18T11:54:23.5151889-03:00] - US-006
+- Status: COMPLETE
+- What was implemented:
+  - Recorded architectural decision ADR-0001 in `docs/adr/ADR-0001-build-verify-scripts-contract.md`, standardizing the official contract as `build/verify`.
+  - Documented trade-offs (benefits/costs) and a compatibility + deprecation strategy for legacy commands (`compile`/`check`) with an explicit transition window.
+  - Published the operational contract document at `docs/scripts-contract.md`, defining canonical commands and CI usage.
+- Files changed:
+  - docs/adr/ADR-0001-build-verify-scripts-contract.md
+  - docs/scripts-contract.md
+  - tasks/task-18_03_26_001314-review-findings-remediation/prd.json
+  - tasks/AGENTS.md
+- Commit:
+  - `feat: US-006 - Define official scripts contract`
+- Validation:
+  - pnpm run typecheck -> PASS (exit code 0)
+- Learnings for future iterations:
+  - Keep script evolution behind stable top-level entry points (`build`/`verify`) and treat old command names as temporary aliases with clear removal criteria.
+- [DONE] US-006: Define official scripts contract — 2026-03-18T11:54:23.5151889-03:00
+
+## [2026-03-18T11:49:15.1356931-03:00] - US-005
+- Status: COMPLETE
+- What was implemented:
+  - Extended `schemas/swingbuilder.schema.json` to support hierarchical component defaults for `MenuBar`, `Menu`, `MenuItem`, and `ToolBar`.
+  - Added integration coverage in `tests/integration/schema-hierarchy-validation.test.ts` with one valid and one invalid hierarchical config example.
+  - Updated `README.md` configuration docs with hierarchy fields (`children`, `parentId`, `position`) and supported hierarchical component defaults.
+  - Confirmed no controlled breaking change is needed: schema update is additive and aligns with existing `ConfigReader` runtime support.
+- Files changed:
+  - schemas/swingbuilder.schema.json
+  - tests/integration/schema-hierarchy-validation.test.ts
+  - README.md
+  - tasks/task-18_03_26_001314-review-findings-remediation/prd.json
+- Validation:
+  - pnpm run test -> PASS (20 files, 102 tests)
+  - pnpm run typecheck -> PASS (exit code 0)
+  - pnpm run verify (legacy alias: pnpm run check) -> PASS (lint + typecheck + build gate)
+- Learnings for future iterations:
+  - Keep schema component keys synchronized with `ConfigReader` `COMPONENT_TYPES`, especially when hierarchical component types are introduced.
+- [DONE] US-005: Fix hierarchy support in schema — 2026-03-18T11:49:15.1356931-03:00
+
+## [2026-03-18T14:51:23Z] - Group B Execution
+Stories: US-004, US-005 (parallel)
+Results:
+  - US-004: SUCCESS - schema/runtime audit published with discrepancies and actionable adjustments; typecheck PASS
+  - US-005: SUCCESS - schema hierarchy support + integration tests + runtime-compat docs; tests/typecheck/verify PASS
+Group Status: COMPLETE
+---
+
+## [2026-03-18T15:01:00Z] - US-007
+- Status: COMPLETE
+- What was implemented:
+  - Updated root `package.json` to apply the official scripts contract with canonical `build` and `verify` commands.
+  - Kept `compile` and `check` as compatibility aliases mapped to canonical commands during migration.
+  - Updated `README.md` development/validation guidance to use `pnpm run build` and `pnpm run verify` as primary commands.
+  - Updated task requirements (`req-review-findings-remediation.md`) to state `build`/`verify` as the official contract and legacy aliases as transitional.
+  - Updated tasks/task-18_03_26_001314-review-findings-remediation/prd.json (US-007 passes=true and evidence notes).
+- Files changed:
+  - package.json
+  - README.md
+  - tasks/task-18_03_26_001314-review-findings-remediation/req-review-findings-remediation.md
+  - tasks/task-18_03_26_001314-review-findings-remediation/prd.json
+  - tasks/task-18_03_26_001314-review-findings-remediation/progress.txt
+- Validation:
+  - pnpm run build -> PASS
+  - pnpm run verify -> PASS
+  - pnpm run typecheck -> PASS
+- Learnings for future iterations:
+  - Keep CI/docs pinned to canonical `build`/`verify` while preserving short-lived aliases only for migration safety.
+- [DONE] US-007: Apply scripts contract in repository — 2026-03-18T15:01:00Z
+
+## [2026-03-18T15:01:54Z] - Group C Execution
+Stories: US-006, US-007 (parallel)
+Results:
+  - US-006: SUCCESS - ADR + scripts contract docs + compatibility strategy; typecheck PASS
+  - US-007: SUCCESS - package/readme/task contract alignment and validation of build/verify; build/verify/typecheck PASS
+Group Status: COMPLETE
+---
+
+## [2026-03-18T15:07:15Z] - Group D Execution
+Stories: US-008 (single)
+Results:
+  - US-008: SUCCESS - CI coverage artifact upload + artifact contract docs + local deterministic validation
+Group Status: COMPLETE
+---
+
+## [2026-03-18T15:34:00Z] - US-010
+- Status: COMPLETE
+- What was implemented:
+  - Added `tasks/task-18_03_26_001314-review-findings-remediation/reconciliation.md` with PRD-vs-implementation divergence mapping.
+  - Recorded per-divergence decision (`fix code` or `accepted exception`), severity, evidence references, owner, deadline, and status.
+  - Defined explicit resolution plans for all open high-priority divergences and confirmed no critical divergence is left without a plan.
+  - Updated `tasks/task-18_03_26_001314-review-findings-remediation/prd.json` (US-010 `passes=true` with technical notes).
+- Files changed:
+  - tasks/task-18_03_26_001314-review-findings-remediation/reconciliation.md
+  - tasks/task-18_03_26_001314-review-findings-remediation/prd.json
+  - tasks/task-18_03_26_001314-review-findings-remediation/progress.txt
+- Validation:
+  - pnpm run typecheck -> PASS (exit code 0)
+- Learnings for future iterations:
+  - Keep reconciliation records tied to explicit source lines so follow-up implementation tasks can be delegated without re-discovery effort.
+- [DONE] US-010: Reconcile PRD vs implementation — 2026-03-18T15:34:00Z
+
+## [2026-03-18T15:36:00Z] - US-009
+- Status: COMPLETE
+- What was implemented:
+  - Identified historical `passes=true` records with empty notes in `tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/prd.json` (US-001..US-017).
+  - Created dedicated backfill evidence at `tasks/task-18_03_26_001314-review-findings-remediation/backfill/us-009/historical-notes-backfill.md` with before/after links and owner/status for each backfill item.
+  - Captured pre-backfill snapshot at `tasks/task-18_03_26_001314-review-findings-remediation/backfill/us-009/before/task-12_03_26_201338-review-swing-gui-builder-prd-before.json`.
+  - Backfilled non-empty technical notes for all 17 historical stories in `tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/prd.json`.
+  - Updated `tasks/task-18_03_26_001314-review-findings-remediation/prd.json` (US-009 `passes=true` with technical notes).
+- Files changed:
+  - tasks/task-18_03_26_001314-review-findings-remediation/backfill/us-009/historical-notes-backfill.md
+  - tasks/task-18_03_26_001314-review-findings-remediation/backfill/us-009/before/task-12_03_26_201338-review-swing-gui-builder-prd-before.json
+  - tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/prd.json
+  - tasks/task-18_03_26_001314-review-findings-remediation/prd.json
+  - tasks/task-18_03_26_001314-review-findings-remediation/progress.txt
+- Validation:
+  - node ./scripts/validatePrdNotes.mjs "./tasks/task-18_03_26_001314-review-findings-remediation/backfill/us-009/before/task-12_03_26_201338-review-swing-gui-builder-prd-before.json" -> FAIL (expected historical baseline)
+  - node ./scripts/validatePrdNotes.mjs "./tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/prd.json" -> PASS
+  - pnpm run typecheck -> PASS (exit code 0)
+- Learnings for future iterations:
+  - For historical PRD corrections, preserve an immutable pre-backfill snapshot in task-local `backfill/<story>/before/` to keep auditability for before/after traceability.
+- [DONE] US-009: Mandatory backfill of historical notes — 2026-03-18T15:36:00Z
+
+## [2026-03-18T15:17:24Z] - Group E Execution
+Stories: US-009, US-010 (parallel)
+Results:
+  - US-009: SUCCESS - historical notes backfill evidence + owner/status mapping; typecheck PASS
+  - US-010: SUCCESS - reconciliation report with decisions/owners/deadlines and critical resolution plans; typecheck PASS
+Group Status: COMPLETE
+---
+
+## [2026-03-18T15:17:24Z] - Task Completion
+Result: ALL STORIES COMPLETE
+Validation: pnpm run verify && pnpm run test -> PASS
+Next Action: Task folder renamed with [DONE] prefix
+---
+

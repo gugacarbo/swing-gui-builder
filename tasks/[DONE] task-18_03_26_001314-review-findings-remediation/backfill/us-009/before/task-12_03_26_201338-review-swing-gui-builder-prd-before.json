@@ -15,7 +15,7 @@
       ],
       "priority": 1,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-002",
@@ -29,7 +29,7 @@
       ],
       "priority": 2,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-003",
@@ -42,7 +42,7 @@
       ],
       "priority": 3,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-004",
@@ -56,7 +56,7 @@
       ],
       "priority": 4,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-005",
@@ -71,7 +71,7 @@
       ],
       "priority": 5,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-006",
@@ -86,7 +86,7 @@
       ],
       "priority": 6,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-007",
@@ -102,7 +102,7 @@
       ],
       "priority": 7,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-008",
@@ -116,7 +116,7 @@
       ],
       "priority": 8,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-009",
@@ -129,7 +129,7 @@
       ],
       "priority": 9,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-010",
@@ -144,7 +144,7 @@
       ],
       "priority": 10,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-011",
@@ -160,7 +160,7 @@
       ],
       "priority": 11,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-012",
@@ -175,7 +175,7 @@
       ],
       "priority": 12,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-013",
@@ -190,7 +190,7 @@
       ],
       "priority": 13,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-014",
@@ -208,7 +208,7 @@
       ],
       "priority": 14,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-015",
@@ -224,7 +224,7 @@
       ],
       "priority": 15,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-016",
@@ -240,7 +240,7 @@
       ],
       "priority": 16,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     },
     {
       "id": "US-017",
@@ -254,7 +254,7 @@
       ],
       "priority": 17,
       "passes": true,
-      "notes": "Historical notes backfill (US-009, 2026-03-18): original record was passes=true with empty notes. File evidence: tasks/[DONE] task-12_03_26_201338-review-swing-gui-builder/review-swing-gui-builder.md and tasks/[DONE] task-17_03_26_231940-completed-tasks-review/review-us-005-review-projeto.md. Command evidence: pnpm run typecheck. Result evidence: PASS (exit code 0). Owner: task-18_03_26_001314-review-findings-remediation/US-009. Status: backfilled."
+      "notes": ""
     }
   ]
 }
