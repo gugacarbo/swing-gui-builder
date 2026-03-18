@@ -49,7 +49,6 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
         defaultUri: workspaceFolders[0].uri,
       });
 
-
       if (!pickerResult || pickerResult.length === 0) return;
 
       // Calculate relative path from workspace root
