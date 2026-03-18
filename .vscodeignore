@@ -9,6 +9,7 @@ docs/**
 .vscode/**
 .vscode-test/**
 out/test/**
+tests
 src/**
 webview-app/**
 node_modules/**
@@ -23,3 +24,6 @@ shared/**
 *.log
 *.vsix
 CHANGELOG.*
+coverage/**
+scripts/generateCoverageBadges.mjs
+.coveragebadgesrc

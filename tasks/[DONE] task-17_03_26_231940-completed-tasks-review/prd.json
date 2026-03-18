@@ -1,0 +1,204 @@
+{
+    "project": "swing-gui-builder-vscode",
+    "branchName": "ralph/completed-tasks-review",
+    "description": "Revisao completa das tasks marcadas como [DONE] no repositorio para confirmar conclusao real, identificar lacunas e registrar pendencias acionaveis com evidencias.",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Inventariar tasks [DONE] e artefatos",
+            "description": "Como revisor do projeto, quero listar todas as tasks [DONE] e seus artefatos para ter uma base unica de avaliacao.",
+            "group": "A",
+            "acceptanceCriteria": [
+                "Existe inventario com 100% das tasks [DONE] encontradas em tasks/.",
+                "Cada task possui colunas para artefatos encontrados (req/prd/plan/progress/review/coverage-report).",
+                "O inventario identifica lacunas documentais por task.",
+                "O inventario esta salvo em tasks/task-17_03_26_231940-completed-tasks-review/review-inventory.md.",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": "Inventario criado em review-inventory.md (12/12 tasks [DONE]) com colunas req/prd/plan/progress/review/coverage-report e lacunas por task. Typecheck OK."
+        },
+        {
+            "id": "US-002",
+            "title": "Definir checklist unico de done real",
+            "description": "Como revisor do projeto, quero um checklist objetivo para avaliar conclusao real de forma consistente.",
+            "group": "B",
+            "acceptanceCriteria": [
+                "Existe checklist unico com criterios minimos de rastreabilidade, consistencia e validacao tecnica.",
+                "O checklist define regras para classificar task como Concluida, Parcial ou Nao concluida.",
+                "O checklist esta salvo em tasks/task-17_03_26_231940-completed-tasks-review/review-checklist.md.",
+                "O checklist pode ser aplicado sem ambiguidade por outro revisor.",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": "Checklist unico criado em review-checklist.md com criterios obrigatorios (rastreabilidade, consistencia e validacao tecnica), regras objetivas de classificacao (Concluida/Parcial/Nao concluida) e formato de aplicacao replicavel. Typecheck OK."
+        },
+        {
+            "id": "US-003",
+            "title": "Definir escala de severidade e prioridade",
+            "description": "Como revisor do projeto, quero classificar achados por severidade para priorizar follow-ups corretamente.",
+            "group": "C",
+            "acceptanceCriteria": [
+                "Escala de severidade definida: Critico, Alto, Medio, Baixo.",
+                "Cada severidade possui criterio objetivo de impacto e urgencia.",
+                "A regra de priorizacao de follow-up esta documentada no mesmo arquivo do checklist.",
+                "Typecheck passes"
+            ],
+            "priority": 3,
+            "passes": true,
+            "notes": "Escala de severidade (Critico/Alto/Medio/Baixo) adicionada no review-checklist.md com criterios objetivos de impacto/urgencia e regra de priorizacao de follow-up no mesmo arquivo. Typecheck OK."
+        },
+        {
+            "id": "US-004",
+            "title": "Revisar task de PRD inicial",
+            "description": "Como revisor do projeto, quero validar a task de PRD inicial para confirmar coerencia entre planejamento e execucao registrada.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "A task [DONE] task-12_03_26_201338-prd-swing-gui-builder foi avaliada com o checklist unico.",
+                "Existe registro de evidencias (arquivos analisados e status da task).",
+                "Eventuais lacunas estao descritas com severidade e recomendacao.",
+                "Typecheck passes"
+            ],
+            "priority": 4,
+            "passes": true,
+            "notes": "Task [DONE] prd inicial avaliada com checklist unico e evidencias em review-us-004-prd-inicial.md; lacunas classificadas com severidade e recomendacoes. Typecheck OK."
+        },
+        {
+            "id": "US-005",
+            "title": "Revisar task de review do projeto",
+            "description": "Como revisor do projeto, quero validar se a task de review representa execucao real e nao apenas planejamento.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "A task [DONE] task-12_03_26_201338-review-swing-gui-builder foi avaliada com base em evidencias.",
+                "Foi verificado se subtasks documentadas possuem sinais de execucao.",
+                "O status final da task esta classificado (Concluida/Parcial/Nao concluida).",
+                "Typecheck passes"
+            ],
+            "priority": 5,
+            "passes": true,
+            "notes": "Task [DONE] de review do projeto avaliada quanto a sinais de execucao real em review-us-005-review-projeto.md; status final classificado com base em evidencia. Typecheck OK."
+        },
+        {
+            "id": "US-006",
+            "title": "Revisar tasks de webview e refatoracao",
+            "description": "Como revisor do projeto, quero validar as tasks de webview para confirmar aderencia entre escopo declarado e estado atual.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "As tasks [DONE] task-12_03_26_201338-webview-with-react-vite e [DONE] task-13_03_26_213128-refactoring-webview-app foram avaliadas.",
+                "Evidencias de aderencia foram registradas com referencia a artefatos relevantes.",
+                "Inconsistencias, quando houver, foram classificadas por severidade.",
+                "Typecheck passes"
+            ],
+            "priority": 6,
+            "passes": true,
+            "notes": "Tasks de webview/refatoracao avaliadas em review-us-006-webview-refatoracao.md com aderencia, inconsistencias e severidade registradas. Typecheck OK."
+        },
+        {
+            "id": "US-007",
+            "title": "Revisar tasks de componentes Swing",
+            "description": "Como revisor do projeto, quero validar tasks de expansao, complexidade e preview de componentes para confirmar cobertura funcional minima.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "As tasks [DONE] task-15_03_26_131444-expand-swing-components, [DONE] task-16_03_26_183407-complex-swing-components e [DONE] task-16_03_26_183407-components-preview foram avaliadas.",
+                "Existe evidencia de consistencia entre requisitos e entregas declaradas.",
+                "Gaps foram registrados com recomendacao objetiva.",
+                "Typecheck passes"
+            ],
+            "priority": 7,
+            "passes": true,
+            "notes": "Tasks de componentes Swing avaliadas em review-us-007-componentes-swing.md com consistencia requisito-entrega e gaps com recomendacao objetiva. Typecheck OK."
+        },
+        {
+            "id": "US-008",
+            "title": "Revisar tasks de refatoracao estrutural",
+            "description": "Como revisor do projeto, quero validar tasks de refatoracao e alinhamento de monorepo para confirmar que resultados estao refletidos no estado atual.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "As tasks [DONE] task-16_03_26_200311-codebase-refactoring e [DONE] task-16_03_26_214400-monorepo-config-alignment foram avaliadas.",
+                "Foi verificado alinhamento entre escopo declarado e estrutura atual do repositorio.",
+                "Achados foram classificados e registrados com evidencia.",
+                "Typecheck passes"
+            ],
+            "priority": 8,
+            "passes": true,
+            "notes": "Tasks de refatoracao estrutural/monorepo avaliadas em review-us-008-refatoracao-estrutural.md com evidencias, classificacao e achados. Typecheck OK."
+        },
+        {
+            "id": "US-009",
+            "title": "Revisar tasks de fixes, testes e cobertura",
+            "description": "Como revisor do projeto, quero validar tasks recentes de qualidade para confirmar sustentacao tecnica das entregas.",
+            "group": "D",
+            "acceptanceCriteria": [
+                "As tasks [DONE] task-17_03_26_120000-fixes-and-improvements, [DONE] task-17_03_26_140000-automated-tests e [DONE] task-17_03_26_170000-test-coverage foram avaliadas.",
+                "Evidencias em tests/, coverage/ e artefatos das tasks foram consideradas na classificacao.",
+                "Divergencias entre promessa e evidencia tecnica foram registradas.",
+                "Typecheck passes"
+            ],
+            "priority": 9,
+            "passes": true,
+            "notes": "Tasks de fixes/testes/cobertura avaliadas em review-us-009-qualidade-testes-cobertura.md com divergencias entre promessa e evidencia tecnica registradas. Typecheck OK."
+        },
+        {
+            "id": "US-010",
+            "title": "Criar matriz consolidada de rastreabilidade",
+            "description": "Como revisor do projeto, quero uma matriz unica para visualizar status, evidencias e pendencias de todas as tasks [DONE].",
+            "group": "E",
+            "acceptanceCriteria": [
+                "Existe review-matrix.md com todas as 12 tasks [DONE].",
+                "Cada linha contem: requisito/objetivo, evidencias, status final e pendencias.",
+                "A matriz permite identificar rapidamente tasks parciais e nao concluidas.",
+                "Typecheck passes"
+            ],
+            "priority": 10,
+            "passes": true,
+            "notes": "Matriz consolidada criada em review-matrix.md cobrindo 12 tasks [DONE] com objetivo, evidencias, status final e pendencias por task. Typecheck OK."
+        },
+        {
+            "id": "US-011",
+            "title": "Consolidar achados com severidade",
+            "description": "Como revisor do projeto, quero um relatorio de achados para facilitar priorizacao de correcao.",
+            "group": "E",
+            "acceptanceCriteria": [
+                "Existe review-findings.md com todos os achados relevantes.",
+                "Cada achado inclui: impacto, severidade, evidencia e recomendacao.",
+                "Achados criticos e altos estao explicitamente destacados.",
+                "Typecheck passes"
+            ],
+            "priority": 11,
+            "passes": true,
+            "notes": "Achados consolidados em review-findings.md com impacto, severidade, evidencia e recomendacao; itens criticos e altos destacados. Typecheck OK."
+        },
+        {
+            "id": "US-012",
+            "title": "Gerar backlog de follow-ups",
+            "description": "Como coordenador tecnico, quero transformar pendencias em backlog acionavel para execucao posterior.",
+            "group": "F",
+            "acceptanceCriteria": [
+                "Existe review-followups.md com itens acionaveis.",
+                "Cada item inclui prioridade e sugestao de owner.",
+                "Cada item referencia a evidencia ou origem no relatorio de achados.",
+                "Typecheck passes"
+            ],
+            "priority": 12,
+            "passes": true,
+            "notes": "Backlog acionavel criado em review-followups.md com 12 follow-ups priorizados (P0-P3), owner sugerido e origem/evidencia referenciando CF-01..CF-14 do review-findings.md e a review-matrix.md. Typecheck OK via `pnpm run typecheck`."
+        },
+        {
+            "id": "US-013",
+            "title": "Publicar relatorio final e atualizar progresso",
+            "description": "Como solicitante da revisao, quero um relatorio final claro e status atualizado para decidir encerramento.",
+            "group": "G",
+            "acceptanceCriteria": [
+                "Existe review-completed-tasks.md com resumo executivo, metricas e principais riscos.",
+                "O arquivo progress.txt da task de revisao foi atualizado com decisao de encerramento ou continuidade.",
+                "O relatorio final traz recomendacao objetiva para cada task nao plenamente concluida.",
+                "Typecheck passes"
+            ],
+            "priority": 13,
+            "passes": true,
+            "notes": "Relatorio final publicado em review-completed-tasks.md com resumo executivo, metricas, riscos e recomendacoes por task nao plenamente concluida. progress.txt atualizado com decisao CONTINUAR. Typecheck OK."
+        }
+    ]
+}
