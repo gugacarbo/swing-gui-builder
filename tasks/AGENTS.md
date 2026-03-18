@@ -49,3 +49,4 @@ tasks/
 - Always update AGENTS.md with discovered patterns for future iterations
 - **Task completion:** Rename task folder from `[task-name]/` to `[DONE] [task-name]/`
 - Keep `schemas/swingbuilder.schema.json` component keys aligned with `src/config/ConfigReader.ts` `COMPONENT_TYPES` to avoid runtime/schema drift.
+- Official repository scripts contract is `build`/`verify`; treat `compile`/`check` as temporary legacy aliases during migration.

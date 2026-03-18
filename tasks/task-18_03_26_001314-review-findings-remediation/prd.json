@@ -92,8 +92,8 @@
                 "Typecheck passes"
             ],
             "priority": 6,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Published official scripts contract docs at docs/scripts-contract.md and architectural decision at docs/adr/ADR-0001-build-verify-scripts-contract.md, including trade-offs and a legacy compatibility/deprecation strategy for compile/check during build/verify migration; validation: pnpm run typecheck (pass)."
         },
         {
             "id": "US-007",
