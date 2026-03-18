@@ -231,7 +231,7 @@ describe("registerGenerateCommand branch coverage", () => {
     expect(mocks.showOpenDialog).toHaveBeenCalled();
     expect(mocks.showInputBox).not.toHaveBeenCalled();
     expect(mocks.createDirectory).toHaveBeenCalledWith({
-      fsPath: path.join("C:\\workspace", "src\\generated\\ui"),
+      fsPath: path.join("C:\\workspace", "src", "generated", "ui"),
     });
   });
 
