@@ -1,13 +1,12 @@
 import { act, createElement, type DragEvent } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-import type { CanvasComponent } from "@/types/canvas";
 import {
   type UseCanvasDragDropOptions,
   type UseCanvasDragDropResult,
   useCanvasDragDrop,
 } from "@/hooks/useCanvasDragDrop";
+import type { CanvasComponent } from "@/types/canvas";
 
 interface HarnessProps {
   options: UseCanvasDragDropOptions;
@@ -73,6 +72,14 @@ describe("useCanvasDragDrop additional behavior", () => {
   let root: Root;
   let viewport: HTMLDivElement;
 
+  function getHookResult(result: UseCanvasDragDropResult | null): UseCanvasDragDropResult {
+    if (!result) {
+      throw new Error("Hook result was not initialized");
+    }
+
+    return result;
+  }
+
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -117,29 +124,29 @@ describe("useCanvasDragDrop additional behavior", () => {
       );
     });
 
-    expect(hookResult?.isDragging).toBe(false);
+    expect(getHookResult(hookResult).isDragging).toBe(false);
 
     act(() => {
       viewport.dispatchEvent(new Event("dragenter"));
       viewport.dispatchEvent(new Event("dragenter"));
     });
-    expect(hookResult?.isDragging).toBe(true);
+    expect(getHookResult(hookResult).isDragging).toBe(true);
 
     act(() => {
       viewport.dispatchEvent(new Event("dragleave"));
     });
-    expect(hookResult?.isDragging).toBe(true);
+    expect(getHookResult(hookResult).isDragging).toBe(true);
 
     act(() => {
       viewport.dispatchEvent(new Event("dragleave"));
     });
-    expect(hookResult?.isDragging).toBe(false);
+    expect(getHookResult(hookResult).isDragging).toBe(false);
 
     act(() => {
       viewport.dispatchEvent(new Event("dragenter"));
       viewport.dispatchEvent(new Event("drop"));
     });
-    expect(hookResult?.isDragging).toBe(false);
+    expect(getHookResult(hookResult).isDragging).toBe(false);
   });
 
   it("handles drag over events and sets copy dropEffect", () => {
@@ -178,7 +185,7 @@ describe("useCanvasDragDrop additional behavior", () => {
     });
     expect(dragOverEvent.preventDefault).toHaveBeenCalled();
     expect(dragOverEvent.dataTransfer.dropEffect).toBe("copy");
-    expect(hookResult?.isDragging).toBe(true);
+    expect(getHookResult(hookResult).isDragging).toBe(true);
 
     act(() => {
       hookResult?.handleDragOver(dragOverEvent);

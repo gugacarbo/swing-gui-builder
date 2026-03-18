@@ -7,13 +7,13 @@
     },
     {
         "label": "Extension",
-        "source": "./coverage/vitest-summary.json",
+        "source": "./coverage/coverage-summary.json",
         "attribute": "total.statements.pct",
         "outputDir": "./media/coverage-badges"
     },
     {
         "label": "Webview",
-        "source": "./webview-app/coverage/vitest-summary.json",
+        "source": "./webview-app/coverage/coverage-summary.json",
         "attribute": "total.statements.pct",
         "outputDir": "./media/coverage-badges"
     }

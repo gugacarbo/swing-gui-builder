@@ -31,7 +31,7 @@
     "ui-builder"
   ],
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.110.0"
   },
   "main": "./out/extension.js",
   "activationEvents": [],
@@ -41,9 +41,9 @@
     "coverage": "pnpm run test:coverage && pnpm --dir webview-app test:coverage && pnpm run coverage:badges",
     "test:coverage": "vitest run --coverage --reporter=default --reporter=json --outputFile.json=coverage/vitest-summary.json",
     "coverage:merge": "shx rm -rf .nyc_output coverage/combined && shx mkdir -p .nyc_output coverage/combined && shx cp coverage/coverage-final.json .nyc_output/extension-coverage.json && shx cp webview-app/coverage/coverage-final.json .nyc_output/webview-coverage.json && nyc report --temp-dir .nyc_output --reporter json-summary --reporter html --report-dir coverage/combined && shx rm -rf .nyc_output",
-    "coverage:badges": "shx rm -f media/coverage-badges/*.svg && pnpm run coverage:merge && coverage-badges --config .coveragebadgesrc",
+    "coverage:badges": "shx rm -f media/coverage-badges/*.png media/coverage-badges/*.svg && pnpm run coverage:merge && node ./scripts/generateCoverageBadges.mjs",
     "compile": "pnpm run build:shared && pnpm run build:webview && pnpm run build:extension",
-    "build:extension": "tsc -p ./",
+    "build:extension": "tsc -p ./ && tsc-alias -p tsconfig.json",
     "build:webview": "pnpm --dir webview-app build",
     "build:shared": "pnpm --dir shared build",
     "check": "pnpm run lint && pnpm run typecheck && pnpm run compile",
@@ -64,6 +64,7 @@
     "coverage-badges": "^1.0.7",
     "nyc": "^15.1.0",
     "shx": "^0.4.0",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
   },
