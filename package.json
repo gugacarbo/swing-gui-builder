@@ -18,7 +18,7 @@
     "Snippets"
   ],
   "engines": {
-    "vscode": "^1.96.0"
+    "vscode": "^1.95.0"
   },
   "keywords": [
     "java",
@@ -33,17 +33,9 @@
     "ui",
     "ui-builder"
   ],
-  "engines": {
-    "vscode": "^1.95.0"
-  },
   "main": "./out/extension.js",
   "activationEvents": [
-    "onLanguage:java",
-    "onCommand:swingGuiBuilder.newWindow",
-    "onCommand:swingGuiBuilder.generate",
-    "onCommand:swingGuiBuilder.save",
-    "onCommand:swingGuiBuilder.open",
-    "onCommand:swingGuiBuilder.initConfig"
+    "onLanguage:java"
   ],
   "scripts": {
     "test": "vitest run",
@@ -65,8 +57,8 @@
     "lint:fix": "biome check --write src && cd shared && npm run lint:fix && cd ../webview-app && npm run lint:fix && cd ..",
     "typecheck": "cd shared && npm run build && cd ../webview-app && npm run typecheck && cd .. && tsc -p ./ --noEmit",
     "vscode:prepublish": "npm run build",
-    "vsc:pkg": "vsce package",
-    "vsc:push": "vsce publish"
+    "vsc:pkg": "vsce package --no-dependencies",
+    "vsc:push": "vsce publish --no-dependencies"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.7",

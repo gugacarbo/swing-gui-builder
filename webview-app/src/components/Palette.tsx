@@ -67,14 +67,14 @@ const PALETTE_COLLAPSED_STORAGE_KEY = "swing-gui-builder.sidebar.palette-collaps
 
 function getInitialPaletteCollapsedState(): boolean {
   if (typeof window === "undefined") {
-    return false;
+    return true;
   }
 
   try {
     return window.localStorage.getItem(PALETTE_COLLAPSED_STORAGE_KEY) === "true";
   } catch (error) {
     console.warn("[Palette] Failed to read persisted collapse state", error);
-    return false;
+    return true;
   }
 }
 

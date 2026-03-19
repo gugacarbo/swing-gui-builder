@@ -13,6 +13,8 @@ import type { CanvasComponent as CanvasComponentModel } from "@/types/canvas";
 interface CanvasProps {
   frameWidth: number;
   frameHeight: number;
+  frameTitle?: string;
+  frameBackgroundColor?: string;
   components: CanvasComponentModel[];
   selectedComponentId: string | null;
   onSelectComponent: (id: string | null) => void;
@@ -79,6 +81,8 @@ function resolveLocalPosition(
 export function Canvas({
   frameWidth,
   frameHeight,
+  frameTitle,
+  frameBackgroundColor,
   components,
   selectedComponentId,
   onSelectComponent,
@@ -104,6 +108,7 @@ export function Canvas({
 
   const normalizedFrameWidth = Math.max(1, Math.round(frameWidth));
   const normalizedFrameHeight = Math.max(FRAME_TITLE_BAR_HEIGHT + 1, Math.round(frameHeight));
+  const resolvedFrameBackgroundColor = frameBackgroundColor?.trim();
 
   const { handleDrop, handleDragOver, isDragging } = useCanvasDragDrop({
     viewportRef,
@@ -380,12 +385,18 @@ export function Canvas({
                 <span className="h-2 w-2 rounded-full bg-muted-foreground/30" />
               </div>
               <span className="truncate">{`JFrame (${normalizedFrameWidth} × ${normalizedFrameHeight})`}</span>
-              <span className="w-8" />
+              <span className="truncate max-w-[45%] text-right">
+                {frameTitle && frameTitle.trim().length > 0 ? frameTitle : "MainWindow"}
+              </span>
             </div>
 
             <div
               className="absolute inset-x-0 bottom-0 border-t border-vscode-panel-border bg-vscode-background"
-              style={{ top: FRAME_TITLE_BAR_HEIGHT }}
+              style={
+                resolvedFrameBackgroundColor
+                  ? { top: FRAME_TITLE_BAR_HEIGHT, backgroundColor: resolvedFrameBackgroundColor }
+                  : { top: FRAME_TITLE_BAR_HEIGHT }
+              }
             >
               <div className="relative h-full w-full overflow-hidden">
                 {rootFloatingComponents.map((component) => renderFloatingComponent(component))}

@@ -132,7 +132,7 @@ describe("integration panel children generation", () => {
     CanvasPanel.currentPanel = undefined;
   });
 
-  it("creates panel subfolder output and keeps panel child bounds relative", async () => {
+  it("creates nested hierarchy subfolder output and keeps panel child bounds relative", async () => {
     const state: CanvasState = {
       className: "PanelChildrenFrame",
       frameWidth: 900,
@@ -159,6 +159,20 @@ describe("integration panel children generation", () => {
           parentOffset: { x: 38, y: 46 },
           text: "Child",
           backgroundColor: "#336699",
+        }),
+        createComponent({
+          id: "nestedPanel",
+          type: "Panel",
+          variableName: "nestedPanel",
+          parentId: "parentPanel",
+        }),
+        createComponent({
+          id: "nestedButton",
+          type: "Button",
+          variableName: "nestedButton",
+          parentId: "nestedPanel",
+          text: "Nested Child",
+          backgroundColor: "#225577",
         }),
       ],
     };
@@ -190,7 +204,11 @@ describe("integration panel children generation", () => {
     expect(previewPayloads).toHaveLength(1);
     expect(createDirectoryTargets).toContain(outputRoot);
     expect(createDirectoryTargets).toContain(path.join(outputRoot, "mainPanel"));
+    expect(createDirectoryTargets).toContain(path.join(outputRoot, "mainPanel", "nestedPanel"));
     expect(writeTargets).toContain(path.join(outputRoot, "mainPanel", "CustomButton1.java"));
+    expect(writeTargets).toContain(
+      path.join(outputRoot, "mainPanel", "nestedPanel", "CustomButton2.java"),
+    );
     expect(mainFileContent).toContain("    mainPanel.setBounds(100, 80, 320, 240);");
     expect(mainFileContent).toContain("    mainPanel.setLayout(null);");
     expect(mainFileContent).toContain("    childButton.setBounds(38, 46, 130, 34);");

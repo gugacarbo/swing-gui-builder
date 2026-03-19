@@ -80,8 +80,10 @@ export const CanvasStateSchema = z
   .object({
     components: z.array(CanvasComponentSchema),
     className: z.string().min(1).default("MainWindow"),
+    frameTitle: z.string().optional(),
     frameWidth: z.number().finite().min(1).default(800),
     frameHeight: z.number().finite().min(1).default(600),
+    backgroundColor: z.string().optional(),
   })
   .passthrough();
 

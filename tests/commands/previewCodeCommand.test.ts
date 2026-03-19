@@ -83,7 +83,13 @@ describe("registerPreviewCodeCommand", () => {
     mocks.workspaceFolders = undefined;
     const postPreviewCode = vi.fn(async () => true);
     CanvasPanel.currentPanel = {
-      getCanvasState: () => ({ className: "PreviewOnly", frameWidth: 800, frameHeight: 600, components: [] }),
+      getCanvasState: () => ({
+        className: "PreviewOnly",
+        frameTitle: "Preview Frame",
+        frameWidth: 800,
+        frameHeight: 600,
+        components: [],
+      }),
       postPreviewCode,
     } as never;
 

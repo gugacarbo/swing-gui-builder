@@ -6,7 +6,7 @@ interface SidebarProps {
   components: CanvasComponent[];
   selectedComponentId: string | null;
   onSelectComponent: (id: string) => void;
-  onMoveComponent: (componentId: string, parentId: string, index: number) => void;
+  onMoveComponent: (componentId: string, parentId: string | null, index: number) => void;
 }
 
 export function Sidebar({

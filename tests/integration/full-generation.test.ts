@@ -260,7 +260,8 @@ describe("integration full generation flow", () => {
 
     const previewFiles = previewPayloads[0];
     const generatedByName = getGeneratedByFileName();
-    const expectedPackage = "package com.acme.generated.ui;";
+    const expectedBasePackage = "package com.acme.generated.ui;";
+    const expectedContentPanelPackage = "package com.acme.generated.ui.contentPanel;";
     const outputRoot = path.join(
       "C:\\workspace",
       "src",
@@ -275,7 +276,15 @@ describe("integration full generation flow", () => {
 
     expect(previewPayloads).toHaveLength(1);
     expect(previewFiles.length).toBe(3);
-    expect(previewFiles.every((file) => file.content.startsWith(expectedPackage))).toBe(true);
+
+    // Main frame has base package, components in subfolders have combined package
+    const mainFrameFile = previewFiles.find((f) => f.fileName === "ComplexFlowFrame.java");
+    const textFieldFile = previewFiles.find((f) => f.fileName === "CustomTextField1.java");
+    const buttonFile = previewFiles.find((f) => f.fileName === "CustomButton1.java");
+
+    expect(mainFrameFile?.content.startsWith(expectedBasePackage)).toBe(true);
+    expect(textFieldFile?.content.startsWith(expectedContentPanelPackage)).toBe(true);
+    expect(buttonFile?.content.startsWith(expectedContentPanelPackage)).toBe(true);
     expect([...generatedByName.keys()].sort()).toEqual(
       previewFiles.map((file) => file.fileName).sort(),
     );

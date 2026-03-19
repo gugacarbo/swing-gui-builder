@@ -10,6 +10,7 @@ import {
   getComponentInitCode,
   getComponentPropsCode,
   getListenerCode,
+  hexToRgb,
 } from "../../src/generator/codeHelpers";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
@@ -292,5 +293,10 @@ describe("codeHelpers additional behavior coverage", () => {
     const defaultLines: string[] = [];
     applyInlineStyleCode(defaultLines, defaults);
     expect(defaultLines).toEqual([]);
+  });
+
+  it("expands shorthand hex colors when converting to rgb", () => {
+    expect(hexToRgb("#abc")).toEqual({ r: 170, g: 187, b: 204 });
+    expect(hexToRgb("#fff")).toEqual({ r: 255, g: 255, b: 255 });
   });
 });

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Canvas } from "@/components/Canvas";
+import { FrameConfigModal, type FrameConfigurationValues } from "@/components/FrameConfigModal";
 import { PreviewCodeModal } from "@/components/PreviewCodeModal";
 import { PropertiesPanel } from "@/components/PropertiesPanel";
 import { Sidebar } from "@/components/Sidebar";
@@ -17,6 +18,7 @@ import type { PreviewCodeFile } from "@/types/messages";
 
 const INITIAL_CANVAS_STATE: CanvasState = {
   className: "MainWindow",
+  frameTitle: "MainWindow",
   frameWidth: 1024,
   frameHeight: 768,
   components: [],
@@ -121,6 +123,13 @@ function App() {
     width: INITIAL_CANVAS_STATE.frameWidth,
     height: INITIAL_CANVAS_STATE.frameHeight,
   });
+  const [frameBackgroundColor, setFrameBackgroundColor] = useState<string | undefined>(
+    INITIAL_CANVAS_STATE.backgroundColor,
+  );
+  const [frameTitle, setFrameTitle] = useState(
+    INITIAL_CANVAS_STATE.frameTitle ?? INITIAL_CANVAS_STATE.className,
+  );
+  const [isFrameConfigModalOpen, setIsFrameConfigModalOpen] = useState(false);
   const [previewFiles, setPreviewFiles] = useState<PreviewCodeFile[]>([]);
   const [selectedPreviewFileName, setSelectedPreviewFileName] = useState<string | null>(null);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
@@ -303,7 +312,7 @@ function App() {
   );
 
   const handleMoveComponentInHierarchy = useCallback(
-    (componentId: string, parentId: string, index: number) => {
+    (componentId: string, parentId: string | null, index: number) => {
       updateComponents((current) =>
         moveComponentInHierarchy(current, componentId, parentId, index),
       );
@@ -340,6 +349,23 @@ function App() {
     postToolbarCommand("save");
   }, [postToolbarCommand]);
 
+  const handleOpenFrameConfig = useCallback(() => {
+    setIsFrameConfigModalOpen(true);
+  }, []);
+
+  const handleCloseFrameConfig = useCallback(() => {
+    setIsFrameConfigModalOpen(false);
+  }, []);
+
+  const handleApplyFrameConfig = useCallback((values: FrameConfigurationValues) => {
+    setFrameDimensions({
+      width: values.width,
+      height: values.height,
+    });
+    setFrameTitle(values.title);
+    setFrameBackgroundColor(values.backgroundColor);
+  }, []);
+
   const handlePreviewCode = useCallback(() => {
     postPreviewCode();
   }, [postPreviewCode]);
@@ -375,11 +401,20 @@ function App() {
   useEffect(() => {
     postStateChanged({
       ...INITIAL_CANVAS_STATE,
+      frameTitle,
       frameWidth: frameDimensions.width,
       frameHeight: frameDimensions.height,
+      backgroundColor: frameBackgroundColor,
       components,
     });
-  }, [components, frameDimensions.height, frameDimensions.width, postStateChanged]);
+  }, [
+    components,
+    frameBackgroundColor,
+    frameDimensions.height,
+    frameDimensions.width,
+    frameTitle,
+    postStateChanged,
+  ]);
 
   useExtensionListener({
     onLoadState: (state) => {
@@ -389,6 +424,8 @@ function App() {
         width: Math.max(1, Math.round(state.frameWidth)),
         height: Math.max(1, Math.round(state.frameHeight)),
       });
+      setFrameTitle(state.frameTitle ?? state.className);
+      setFrameBackgroundColor(state.backgroundColor ?? INITIAL_CANVAS_STATE.backgroundColor);
       selectComponent(null);
     },
     onPreviewCodeResponse: handlePreviewCodeResponse,
@@ -406,6 +443,7 @@ function App() {
           onUndo={handleUndo}
           onRedo={handleRedo}
           onDelete={handleDelete}
+          onConfigureFrame={handleOpenFrameConfig}
           onGenerate={handleGenerate}
           onPreviewCode={handlePreviewCode}
         />
@@ -427,6 +465,8 @@ function App() {
             <Canvas
               frameWidth={frameDimensions.width}
               frameHeight={frameDimensions.height}
+              frameTitle={frameTitle}
+              frameBackgroundColor={frameBackgroundColor}
               components={components}
               selectedComponentId={selectedComponentId}
               onSelectComponent={selectComponent}
@@ -438,7 +478,7 @@ function App() {
             />
           </section>
 
-          <aside className="min-h-0 w-[300px] shrink-0 bg-vscode-panel-background">
+          <aside className="min-h-0 w-75 shrink-0 bg-vscode-panel-background">
             <PropertiesPanel
               component={selectedComponent}
               onUpdateComponent={handleUpdateComponent}
@@ -460,6 +500,16 @@ function App() {
         onSelectFile={handleSelectPreviewFile}
         onGenerate={handleGenerate}
         onClose={handleClosePreviewModal}
+      />
+
+      <FrameConfigModal
+        isOpen={isFrameConfigModalOpen}
+        initialWidth={frameDimensions.width}
+        initialHeight={frameDimensions.height}
+        initialTitle={frameTitle}
+        initialBackgroundColor={frameBackgroundColor}
+        onApply={handleApplyFrameConfig}
+        onClose={handleCloseFrameConfig}
       />
     </main>
   );

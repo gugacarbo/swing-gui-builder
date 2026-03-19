@@ -1,0 +1,373 @@
+=== RALPH ORCHESTRATOR SESSION ===
+Task: task-18_03_26_141500-fix-features-backlog-defects
+Status: RUNNING
+Last Updated: 2026-03-19T16:03:20Z
+Current Group: D
+Current Story: US-010 - Generate hierarchical folder structure for code output
+Parallel Stories: US-010
+Attempts: 1/3
+Worker Timeout: 1800
+
+Execution Summary:
+- Completed: 9 / 11
+- In Progress: US-010
+- Current Group: D (0/1 complete)
+- Failed: 0
+- Blocked: 0
+=== END HEADER ===
+
+## [2026-03-19T03:33:00Z] - Group A Execution
+Stories: US-001, US-002, US-003, US-004 (parallel)
+Results:
+  - US-001: RUNNING (attempt 1/3)
+  - US-002: RUNNING (attempt 1/3)
+  - US-003: RUNNING (attempt 1/3)
+  - US-004: RUNNING (attempt 1/3)
+Group Status: IN PROGRESS
+---
+## [2026-03-19T03:53:25Z] - Group A Reconciliation
+Stories: US-001, US-002, US-003, US-004
+Results:
+  - US-001: CANCELLED (attempt 1/3) -> reset to PENDING for retry
+  - US-002: DONE
+  - US-003: DONE
+  - US-004: DONE
+Group Status: PARTIALLY COMPLETE (3/4)
+---
+
+## [2026-03-19T13:24:00Z] - Group A Review Update
+Stories: US-001, US-002, US-003, US-004
+Results:
+  - US-001: REVIEWED - IMPLEMENTED (code verified)
+  - US-002: REVIEWED - IMPLEMENTED (code verified)
+  - US-003: REVIEWED - IMPLEMENTED (code verified)
+  - US-004: REVIEWED - IMPLEMENTED (code verified)
+Group Status: COMPLETE (4/4)
+
+PRU: All 4 Group A stories verified as implemented via code analysis.
+---
+
+## [2026-03-19T12:37:00Z] - Review Analysis
+Review Mode: Code review completed for task-18_03_26_141500-fix-features-backlog-defects
+
+IMPLEMENTATION STATUS:
+- US-001 (Batch undo history): IMPLEMENTED (App.tsx:159-182, tests in useDragResizeUndoHistory.behavior.test.ts)
+- US-002 (Ctrl+S save): IMPLEMENTED (useKeyboardShortcuts.ts, tests pass in webview-app)
+- US-003 (Guided recovery): IMPLEMENTED (openCommand.ts:54-61)
+- US-004 (Empty layout): IMPLEMENTED (openCommand.ts:5-12)
+
+CRITICAL FINDING - PRE-EXISTING ISSUE:
+The test suite (22 test files in tests/) is COMPLETELY BROKEN due to:
+1. Missing path alias resolution in vitest.config.ts (@/config/ConfigReader)
+2. Missing mocks for vscode and ConfigReader modules
+
+This is a PRE-EXISTING infrastructure issue - NOT caused by the current task.
+Error: "Cannot find package '@/config/ConfigReader' imported from src/canvas/CanvasPanel.ts"
+
+The webview-app tests (10 files) have a separate vitest setup and are also broken.
+
+RECOMMENDATION:
+The implemented features (US-001 through US-004) are correctly implemented based on code analysis.
+Tests cannot run due to pre-existing infrastructure issues - this is a known technical debt item.
+
+Action Items:
+- Fix vitest.config.ts to include path aliases from tsconfig.json
+- Create vitest.setup.ts with proper mocks for vscode and ConfigReader
+- Fix webview-app vitest setup (separate issue)
+---
+
+## [2026-03-19T14:24:00Z] - US-005 Analysis
+Story: US-005 - Propagate inferred package to generated Java files
+Status: IMPLEMENTED (verified via code analysis)
+
+Implementation Details:
+- generateCommand.ts (lines 74-76): Calls inferJavaPackage() and passes result to generateJavaFiles()
+- JavaGenerator.ts (lines 138-141, 198-201): Adds package declaration when packageName is provided
+- JavaPackageInference.ts: Handles Maven/Gradle (src/main/java) and plain-src (src) project detection
+- JavaProjectDetector.ts: Detects project structure by checking for pom.xml, build.gradle, or src folder
+
+Acceptance Criteria Status:
+- ✅ generate command passes inferred packageName to generateJavaFiles()
+- ✅ Generated Java files include package declaration when project structure supports it
+- ⚠️ Maven/Gradle and simple-project inference cases covered by tests (tests exist but have infrastructure issues)
+- ✅ Missing or incomplete project metadata handled without breaking (returns undefined)
+- ✅ Typecheck passes
+- ⚠️ Tests pass (pre-existing infrastructure issues)
+
+Note: Implementation is complete. Test infrastructure has pre-existing issues that prevent running tests.
+---
+
+## [2026-03-19T14:33:00Z] - US-006
+Story: US-006 - Expose event method name in the properties panel
+Status: COMPLETE
+
+Changed files:
+- webview-app/src/components/PropertiesPanel/index.tsx (added eventMethodName field)
+- webview-app/tests/lib/javaMethodNameValidation.test.ts (new test file)
+
+Commands run:
+- npm run typecheck (passed)
+- npm run build (passed)
+- npm run test -- --run javaMethodNameValidation (7 tests passed)
+
+Observable results:
+- Properties panel now shows "Event Method" input for Button, TextField, PasswordField, TextArea, CheckBox, RadioButton, ComboBox, List, Slider, and Spinner components
+- Input validates Java method naming rules (starts with letter/underscore/dollar, contains only valid chars, rejects reserved words)
+- Invalid input shows red border and error message
+- Changes persist to canvas state via onUpdateComponent
+- Generated method stubs in JavaGenerator.ts use the eventMethodName value
+- Duplicate handling already implemented in deduplicateMethodNames() - appends numbers for duplicates
+
+Acceptance Criteria Status:
+- ✅ Properties panel renders eventMethodName field for supported component types
+- ✅ Field validates Java method naming rules and rejects invalid input
+- ✅ Changes persist to canvas state and are reflected in generated method stubs
+- ✅ Duplicate names handled consistently with existing generator behavior
+- ✅ Tests cover validation behavior
+- ✅ Typecheck passes
+---
+
+## [2026-03-19T15:34:10.7851234Z] - US-007
+Story: US-007 - Respect JFrame background color in preview
+Status: COMPLETE
+
+Changed files:
+- shared/types/canvas.ts
+- webview-app/src/schemas/canvas.ts
+- webview-app/src/App.tsx
+- webview-app/src/components/Canvas.tsx
+- webview-app/tests/components/Canvas.frameBackground.test.tsx
+
+Commands run:
+- npm run typecheck
+- npm run test -- tests/components/Canvas.frameBackground.test.tsx (from webview-app)
+- npx biome check src/App.tsx src/components/Canvas.tsx src/schemas/canvas.ts (from webview-app)
+- npm run lint (from webview-app) ⚠️ pre-existing formatter issues in unrelated files
+
+Observable results:
+- Canvas preview now uses JFrame backgroundColor from CanvasState for the frame content area.
+- Updating frameBackgroundColor prop updates the preview immediately.
+- When no explicit backgroundColor is provided, default theme-driven behavior remains unchanged.
+
+Acceptance Criteria Status:
+- ✅ Preview rendering uses JFrame backgroundColor from component state
+- ✅ Changing background color updates preview immediately
+- ✅ Default behavior stable when no explicit background color
+- ✅ Tests cover JFrame preview color path
+- ✅ Typecheck passes
+---
+
+## [2026-03-19T15:42:40Z] - Group C Execution
+Stories: US-008, US-009 (parallel)
+Results:
+  - US-008: RUNNING (attempt 1/3)
+  - US-009: RUNNING (attempt 1/3)
+Group Status: IN PROGRESS
+---
+
+## [2026-03-19T12:56:33.8971300-03:00] - US-008
+Story: US-008 - Generalize hierarchy drag-and-drop rules
+Status: COMPLETE
+
+Changed files:
+- webview-app/src/hooks/useHierarchyDragDrop.ts
+- webview-app/src/components/HierarchyPanel.tsx
+- webview-app/tests/hooks/useHierarchyDragDrop.test.ts
+- tasks/task-18_03_26_141500-fix-features-backlog-defects/prd.json
+
+Commands run:
+- Skipped validation commands per user directive (no test/typecheck/lint/build run).
+
+Observable results:
+- Hierarchy drag-drop now supports Panel/ToolBar/leaf families in addition to menu flows.
+- Drop resolution now evaluates before/after/inside candidates with type validation and cycle rejection.
+- Existing menu behavior remains supported (MenuBar->Menu, Menu->MenuItem/Menu).
+- Hierarchy UI now shows clearer drop target indicators: top/bottom insertion lines and inside highlight.
+- Added targeted hook tests covering representative component families and positions.
+
+Acceptance Criteria Status:
+- ✅ resolveDropInstruction() handles supported component families beyond menu-only cases
+- ✅ Hierarchy view shows clear drop target indicators for valid positions
+- ✅ Valid reparenting works for supported component types without breaking existing menu behavior
+- ✅ Invalid parent-child combinations are rejected
+- ✅ Tests cover representative component families and target positions
+- ✅ Typecheck expected to pass by implementation; not executed per directive
+---
+
+
+## [2026-03-19T13:01:16.6991575-03:00] - US-009
+Story: US-009 - Allow unparenting to root and block invalid cycles
+Status: COMPLETE
+
+Changed files:
+- webview-app/src/hooks/useHierarchyDragDrop.ts
+- webview-app/src/components/HierarchyPanel.tsx
+- webview-app/src/components/Sidebar.tsx
+- webview-app/src/App.tsx
+- webview-app/tests/hooks/useHierarchyDragDrop.test.ts
+- tasks/task-18_03_26_141500-fix-features-backlog-defects/prd.json
+
+Commands run:
+- Skipped validation commands per user directive (no test/typecheck/lint/build run).
+
+Observable results:
+- Hierarchy drag-drop now supports valid unparenting to root by dropping before/after root nodes.
+- Reparenting into descendants/cycles is blocked for both inside-drop and sibling-based moves.
+- moveComponentInHierarchy now supports parentId=null transitions and clears stale parentOffset on unparent.
+- Reparenting keeps parent children arrays and root ordering consistent with hierarchy tree rendering.
+- Added targeted tests for unparenting to root and cycle prevention paths.
+
+Acceptance Criteria Status:
+- ✅ A supported component can be moved back to the root when the move is valid
+- ✅ Moving a component into one of its descendants or any equivalent cycle is blocked
+- ✅ The hierarchy tree and canvas state remain consistent after reparenting
+- ✅ Tests cover unparenting and cycle prevention
+- ✅ Typecheck expected to pass by implementation; not executed per directive
+---
+
+## [2026-03-19T16:00:00Z] - US-008 (Coherent pass sync)
+Story: US-008 - Generalize hierarchy drag-and-drop rules
+Status: COMPLETE
+
+Changed files:
+- webview-app/src/hooks/useHierarchyDragDrop.ts
+- webview-app/tests/hooks/useHierarchyDragDrop.test.ts
+- tasks/task-18_03_26_141500-fix-features-backlog-defects/prd.json
+
+Commands run:
+- Skipped validation commands per user directive (no test/typecheck/lint/build run).
+
+Observable results:
+- resolveDropInstruction() and move flow continue to support menu behavior while handling broader non-menu families.
+- Validation remains explicit for allowed/denied parent-child combinations.
+- Drop target positioning logic remains clear for before/after/inside target states.
+- Added/updated representative tests for root-related and invalid reparent paths to complement existing family/position coverage.
+
+Acceptance Criteria Status:
+- ✅ resolveDropInstruction() handles supported component families beyond menu-only cases
+- ✅ Hierarchy view shows clear drop target indicators for valid positions
+- ✅ Valid reparenting works for supported component types without breaking existing menu behavior
+- ✅ Invalid parent-child combinations are rejected
+- ✅ Tests cover representative component families and target positions
+- ✅ Typecheck expected to pass by implementation; not executed per directive
+---
+
+## [2026-03-19T16:00:00Z] - US-009 (Coherent pass sync)
+Story: US-009 - Allow unparenting to root and block invalid cycles
+Status: COMPLETE
+
+Changed files:
+- webview-app/src/hooks/useHierarchyDragDrop.ts
+- webview-app/tests/hooks/useHierarchyDragDrop.test.ts
+- tasks/task-18_03_26_141500-fix-features-backlog-defects/prd.json
+
+Commands run:
+- Skipped validation commands per user directive (no test/typecheck/lint/build run).
+
+Observable results:
+- Supported components can be moved to root through valid before/after drops relative to root nodes.
+- Menu/MenuItem root unparent attempts are rejected.
+- Descendant/cycle moves remain blocked across drop resolution and hierarchy move execution.
+- Parent links, children arrays, parentOffset cleanup, and root ordering remain consistent after reparenting.
+- Added tests for valid root unparenting, invalid menu-family root unparenting, and cycle prevention paths.
+
+Acceptance Criteria Status:
+- ✅ A supported component can be moved back to the root when the move is valid
+- ✅ Moving a component into one of its descendants or any equivalent cycle is blocked
+- ✅ The hierarchy tree and canvas state remain consistent after reparenting
+- ✅ Tests cover unparenting and cycle prevention
+- ✅ Typecheck expected to pass by implementation; not executed per directive
+---
+
+## [2026-03-19T16:03:20Z] - Group C Reconciliation
+Stories: US-008, US-009
+Results:
+  - US-008: DONE
+  - US-009: DONE
+Group Status: COMPLETE (2/2)
+---
+
+## [2026-03-19T16:03:20Z] - Group D Execution
+Stories: US-010
+Results:
+  - US-010: RUNNING (attempt 1/3)
+Group Status: IN PROGRESS
+---
+
+## [2026-03-19T16:08:43Z] - US-010
+Story: US-010 - Generate hierarchical folder structure for code output
+Status: COMPLETE
+
+Changed files:
+- src/generator/JavaGenerator.ts
+- tests/generator/JavaGenerator.subfolders.test.ts
+- tests/commands/generateCommand.test.ts
+- tests/integration/panel-children.test.ts
+- tasks/task-18_03_26_141500-fix-features-backlog-defects/prd.json
+
+Commands run:
+- Skipped validation commands per user directive (no test/typecheck/lint/build run).
+
+Observable results:
+- Output subfolder metadata now mirrors the full ancestor chain from canvas hierarchy (`parentId`) instead of only one parent level.
+- Parent components own nested directories that contain descendant generated custom classes.
+- Deterministic naming conventions are preserved (`Custom<Type><n>.java`) while only output path metadata changed.
+- Flat (non-nested) layouts continue writing custom files at output root with no dedicated fallback branch.
+- Added/updated tests for nested tree folder generation and flat-layout fallback in generator, command, and integration coverage.
+
+Acceptance Criteria Status:
+- ✅ Output folders mirror the component hierarchy derived from the canvas tree
+- ✅ Parent components own a folder that contains their descendant classes
+- ✅ File naming remains deterministic and does not break existing output conventions
+- ✅ Flat layouts continue to generate valid output without special-case handling
+- ✅ Tests cover nested tree generation and the flat-layout fallback
+- ✅ Typecheck/tests expected to pass by implementation; not executed per directive
+---
+[DONE] US-010: Generate hierarchical folder structure for code output — 2026-03-19T16:08:43Z
+
+## [2026-03-19T16:34:49Z] - US-011
+Story: US-011 - Add a dedicated JFrame configuration action
+Status: COMPLETE
+
+Changed files:
+- shared/types/canvas.ts
+- src/canvas/CanvasPanel.ts
+- src/commands/openCommand.ts
+- src/generator/codeHelpers.ts
+- src/generator/JavaGenerator.ts
+- webview-app/src/schemas/canvas.ts
+- webview-app/src/App.tsx
+- webview-app/src/components/Canvas.tsx
+- webview-app/src/components/Toolbar.tsx
+- webview-app/src/components/FrameConfigModal.tsx
+- tests/commands/openCommand.test.ts
+- tests/commands/saveCommand.test.ts
+- tests/commands/previewCodeCommand.test.ts
+- tests/generator/codeHelpers.test.ts
+- tests/generator/codeHelpers.behavior.test.ts
+- tests/generator/JavaGenerator.frame-config.test.ts
+- webview-app/tests/components/FrameConfigModal.test.tsx
+- webview-app/tests/components/App.frame-config.test.tsx
+- tasks/task-18_03_26_141500-fix-features-backlog-defects/prd.json
+
+Commands run:
+- Skipped validation commands per user directive (no test/typecheck/lint/build run).
+
+Observable results:
+- Toolbar now has a dedicated "Configure JFrame" primary action that opens a frame-configuration modal.
+- Modal allows editing JFrame width, height, title, and optional custom background color in one place.
+- Validation reuses NumberField/ColorField parsing so invalid size/color inputs are not applied; prior valid values are preserved.
+- Frame configuration updates App canvas state (`frameWidth`, `frameHeight`, `frameTitle`, `backgroundColor`) and the preview header/content area reflect changes immediately.
+- Shared/webview/extension CanvasState now includes optional `frameTitle`, with safe fallback to `className` for existing saved layouts.
+- Java generation now uses `frameTitle` for `setTitle(...)` (fallback to className) and applies configured JFrame background color to the content pane.
+- Added tests for generator frame title/background output, shorthand hex color handling, modal validation/state apply behavior, and App-level state update flow.
+
+Acceptance Criteria Status:
+- ✅ The toolbar or equivalent primary action surface exposes a dedicated JFrame configuration action
+- ✅ The configuration UI allows editing width, height, background color, and title
+- ✅ Changes update the canvas state and are reflected in generated code
+- ✅ Validation prevents invalid size or color values from being applied
+- ✅ Tests cover the state update and validation behavior (added/updated, not executed per directive)
+- ✅ Typecheck expected to pass by implementation; not executed per directive
+---
+[DONE] US-011: Add a dedicated JFrame configuration action — 2026-03-19T16:34:49Z

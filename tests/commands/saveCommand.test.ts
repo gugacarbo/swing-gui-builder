@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   showInformationMessage: vi.fn(),
   getCanvasState: vi.fn<() => CanvasState>(() => ({
     className: "MainWindow",
+    frameTitle: "MainWindow",
     frameWidth: 800,
     frameHeight: 600,
     components: [],
@@ -62,6 +63,7 @@ describe("registerSaveCommand", () => {
     mocks.workspaceFolders = [{ uri: { fsPath: "C:\\workspace" } }];
     mocks.getCanvasState.mockReturnValue({
       className: "MainWindow",
+      frameTitle: "MainWindow",
       frameWidth: 800,
       frameHeight: 600,
       components: [],
@@ -79,6 +81,7 @@ describe("registerSaveCommand", () => {
 
     const expectedState = {
       className: "MainWindow",
+      frameTitle: "MainWindow",
       frameWidth: 800,
       frameHeight: 600,
       components: [],
@@ -87,6 +90,63 @@ describe("registerSaveCommand", () => {
     expect(mocks.writeFile).toHaveBeenCalledWith(
       { fsPath: path.join("C:\\workspace", ".swingbuilder-layout.json") },
       Buffer.from(`${JSON.stringify(expectedState, null, 2)}\n`, "utf-8"),
+    );
+    expect(mocks.showInformationMessage).toHaveBeenCalledWith(
+      "Canvas saved to .swingbuilder-layout.json",
+    );
+  });
+
+  it("shows error when no workspace folder is open", async () => {
+    mocks.workspaceFolders = undefined;
+    registerSaveCommand();
+    const handler = mocks.commandHandlers.get("swingGuiBuilder.save");
+
+    await handler?.();
+
+    expect(mocks.showErrorMessage).toHaveBeenCalledWith("No workspace folder open.");
+    expect(mocks.writeFile).not.toHaveBeenCalled();
+  });
+
+  it("shows error when no canvas panel is open", async () => {
+    CanvasPanel.currentPanel = undefined as never;
+    registerSaveCommand();
+    const handler = mocks.commandHandlers.get("swingGuiBuilder.save");
+
+    await handler?.();
+
+    expect(mocks.showErrorMessage).toHaveBeenCalledWith("No canvas is open. Open a canvas first.");
+    expect(mocks.writeFile).not.toHaveBeenCalled();
+  });
+
+  it("saves state with components", async () => {
+    const stateWithComponents: CanvasState = {
+      className: "MyWindow",
+      frameTitle: "My Custom Frame",
+      frameWidth: 1024,
+      frameHeight: 768,
+      components: [
+        {
+          id: "btn-1",
+          type: "JButton",
+          text: "Click Me",
+          bounds: { x: 10, y: 20, width: 100, height: 30 },
+          properties: {},
+        },
+      ],
+    };
+    mocks.getCanvasState.mockReturnValue(stateWithComponents);
+    CanvasPanel.currentPanel = {
+      getCanvasState: () => mocks.getCanvasState(),
+    } as never;
+
+    registerSaveCommand();
+    const handler = mocks.commandHandlers.get("swingGuiBuilder.save");
+
+    await handler?.();
+
+    expect(mocks.writeFile).toHaveBeenCalledWith(
+      { fsPath: path.join("C:\\workspace", ".swingbuilder-layout.json") },
+      Buffer.from(`${JSON.stringify(stateWithComponents, null, 2)}\n`, "utf-8"),
     );
     expect(mocks.showInformationMessage).toHaveBeenCalledWith(
       "Canvas saved to .swingbuilder-layout.json",

@@ -56,7 +56,11 @@ describe("codeHelpers", () => {
       expect(hexToRgb("#1a2B3c")).toEqual({ r: 26, g: 43, b: 60 });
     });
 
-    it.each(["123456", "#FFF", "#12GG12", ""])("returns black for invalid value %s", (value) => {
+    it("converts short #RGB hex values to rgb", () => {
+      expect(hexToRgb("#abc")).toEqual({ r: 170, g: 187, b: 204 });
+    });
+
+    it.each(["123456", "#12GG12", ""])("returns black for invalid value %s", (value) => {
       expect(hexToRgb(value)).toEqual({ r: 0, g: 0, b: 0 });
     });
   });

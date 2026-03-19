@@ -55,7 +55,9 @@ export interface CanvasComponent {
  */
 export interface CanvasState {
   className: string;
+  frameTitle?: string;
   frameWidth: number;
   frameHeight: number;
+  backgroundColor?: string;
   components: CanvasComponent[];
 }

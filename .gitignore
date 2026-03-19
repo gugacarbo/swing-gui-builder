@@ -8,3 +8,4 @@ node_modules/
 out/
 coverage
 coverage/*
+temp

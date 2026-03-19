@@ -48,15 +48,56 @@ export interface GeneratedFileWithPath {
   subfolder?: string;
 }
 
+/**
+ * Combines the base package name with a subfolder path to form the full package.
+ * Example: ("com.example", "parent/child") => "com.example.parent.child"
+ */
+function combinePackageWithSubfolder(
+  packageName: string | undefined,
+  subfolder: string | undefined,
+): string | undefined {
+  if (!packageName && !subfolder) {
+    return undefined;
+  }
+
+  const subfolderAsPackage = subfolder?.replace(/[/\\]/g, ".");
+
+  if (!packageName) {
+    return subfolderAsPackage;
+  }
+
+  if (!subfolderAsPackage) {
+    return packageName;
+  }
+
+  return `${packageName}.${subfolderAsPackage}`;
+}
+
 export function getParentFolder(
   comp: ComponentModel,
   allComponents: ComponentModel[],
 ): string | undefined {
-  if (!comp.parentId) {
-    return undefined;
+  const componentMap = new Map(allComponents.map((component) => [component.id, component]));
+  const pathSegments: string[] = [];
+  const visitedParentIds = new Set<string>();
+  let currentParentId = comp.parentId;
+
+  while (currentParentId) {
+    if (visitedParentIds.has(currentParentId)) {
+      break;
+    }
+
+    visitedParentIds.add(currentParentId);
+    const parent = componentMap.get(currentParentId);
+    if (!parent) {
+      break;
+    }
+
+    pathSegments.unshift(parent.variableName);
+    currentParentId = parent.parentId;
   }
 
-  return allComponents.find((component) => component.id === comp.parentId)?.variableName;
+  return pathSegments.length > 0 ? pathSegments.join("/") : undefined;
 }
 
 export function generateJavaFiles(
@@ -135,8 +176,9 @@ function generateCustomComponentFile(
   const swingClass = getSwingClass(comp.type);
   const lines: string[] = [];
 
-  if (packageName) {
-    lines.push(`package ${packageName};`);
+  const fullPackage = combinePackageWithSubfolder(packageName, subfolder);
+  if (fullPackage) {
+    lines.push(`package ${fullPackage};`);
     lines.push("");
   }
 
@@ -194,6 +236,7 @@ function generateMainFrameFile(
   const hasToolBars = toolBars.length > 0;
   const componentMap = new Map(state.components.map((component) => [component.id, component]));
   const lines: string[] = [];
+  const frameTitle = state.frameTitle ?? state.className;
 
   if (packageName) {
     lines.push(`package ${packageName};`);
@@ -217,9 +260,13 @@ function generateMainFrameFile(
 
   lines.push("");
   lines.push(`  public ${state.className}() {`);
-  lines.push(`    setTitle("${escapeJava(state.className)}");`);
+  lines.push(`    setTitle("${escapeJava(frameTitle)}");`);
   lines.push(`    setSize(${state.frameWidth}, ${state.frameHeight});`);
   lines.push("    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);");
+  if (state.backgroundColor && state.backgroundColor !== DEFAULT_BG) {
+    const rgb = hexToRgb(state.backgroundColor);
+    lines.push(`    getContentPane().setBackground(new Color(${rgb.r}, ${rgb.g}, ${rgb.b}));`);
+  }
   if (menuBars.length > 0) {
     lines.push("    JFrame frame = this;");
   }

@@ -10,7 +10,7 @@ interface HierarchyPanelProps {
   components: CanvasComponent[];
   selectedComponentId: string | null;
   onSelectComponent: (id: string) => void;
-  onMoveComponent: (componentId: string, parentId: string, index: number) => void;
+  onMoveComponent: (componentId: string, parentId: string | null, index: number) => void;
 }
 
 interface HierarchyNode {
@@ -168,6 +168,9 @@ function HierarchyTreeNode({
   const isSelected = selectedComponentId === node.component.id;
   const isDragging = draggingComponentId === node.component.id;
   const isDropTarget = dropTarget?.componentId === node.component.id;
+  const isDropTargetBefore = isDropTarget && dropTarget.position === "before";
+  const isDropTargetAfter = isDropTarget && dropTarget.position === "after";
+  const isDropTargetInside = isDropTarget && dropTarget.position === "inside";
   const isDraggable = isDraggableComponent(node.component.id);
 
   return (
@@ -199,16 +202,32 @@ function HierarchyTreeNode({
 
         <button
           type="button"
-          className={`flex min-w-0 flex-1 items-center justify-between rounded px-2 py-1 text-left text-xs ${
-            isSelected ? "bg-accent text-foreground" : "text-vscode-foreground hover:bg-accent/70"
-          } ${isDropTarget ? "bg-[var(--canvas-drop-target)] outline-1 outline-[var(--canvas-selection)]" : ""} ${
-            isDraggable ? "cursor-grab active:cursor-grabbing" : ""
-          } ${isDragging ? "opacity-60" : ""}`}
+          className={cn(
+            "relative flex min-w-0 flex-1 items-center justify-between rounded px-2 py-1 text-left text-xs",
+            isSelected ? "bg-accent text-foreground" : "text-vscode-foreground hover:bg-accent/70",
+            isDropTargetInside
+              ? "bg-[var(--canvas-drop-target)] outline-1 outline-[var(--canvas-selection)]"
+              : "",
+            isDraggable ? "cursor-grab active:cursor-grabbing" : "",
+            isDragging ? "opacity-60" : "",
+          )}
           draggable={isDraggable}
           onDragStart={(event) => onDragStart(event, node.component.id)}
           onDragEnd={onDragEnd}
           onClick={() => onSelectComponent(node.component.id)}
         >
+          {isDropTargetBefore ? (
+            <span
+              className="pointer-events-none absolute inset-x-0 top-0 h-0.5 rounded-full bg-[var(--canvas-selection)]"
+              aria-hidden="true"
+            />
+          ) : null}
+          {isDropTargetAfter ? (
+            <span
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-[var(--canvas-selection)]"
+              aria-hidden="true"
+            />
+          ) : null}
           <span className="truncate font-medium">{componentName}</span>
           <span className="ml-2 shrink-0 text-[11px] text-muted-foreground">
             {toSwingTypeLabel(node.component.type)}
@@ -381,8 +400,8 @@ export function HierarchyPanel({
           </ul>
         ) : (
           <p className="px-2 py-3 text-xs text-muted-foreground">
-            Add components to see their hierarchy. Drag JMenu and JMenuItem nodes here to reorder
-            menu structures.
+            Add components to see their hierarchy. Drag supported nodes to reorder siblings or
+            reparent into valid containers.
           </p>
         )}
       </div>

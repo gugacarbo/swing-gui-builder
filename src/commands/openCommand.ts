@@ -5,6 +5,7 @@ import type { CanvasState } from "../components/ComponentModel";
 function createDefaultCanvasState(): CanvasState {
   return {
     className: "MainWindow",
+    frameTitle: "MainWindow",
     frameWidth: 800,
     frameHeight: 600,
     components: [],
@@ -48,7 +49,7 @@ export function registerOpenCommand(
       const fileContent = await vscode.workspace.fs.readFile(filePath);
       const parsedState = JSON.parse(Buffer.from(fileContent).toString("utf-8")) as CanvasState;
       const className = parsedState.className || "MainWindow";
-      state = { ...parsedState, className };
+      state = { ...parsedState, className, frameTitle: parsedState.frameTitle ?? className };
       vscode.window.showInformationMessage("Canvas loaded from .swingbuilder-layout.json");
     } catch (error) {
       if (isMissingLayoutError(error)) {

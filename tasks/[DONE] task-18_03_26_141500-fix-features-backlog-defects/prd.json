@@ -115,8 +115,8 @@
       ],
       "priority": 7,
       "group": "B",
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "IMPLEMENTED: Canvas reads JFrame backgroundColor from CanvasState and applies it to the frame content area. App state now forwards backgroundColor in stateChanged/loadState flows. Added Canvas.frameBackground.test.tsx covering applied color, immediate update on change, and default behavior when undefined."
     },
     {
       "id": "US-008",
@@ -132,8 +132,8 @@
       ],
       "priority": 8,
       "group": "C",
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "IMPLEMENTED: resolveDropInstruction() now resolves before/after/inside drops for menu, panel, toolbar, and leaf families with explicit parent-child validation and cycle checks. Existing menu behavior is preserved while non-menu families can reparent across valid containers. Hierarchy drop indicators remain explicit (before/after edge lines and inside highlight). Added representative hook tests for menu/panel/toolbar/leaf families and target positions. Validation commands intentionally skipped per directive."
     },
     {
       "id": "US-009",
@@ -148,8 +148,8 @@
       ],
       "priority": 9,
       "group": "C",
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "IMPLEMENTED: supported components can now be unparented to root through valid before/after drops relative to root nodes, while menu-family root moves remain blocked. Descendant/cycle reparenting is blocked in both drop resolution and move execution paths. moveComponentInHierarchy() supports parentId=null transitions, clears stale parentOffset on unparent, and keeps parent children plus root ordering consistent with hierarchy rendering. Added tests covering root unparenting and cycle prevention paths. Validation commands intentionally skipped per directive."
     },
     {
       "id": "US-010",
@@ -166,8 +166,8 @@
       ],
       "priority": 10,
       "group": "D",
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "IMPLEMENTED: JavaGenerator.getParentFolder() now derives a full deterministic ancestry path from the canvas parentId chain, so nested custom components generate into mirrored hierarchy subfolders (e.g., parent/child/CustomButtonN.java). Root-level components continue generating at the output root without special-case branches, preserving existing deterministic file naming conventions (Custom<Type><n>). Added/updated tests for nested hierarchy generation and flat-layout fallback in JavaGenerator.subfolders, generateCommand, and panel-children integration specs. Validation commands intentionally skipped per directive."
     },
     {
       "id": "US-011",
@@ -183,8 +183,8 @@
       ],
       "priority": 11,
       "group": "E",
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "IMPLEMENTED: Toolbar now exposes a dedicated \"Configure JFrame\" action that opens a focused modal for frame width, height, title, and optional background color editing. Modal validation reuses existing NumberField/ColorField parsing so invalid size/color input is rejected and prior valid state is preserved. App state now persists frameTitle/backgroundColor into CanvasState, Canvas preview reflects frame title/background updates immediately, and Java generation now emits setTitle(frameTitle fallback className) plus content-pane background when configured. Added targeted tests for modal validation/state apply and generator frame-title/background output; validation commands intentionally skipped per directive."
     }
   ]
 }

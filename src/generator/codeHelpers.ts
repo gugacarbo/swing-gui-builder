@@ -30,10 +30,12 @@ function isHierarchicalMenuComponent(comp: ComponentModel): boolean {
 }
 
 export function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) {
+  if (!/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
     return { r: 0, g: 0, b: 0 };
   }
-  const clean = hex.replace("#", "");
+  const raw = hex.replace("#", "");
+  const clean =
+    raw.length === 3 ? raw.split("").map((channel) => `${channel}${channel}`).join("") : raw;
   return {
     r: Number.parseInt(clean.substring(0, 2), 16),
     g: Number.parseInt(clean.substring(2, 4), 16),

@@ -107,7 +107,7 @@ describe("registerGenerateCommand subfolder output", () => {
     CanvasPanel.currentPanel = undefined;
   });
 
-  it("creates parent subfolders and keeps root output for files without subfolder", async () => {
+  it("creates hierarchy subfolders and keeps root output for flat custom components", async () => {
     const state: CanvasState = {
       className: "PanelWithChildFrame",
       frameWidth: 900,
@@ -129,6 +129,27 @@ describe("registerGenerateCommand subfolder output", () => {
           parentId: "panel",
           text: "Inside",
           backgroundColor: "#336699",
+        }),
+        createComponent({
+          id: "nestedPanel",
+          type: "Panel",
+          variableName: "nestedPanel",
+          parentId: "panel",
+        }),
+        createComponent({
+          id: "nestedChildButton",
+          type: "Button",
+          variableName: "nestedChildButton",
+          parentId: "nestedPanel",
+          text: "Inside Nested",
+          backgroundColor: "#228855",
+        }),
+        createComponent({
+          id: "rootButton",
+          type: "Button",
+          variableName: "rootButton",
+          text: "Root",
+          backgroundColor: "#884422",
         }),
       ],
     };
@@ -155,7 +176,12 @@ describe("registerGenerateCommand subfolder output", () => {
 
     expect(createDirectoryTargets).toContain(outputRoot);
     expect(createDirectoryTargets).toContain(path.join(outputRoot, "mainPanel"));
+    expect(createDirectoryTargets).toContain(path.join(outputRoot, "mainPanel", "nestedPanel"));
     expect(writeFileTargets).toContain(path.join(outputRoot, "PanelWithChildFrame.java"));
     expect(writeFileTargets).toContain(path.join(outputRoot, "mainPanel", "CustomButton1.java"));
+    expect(writeFileTargets).toContain(
+      path.join(outputRoot, "mainPanel", "nestedPanel", "CustomButton2.java"),
+    );
+    expect(writeFileTargets).toContain(path.join(outputRoot, "CustomButton3.java"));
   });
 });

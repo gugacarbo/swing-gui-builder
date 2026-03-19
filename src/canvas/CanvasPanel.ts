@@ -46,6 +46,7 @@ export class CanvasPanel {
     this.className = className;
     this.canvasState = {
       className,
+      frameTitle: className,
       frameWidth: 800,
       frameHeight: 600,
       components: [],

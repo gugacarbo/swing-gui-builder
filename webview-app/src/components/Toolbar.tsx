@@ -1,4 +1,4 @@
-import { Eye, Redo2, Trash2, Undo2, WandSparkles } from "lucide-react";
+import { Eye, Redo2, Settings2, Trash2, Undo2, WandSparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ToolbarProps {
@@ -10,6 +10,7 @@ interface ToolbarProps {
   onUndo: () => void;
   onRedo: () => void;
   onDelete: () => void;
+  onConfigureFrame: () => void;
   onGenerate: () => void;
   onPreviewCode: () => void;
 }
@@ -23,11 +24,23 @@ export function Toolbar({
   onUndo,
   onRedo,
   onDelete,
+  onConfigureFrame,
   onGenerate,
   onPreviewCode,
 }: ToolbarProps) {
   return (
     <nav className="flex flex-wrap items-center gap-2" aria-label="Editor actions toolbar">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={onConfigureFrame}
+        aria-label="Configure JFrame"
+      >
+        <Settings2 aria-hidden="true" />
+        Configure JFrame
+      </Button>
+
       <Button
         type="button"
         variant="outline"
