@@ -56,6 +56,107 @@ const SELECT_CLASS_NAME = `${TEXT_INPUT_CLASS_NAME} pr-8`;
 const CHECKBOX_TYPES = new Set<CanvasComponent["type"]>(["CheckBox", "RadioButton"]);
 const ITEM_TYPES = new Set<CanvasComponent["type"]>(["ComboBox", "List"]);
 const RANGE_TYPES = new Set<CanvasComponent["type"]>(["ProgressBar", "Slider", "Spinner"]);
+const EVENT_TYPES = new Set<CanvasComponent["type"]>([
+  "Button",
+  "TextField",
+  "PasswordField",
+  "TextArea",
+  "CheckBox",
+  "RadioButton",
+  "ComboBox",
+  "List",
+  "Slider",
+  "Spinner",
+]);
+
+const JAVA_RESERVED_WORDS = new Set([
+  "abstract",
+  "assert",
+  "boolean",
+  "break",
+  "byte",
+  "case",
+  "catch",
+  "char",
+  "class",
+  "const",
+  "continue",
+  "default",
+  "do",
+  "double",
+  "else",
+  "enum",
+  "extends",
+  "final",
+  "finally",
+  "float",
+  "for",
+  "goto",
+  "if",
+  "implements",
+  "import",
+  "instanceof",
+  "int",
+  "interface",
+  "long",
+  "native",
+  "new",
+  "package",
+  "private",
+  "protected",
+  "public",
+  "return",
+  "short",
+  "static",
+  "strictfp",
+  "super",
+  "switch",
+  "synchronized",
+  "this",
+  "throw",
+  "throws",
+  "transient",
+  "try",
+  "void",
+  "volatile",
+  "while",
+  "true",
+  "false",
+  "null",
+]);
+
+function isValidJavaMethodName(name: string): boolean {
+  if (!name || name.length === 0) return false;
+  const firstChar = name[0];
+  if (
+    !(
+      (firstChar >= "a" && firstChar <= "z") ||
+      (firstChar >= "A" && firstChar <= "Z") ||
+      firstChar === "_" ||
+      firstChar === "$"
+    )
+  ) {
+    return false;
+  }
+  for (let i = 1; i < name.length; i++) {
+    const c = name[i];
+    if (
+      !(
+        (c >= "a" && c <= "z") ||
+        (c >= "A" && c <= "Z") ||
+        (c >= "0" && c <= "9") ||
+        c === "_" ||
+        c === "$"
+      )
+    ) {
+      return false;
+    }
+  }
+  if (JAVA_RESERVED_WORDS.has(name)) {
+    return false;
+  }
+  return true;
+}
 const TOOLBAR_POSITION_OPTIONS: ReadonlyArray<{
   label: string;
   value: "top" | "bottom" | "left" | "right";
@@ -107,6 +208,9 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
   const hasItems = ITEM_TYPES.has(component.type);
   const hasRange = RANGE_TYPES.has(component.type);
   const hasToolBarPosition = component.type === "ToolBar";
+  const hasEventMethod = EVENT_TYPES.has(component.type);
+  const eventMethodName = component.eventMethodName ?? "";
+  const isValidEventMethodName = eventMethodName === "" || isValidJavaMethodName(eventMethodName);
 
   return (
     <section className="flex h-full flex-col" aria-label="Properties panel">
@@ -233,6 +337,23 @@ export function PropertiesPanel({ component, onUpdateComponent }: PropertiesPane
                 </option>
               ))}
             </select>
+          </FormField>
+        ) : null}
+
+        {hasEventMethod ? (
+          <FormField
+            label="Event Method"
+            error={!isValidEventMethodName ? "Invalid Java method name" : undefined}
+          >
+            <input
+              type="text"
+              className={`${TEXT_INPUT_CLASS_NAME} ${!isValidEventMethodName ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500" : ""}`}
+              value={eventMethodName}
+              placeholder="e.g., handleClick"
+              onChange={(event) =>
+                onUpdateComponent(component.id, { eventMethodName: event.target.value })
+              }
+            />
           </FormField>
         ) : null}
       </div>
