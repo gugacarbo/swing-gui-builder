@@ -119,8 +119,10 @@ jobs:
             mkdir -p "$GH_PAGES_DIR"
             git init "$GH_PAGES_DIR"
             git -C "$GH_PAGES_DIR" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
-            git -C "$GH_PAGES_DIR" checkout -b gh-pages
           fi
+
+          # Ensure we are on gh-pages branch
+          git -C "$GH_PAGES_DIR" checkout -B gh-pages
 
           cp -R "$PAGES_OUTPUT_DIR"/. "$GH_PAGES_DIR"/
 
@@ -132,7 +134,7 @@ jobs:
             echo "No gh-pages changes to commit"
           else
             git -C "$GH_PAGES_DIR" commit -m "Update coverage pages for $TARGET"
-            git -C "$GH_PAGES_DIR" push origin gh-pages
+            git -C "$GH_PAGES_DIR" push -u origin gh-pages --force
           fi
 
       - name: Setup Pages
