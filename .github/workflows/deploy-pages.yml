@@ -117,25 +117,32 @@ jobs:
         run: |
           if [ ! -d "$GH_PAGES_DIR/.git" ]; then
             mkdir -p "$GH_PAGES_DIR"
-            git init "$GH_PAGES_DIR"
-            git -C "$GH_PAGES_DIR" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+            cd "$GH_PAGES_DIR"
+            git init
+            git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+            git checkout --orphan gh-pages
+            git rm -rf . 2>/dev/null || true
+            cd -
+          else
+            cd "$GH_PAGES_DIR"
+            git checkout --orphan gh-pages 2>/dev/null || git checkout gh-pages
+            cd -
           fi
-
-          # Ensure we are on gh-pages branch
-          git -C "$GH_PAGES_DIR" checkout -B gh-pages
 
           cp -R "$PAGES_OUTPUT_DIR"/. "$GH_PAGES_DIR"/
 
-          git -C "$GH_PAGES_DIR" config user.name "github-actions[bot]"
-          git -C "$GH_PAGES_DIR" config user.email "github-actions[bot]@users.noreply.github.com"
-          git -C "$GH_PAGES_DIR" add -A
+          cd "$GH_PAGES_DIR"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
 
-          if git -C "$GH_PAGES_DIR" diff --cached --quiet; then
+          if git diff --cached --quiet; then
             echo "No gh-pages changes to commit"
           else
-            git -C "$GH_PAGES_DIR" commit -m "Update coverage pages for $TARGET"
-            git -C "$GH_PAGES_DIR" push -u origin gh-pages --force
+            git commit -m "Update coverage pages for $TARGET"
+            git push -u origin gh-pages --force
           fi
+          cd -
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
