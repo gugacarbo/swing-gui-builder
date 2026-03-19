@@ -15,7 +15,7 @@ on:
         default: "main"
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -109,6 +109,31 @@ jobs:
           cp -R coverage/combined/. "$PAGES_OUTPUT_DIR/$TARGET/"
 
           node ./scripts/generateCoveragePagesIndex.mjs "$PAGES_OUTPUT_DIR"
+
+      - name: Persist gh-pages history
+        env:
+          TARGET: ${{ steps.branch.outputs.target_path }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -d "$GH_PAGES_DIR/.git" ]; then
+            mkdir -p "$GH_PAGES_DIR"
+            git init "$GH_PAGES_DIR"
+            git -C "$GH_PAGES_DIR" remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+            git -C "$GH_PAGES_DIR" checkout -b gh-pages
+          fi
+
+          cp -R "$PAGES_OUTPUT_DIR"/. "$GH_PAGES_DIR"/
+
+          git -C "$GH_PAGES_DIR" config user.name "github-actions[bot]"
+          git -C "$GH_PAGES_DIR" config user.email "github-actions[bot]@users.noreply.github.com"
+          git -C "$GH_PAGES_DIR" add -A
+
+          if git -C "$GH_PAGES_DIR" diff --cached --quiet; then
+            echo "No gh-pages changes to commit"
+          else
+            git -C "$GH_PAGES_DIR" commit -m "Update coverage pages for $TARGET"
+            git -C "$GH_PAGES_DIR" push origin gh-pages
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
