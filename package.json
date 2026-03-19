@@ -17,6 +17,9 @@
     "Other",
     "Snippets"
   ],
+  "engines": {
+    "vscode": "^1.96.0"
+  },
   "keywords": [
     "java",
     "swing",
@@ -30,38 +33,43 @@
     "ui",
     "ui-builder"
   ],
-  "engines": {
-    "vscode": "^1.110.0"
-  },
   "main": "./out/extension.js",
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:java",
+    "onCommand:swingGuiBuilder.newWindow",
+    "onCommand:swingGuiBuilder.generate",
+    "onCommand:swingGuiBuilder.save",
+    "onCommand:swingGuiBuilder.open",
+    "onCommand:swingGuiBuilder.initConfig"
+  ],
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "pnpm run build:shared && pnpm run build:webview && pnpm run build:extension",
-    "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run verify:prd",
+    "build": "npm run build:shared && npm run build:webview && npm run build:extension",
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run build && npm run verify:prd",
     "verify:prd": "node ./scripts/validatePrdNotes.mjs",
-    "coverage": "pnpm run test:coverage && pnpm --dir webview-app test:coverage && pnpm run coverage:badges",
+    "coverage": "npm run test:coverage && npm run test:coverage:webview && npm run coverage:badges",
     "test:coverage": "vitest run --coverage --reporter=default --reporter=json --outputFile.json=coverage/vitest-summary.json",
+    "test:coverage:webview": "cd webview-app && npm run test:coverage",
     "coverage:merge": "shx rm -rf .nyc_output coverage/combined && shx mkdir -p .nyc_output coverage/combined && shx cp coverage/coverage-final.json .nyc_output/extension-coverage.json && shx cp webview-app/coverage/coverage-final.json .nyc_output/webview-coverage.json && nyc report --temp-dir .nyc_output --reporter json-summary --reporter html --report-dir coverage/combined && shx rm -rf .nyc_output",
-    "coverage:badges": "shx rm -f media/coverage-badges/*.png media/coverage-badges/*.svg && pnpm run coverage:merge && node ./scripts/generateCoverageBadges.mjs",
-    "compile": "pnpm run build",
+    "coverage:badges": "shx rm -f media/coverage-badges/*.png media/coverage-badges/*.svg && npm run coverage:merge && node ./scripts/generateCoverageBadges.mjs",
+    "compile": "npm run build",
     "build:extension": "tsc -p ./ && tsc-alias -p tsconfig.json",
-    "build:webview": "pnpm --dir webview-app build",
-    "build:shared": "pnpm --dir shared build",
-    "check": "pnpm run verify",
-    "lint": "biome check src && pnpm --dir shared lint && pnpm --dir webview-app lint",
-    "lint:fix": "biome check --write src && pnpm --dir shared lint:fix && pnpm --dir webview-app lint:fix",
-    "typecheck": "pnpm --dir shared build && pnpm --dir webview-app typecheck && tsc -p ./ --noEmit",
-    "vscode:prepublish": "pnpm run build",
+    "build:webview": "cd webview-app && npm run build",
+    "build:shared": "cd shared && npm run build",
+    "check": "npm run verify",
+    "lint": "biome check src && cd shared && npm run lint && cd ../webview-app && npm run lint && cd ..",
+    "lint:fix": "biome check --write src && cd shared && npm run lint:fix && cd ../webview-app && npm run lint:fix && cd ..",
+    "typecheck": "cd shared && npm run build && cd ../webview-app && npm run typecheck && cd .. && tsc -p ./ --noEmit",
+    "vscode:prepublish": "npm run build",
     "vsc:pkg": "vsce package",
     "vsc:push": "vsce publish"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.7",
-    "@shared/types": "workspace:*",
+    "@shared/types": "./shared",
     "@types/node": "^25.5.0",
-    "@types/vscode": "^1.110.0",
+    "@types/vscode": "^1.96.0",
     "@vitest/coverage-v8": "^4.1.0",
     "@vscode/vsce": "^3.7.1",
     "ajv": "^8.18.0",

@@ -1,8 +1,0 @@
-packages:
-  - "webview-app"
-  - "shared"
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - '@vscode/vsce-sign'
-  - esbuild
-  - keytar
