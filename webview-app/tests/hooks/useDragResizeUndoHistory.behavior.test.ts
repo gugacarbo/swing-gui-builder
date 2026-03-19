@@ -187,6 +187,9 @@ describe("drag/resize undo history batching behavior", () => {
       hook.result.current.handleMouseDown(createPointerEvent({ clientX: 100, clientY: 100 }), {
         mode: "move",
       });
+    });
+
+    act(() => {
       hook.result.current.handleMouseMove(createPointerEvent({ clientX: 120, clientY: 120 }));
       hook.result.current.handleMouseMove(createPointerEvent({ clientX: 140, clientY: 130 }));
     });
@@ -333,6 +336,9 @@ describe("drag/resize undo history batching behavior", () => {
         mode: "resize",
         handle: "se",
       });
+    });
+
+    act(() => {
       hook.result.current.handleMouseMove(createPointerEvent({ clientX: 130, clientY: 120 }));
       hook.result.current.handleMouseMove(createPointerEvent({ clientX: 160, clientY: 150 }));
     });
