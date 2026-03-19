@@ -31,7 +31,7 @@
     "ui-builder"
   ],
   "engines": {
-    "vscode": "^1.110.0"
+    "vscode": "^1.95.0"
   },
   "main": "./out/extension.js",
   "activationEvents": [],
@@ -61,7 +61,7 @@
     "@biomejs/biome": "^2.4.7",
     "@shared/types": "workspace:*",
     "@types/node": "^25.5.0",
-    "@types/vscode": "^1.110.0",
+    "@types/vscode": "^1.95.0",
     "@vitest/coverage-v8": "^4.1.0",
     "@vscode/vsce": "^3.7.1",
     "ajv": "^8.18.0",
