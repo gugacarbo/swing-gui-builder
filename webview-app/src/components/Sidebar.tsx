@@ -16,14 +16,14 @@ export function Sidebar({
   onMoveComponent,
 }: SidebarProps) {
   return (
-    <aside className="flex h-full min-h-0 w-[260px] shrink-0 flex-col border-r border-vscode-panel-border bg-vscode-panel-background">
-      <Palette />
+    <aside className="flex h-full min-h-0 w-64 shrink-0 flex-col border-r border-vscode-panel-border bg-vscode-panel-background">
       <HierarchyPanel
         components={components}
         selectedComponentId={selectedComponentId}
         onSelectComponent={onSelectComponent}
         onMoveComponent={onMoveComponent}
       />
+      <Palette />
     </aside>
   );
 }

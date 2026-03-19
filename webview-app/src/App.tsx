@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Canvas } from "@/components/Canvas";
 import { PreviewCodeModal } from "@/components/PreviewCodeModal";
@@ -124,6 +124,7 @@ function App() {
   const [previewFiles, setPreviewFiles] = useState<PreviewCodeFile[]>([]);
   const [selectedPreviewFileName, setSelectedPreviewFileName] = useState<string | null>(null);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const interactionHistoryStartRef = useRef<CanvasComponent[] | null>(null);
 
   const {
     state: historyComponents,
@@ -139,14 +140,45 @@ function App() {
   const { postStateChanged, postToolbarCommand, postPreviewCode } = usePostMessage();
 
   const updateComponents = useCallback(
-    (updater: (current: CanvasComponent[]) => CanvasComponent[]) => {
+    (
+      updater: (current: CanvasComponent[]) => CanvasComponent[],
+      historyOptions: {
+        mode?: "push" | "replace" | "pushFrom";
+        from?: CanvasComponent[];
+      } = {},
+    ) => {
       setComponentHistory((current) => {
         const next = updater(current);
         setComponents(next);
         return next;
-      });
+      }, historyOptions);
     },
     [setComponentHistory, setComponents],
+  );
+
+  const handleComponentInteractionStart = useCallback(
+    (_id: string, _mode: "move" | "resize") => {
+      if (interactionHistoryStartRef.current === null) {
+        interactionHistoryStartRef.current = historyComponents;
+      }
+    },
+    [historyComponents],
+  );
+
+  const handleComponentInteractionEnd = useCallback(
+    (_id: string, _mode: "move" | "resize") => {
+      const interactionHistoryStart = interactionHistoryStartRef.current;
+      if (!interactionHistoryStart) {
+        return;
+      }
+
+      interactionHistoryStartRef.current = null;
+      setComponentHistory((current) => current, {
+        mode: "pushFrom",
+        from: interactionHistoryStart,
+      });
+    },
+    [setComponentHistory],
   );
 
   const handleAddComponent = useCallback(
@@ -159,88 +191,100 @@ function App() {
 
   const handleMoveComponent = useCallback(
     (id: string, x: number, y: number) => {
-      updateComponents((current) => {
-        const componentsById = buildComponentMap(current);
-        const target = componentsById.get(id);
-        if (!target) {
-          return current;
-        }
-
-        const nextX = Math.round(x);
-        const nextY = Math.round(y);
-
-        if (target.type === "Panel") {
-          const deltaX = nextX - Math.round(target.x);
-          const deltaY = nextY - Math.round(target.y);
-
-          if (deltaX === 0 && deltaY === 0) {
+      updateComponents(
+        (current) => {
+          const componentsById = buildComponentMap(current);
+          const target = componentsById.get(id);
+          if (!target) {
             return current;
           }
 
-          const descendants = collectDescendantIds(id, buildChildLookup(current));
+          const nextX = Math.round(x);
+          const nextY = Math.round(y);
 
-          return current.map((component) => {
-            if (component.id === id) {
-              return { ...component, x: nextX, y: nextY };
+          if (target.type === "Panel") {
+            const deltaX = nextX - Math.round(target.x);
+            const deltaY = nextY - Math.round(target.y);
+
+            if (deltaX === 0 && deltaY === 0) {
+              return current;
             }
 
-            if (!descendants.has(component.id)) {
+            const descendants = collectDescendantIds(id, buildChildLookup(current));
+
+            return current.map((component) => {
+              if (component.id === id) {
+                return { ...component, x: nextX, y: nextY };
+              }
+
+              if (!descendants.has(component.id)) {
+                return component;
+              }
+
+              return {
+                ...component,
+                x: Math.round(component.x + deltaX),
+                y: Math.round(component.y + deltaY),
+              };
+            });
+          }
+
+          return current.map((component) => {
+            if (component.id !== id) {
               return component;
             }
 
-            return {
-              ...component,
-              x: Math.round(component.x + deltaX),
-              y: Math.round(component.y + deltaY),
-            };
+            return normalizeToParentPanelBounds(
+              { ...component, x: nextX, y: nextY },
+              componentsById,
+            );
           });
-        }
-
-        return current.map((component) => {
-          if (component.id !== id) {
-            return component;
-          }
-
-          return normalizeToParentPanelBounds({ ...component, x: nextX, y: nextY }, componentsById);
-        });
-      });
+        },
+        { mode: interactionHistoryStartRef.current ? "replace" : "push" },
+      );
     },
     [updateComponents],
   );
 
   const handleResizeComponent = useCallback(
     (id: string, updates: Pick<CanvasComponent, "x" | "y" | "width" | "height">) => {
-      updateComponents((current) => {
-        const componentsById = buildComponentMap(current);
-        const target = componentsById.get(id);
-        if (!target) {
-          return current;
-        }
-
-        const roundedUpdates = {
-          x: Math.round(updates.x),
-          y: Math.round(updates.y),
-          width: Math.max(1, Math.round(updates.width)),
-          height: Math.max(1, Math.round(updates.height)),
-        };
-
-        const resizedComponents = current.map((component) => {
-          if (component.id !== id) {
-            return component;
+      updateComponents(
+        (current) => {
+          const componentsById = buildComponentMap(current);
+          const target = componentsById.get(id);
+          if (!target) {
+            return current;
           }
 
-          return normalizeToParentPanelBounds({ ...component, ...roundedUpdates }, componentsById);
-        });
+          const roundedUpdates = {
+            x: Math.round(updates.x),
+            y: Math.round(updates.y),
+            width: Math.max(1, Math.round(updates.width)),
+            height: Math.max(1, Math.round(updates.height)),
+          };
 
-        if (target.type !== "Panel") {
-          return resizedComponents;
-        }
+          const resizedComponents = current.map((component) => {
+            if (component.id !== id) {
+              return component;
+            }
 
-        const resizedById = buildComponentMap(resizedComponents);
-        return resizedComponents.map((component) =>
-          normalizeToParentPanelBounds(component, resizedById),
-        );
-      });
+            return normalizeToParentPanelBounds(
+              { ...component, ...roundedUpdates },
+              componentsById,
+            );
+          });
+
+          if (target.type !== "Panel") {
+            return resizedComponents;
+          }
+
+          const resizedById = buildComponentMap(resizedComponents);
+          return resizedComponents.map((component) =>
+            normalizeToParentPanelBounds(component, resizedById),
+          );
+        },
+        { mode: interactionHistoryStartRef.current ? "replace" : "push" },
+      );
     },
     [updateComponents],
   );
@@ -292,6 +336,10 @@ function App() {
     postToolbarCommand("generate");
   }, [postToolbarCommand]);
 
+  const handleSave = useCallback(() => {
+    postToolbarCommand("save");
+  }, [postToolbarCommand]);
+
   const handlePreviewCode = useCallback(() => {
     postPreviewCode();
   }, [postPreviewCode]);
@@ -314,6 +362,7 @@ function App() {
     onUndo: handleUndo,
     onRedo: handleRedo,
     onDelete: handleDelete,
+    onSave: handleSave,
     canUndo,
     canRedo,
     canDelete: selectedComponentId !== null,
@@ -384,6 +433,8 @@ function App() {
               onAddComponent={handleAddComponent}
               onMoveComponent={handleMoveComponent}
               onResizeComponent={handleResizeComponent}
+              onComponentInteractionStart={handleComponentInteractionStart}
+              onComponentInteractionEnd={handleComponentInteractionEnd}
             />
           </section>
 

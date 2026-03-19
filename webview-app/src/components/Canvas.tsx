@@ -22,6 +22,8 @@ interface CanvasProps {
     id: string,
     updates: Pick<CanvasComponentModel, "x" | "y" | "width" | "height">,
   ) => void;
+  onComponentInteractionStart?: (id: string, mode: "move" | "resize") => void;
+  onComponentInteractionEnd?: (id: string, mode: "move" | "resize") => void;
 }
 
 interface PanelRenderContext {
@@ -83,6 +85,8 @@ export function Canvas({
   onAddComponent,
   onMoveComponent,
   onResizeComponent,
+  onComponentInteractionStart,
+  onComponentInteractionEnd,
 }: CanvasProps) {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [expandedMenuId, setExpandedMenuId] = useState<string | null>(null);
@@ -297,6 +301,8 @@ export function Canvas({
           onSelect={onSelectComponent}
           onMove={handleMove}
           onResize={handleResize}
+          onInteractionStart={onComponentInteractionStart}
+          onInteractionEnd={onComponentInteractionEnd}
         >
           {nestedChildren}
         </CanvasComponent>
@@ -304,6 +310,8 @@ export function Canvas({
     },
     [
       onMoveComponent,
+      onComponentInteractionEnd,
+      onComponentInteractionStart,
       onResizeComponent,
       onSelectComponent,
       panelChildrenById,

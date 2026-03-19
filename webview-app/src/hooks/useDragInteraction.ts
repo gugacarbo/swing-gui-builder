@@ -35,6 +35,8 @@ interface UseDragInteractionOptions {
   minWidth?: number;
   minHeight?: number;
   gridSize?: number;
+  onInteractionStart?: (id: string, mode: "move" | "resize") => void;
+  onInteractionEnd?: (id: string, mode: "move" | "resize") => void;
 }
 
 export function useDragInteraction({
@@ -46,6 +48,8 @@ export function useDragInteraction({
   minWidth = 48,
   minHeight = 28,
   gridSize = 1,
+  onInteractionStart,
+  onInteractionEnd,
 }: UseDragInteractionOptions) {
   const [interaction, setInteraction] = useState<DragSession | null>(null);
   const safeMinWidth = Math.max(1, Math.round(minWidth));
@@ -79,10 +83,19 @@ export function useDragInteraction({
           height: component.height,
         },
       });
+      onInteractionStart?.(component.id, mode);
 
       return true;
     },
-    [component.height, component.id, component.width, component.x, component.y, onSelect],
+    [
+      component.height,
+      component.id,
+      component.width,
+      component.x,
+      component.y,
+      onInteractionStart,
+      onSelect,
+    ],
   );
 
   const handleMouseMove = useCallback(
@@ -143,10 +156,11 @@ export function useDragInteraction({
         return false;
       }
 
+      onInteractionEnd?.(component.id, interaction.mode);
       setInteraction(null);
       return true;
     },
-    [interaction],
+    [component.id, interaction, onInteractionEnd],
   );
 
   return {

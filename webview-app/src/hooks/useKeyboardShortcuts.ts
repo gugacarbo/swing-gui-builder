@@ -11,26 +11,37 @@ export interface UseKeyboardShortcutsOptions {
   onUndo: KeyboardShortcutHandler;
   onRedo: KeyboardShortcutHandler;
   onDelete?: KeyboardShortcutHandler;
+  onSave?: KeyboardShortcutHandler;
   canUndo?: KeyboardShortcutAvailability;
   canRedo?: KeyboardShortcutAvailability;
   canDelete?: KeyboardShortcutAvailability;
+  canSave?: KeyboardShortcutAvailability;
   target?: KeyboardEventTarget;
   shouldIgnoreEvent?: (event: KeyboardEvent) => boolean;
 }
 
 function isEditableTarget(event: KeyboardEvent): boolean {
-  const target = event.target as HTMLElement | null;
+  const target = event.target;
 
-  return target?.isContentEditable === true || target?.closest("input, textarea") !== null;
+  if (!(target instanceof Element)) {
+    return false;
+  }
+
+  return (
+    (target instanceof HTMLElement && target.isContentEditable) ||
+    target.closest("input, textarea, [contenteditable='true'], [contenteditable='']") !== null
+  );
 }
 
 export function useKeyboardShortcuts({
   onUndo,
   onRedo,
   onDelete,
+  onSave,
   canUndo = true,
   canRedo = true,
   canDelete = false,
+  canSave = true,
   target = window,
   shouldIgnoreEvent = isEditableTarget,
 }: UseKeyboardShortcutsOptions): void {
@@ -53,8 +64,15 @@ export function useKeyboardShortcuts({
         return;
       }
 
+      const isSaveShortcut = key === "s" && !event.shiftKey;
       const isUndoShortcut = key === "z" && !event.shiftKey;
       const isRedoShortcut = key === "y" || (key === "z" && event.shiftKey);
+
+      if (isSaveShortcut && canSave && onSave) {
+        event.preventDefault();
+        onSave();
+        return;
+      }
 
       if (isUndoShortcut && canUndo) {
         event.preventDefault();
@@ -73,5 +91,16 @@ export function useKeyboardShortcuts({
     return () => {
       target.removeEventListener("keydown", handleKeyDown);
     };
-  }, [canDelete, canRedo, canUndo, onDelete, onRedo, onUndo, shouldIgnoreEvent, target]);
+  }, [
+    canDelete,
+    canRedo,
+    canSave,
+    canUndo,
+    onDelete,
+    onRedo,
+    onSave,
+    onUndo,
+    shouldIgnoreEvent,
+    target,
+  ]);
 }

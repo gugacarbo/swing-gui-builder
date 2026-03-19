@@ -16,6 +16,8 @@ interface CanvasComponentProps {
     id: string,
     updates: Pick<CanvasComponentModel, "x" | "y" | "width" | "height">,
   ) => void;
+  onInteractionStart?: (id: string, mode: "move" | "resize") => void;
+  onInteractionEnd?: (id: string, mode: "move" | "resize") => void;
   children?: ReactNode;
 }
 
@@ -26,6 +28,8 @@ export function CanvasComponent({
   onSelect,
   onMove,
   onResize,
+  onInteractionStart,
+  onInteractionEnd,
   children,
 }: CanvasComponentProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -45,6 +49,8 @@ export function CanvasComponent({
       onResize,
       minWidth: minSize.minWidth,
       minHeight: minSize.minHeight,
+      onInteractionStart,
+      onInteractionEnd,
     });
 
   return (

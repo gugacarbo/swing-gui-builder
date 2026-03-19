@@ -1,0 +1,190 @@
+{
+    "project": "swing-gui-builder",
+    "branchName": "ralph/fix-features-backlog-defects",
+    "description": "Fix Features Backlog Defects - Close backlog defects and TODO items in FEATURES.md, focusing on undo/redo, hierarchy editing, open/save flows, and Java generation reliability",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Batch undo history for drag and resize",
+            "description": "As a user, I want a completed drag or resize to create a single undo step so history stays usable.",
+            "acceptanceCriteria": [
+                "A drag or resize action adds one final history entry when the interaction ends",
+                "Pointer-move updates do not flood the undo stack",
+                "Existing undo and redo behavior still works for non-drag state changes",
+                "Resize interactions preserve the final component geometry",
+                "Targeted tests cover drag and resize history behavior",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-002",
+            "title": "Add Ctrl+S save shortcut",
+            "description": "As a user, I want Ctrl+S or Cmd+S to save the layout so I can persist changes without using the toolbar.",
+            "acceptanceCriteria": [
+                "Ctrl+S and Cmd+S trigger the existing save layout command from the webview",
+                "The shortcut does not fire while the user is typing in an input, textarea, or contenteditable field",
+                "Undo, redo, and delete shortcuts continue to work as they do today",
+                "Shortcut handling is covered by tests",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-003",
+            "title": "Show guided recovery when the layout file is missing",
+            "description": "As a user, I want a clear recovery message when the layout file is missing so I know what to do next.",
+            "acceptanceCriteria": [
+                "The open command handles the missing-file case as a guided, non-fatal path",
+                "The user sees an actionable message that points to creating a new layout or initializing a project",
+                "The extension logs a clear recovery message instead of a generic error stack trace",
+                "Tests cover the missing-file branch",
+                "Typecheck passes"
+            ],
+            "priority": 3,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Create an empty layout when the file is missing",
+            "description": "As a user, I want the app to create an empty layout when the file is missing so I can start immediately.",
+            "acceptanceCriteria": [
+                "The open command can initialize an empty CanvasState with MainWindow defaults when the file is missing",
+                "The new layout opens with default dimensions and zero components",
+                "The created layout can be saved immediately without additional setup",
+                "Tests cover default state creation and loading",
+                "Typecheck passes"
+            ],
+            "priority": 4,
+            "group": "A",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Propagate inferred package to generated Java files",
+            "description": "As a developer, I want the inferred Java package to reach the generator so generated files compile correctly in structured and simple projects.",
+            "acceptanceCriteria": [
+                "The generate command passes the inferred packageName to generateJavaFiles()",
+                "Generated Java files include a package declaration when the project structure supports it",
+                "Maven/Gradle and simple-project inference cases are covered by tests",
+                "Missing or incomplete project metadata is handled without breaking generation",
+                "Typecheck passes",
+                "Tests pass"
+            ],
+            "priority": 5,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-006",
+            "title": "Expose event method name in the properties panel",
+            "description": "As a user, I want to edit the event method name from the properties panel so I can control the generated stub names.",
+            "acceptanceCriteria": [
+                "The properties panel renders an eventMethodName field for supported component types",
+                "The field validates Java method naming rules and rejects invalid input",
+                "Changes persist to canvas state and are reflected in generated method stubs",
+                "Duplicate names are handled consistently with the existing generator behavior",
+                "Tests cover rendering, validation, and state update behavior",
+                "Typecheck passes"
+            ],
+            "priority": 6,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Respect JFrame background color in preview",
+            "description": "As a user, I want the JFrame preview to use the configured background color so the preview matches the component state.",
+            "acceptanceCriteria": [
+                "The preview rendering uses the JFrame backgroundColor from component state",
+                "Changing the background color updates the preview immediately",
+                "The default behavior remains stable when no explicit background color is set",
+                "Tests cover the preview color path for the JFrame",
+                "Typecheck passes"
+            ],
+            "priority": 7,
+            "group": "B",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Generalize hierarchy drag-and-drop rules",
+            "description": "As a user, I want hierarchy drag-and-drop to support the full component set so I can reorganize the canvas consistently.",
+            "acceptanceCriteria": [
+                "resolveDropInstruction() handles supported component families beyond menu-only cases",
+                "The hierarchy view shows clear drop target indicators for valid positions",
+                "Valid reparenting works for supported component types without breaking existing menu behavior",
+                "Invalid parent-child combinations are rejected",
+                "Tests cover representative component families and target positions",
+                "Typecheck passes"
+            ],
+            "priority": 8,
+            "group": "C",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Allow unparenting to root and block invalid cycles",
+            "description": "As a user, I want to move components back to the root level and avoid invalid hierarchy cycles so the canvas state stays valid.",
+            "acceptanceCriteria": [
+                "A supported component can be moved back to the root when the move is valid",
+                "Moving a component into one of its descendants or any equivalent cycle is blocked",
+                "The hierarchy tree and canvas state remain consistent after reparenting",
+                "Tests cover unparenting and cycle prevention",
+                "Typecheck passes"
+            ],
+            "priority": 9,
+            "group": "C",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-010",
+            "title": "Generate hierarchical folder structure for code output",
+            "description": "As a developer, I want generated Java files to mirror the component hierarchy in folders so the output is easier to navigate and maintain.",
+            "acceptanceCriteria": [
+                "Output folders mirror the component hierarchy derived from the canvas tree",
+                "Parent components own a folder that contains their descendant classes",
+                "File naming remains deterministic and does not break existing output conventions",
+                "Flat layouts continue to generate valid output without special-case handling",
+                "Tests cover nested tree generation and the flat-layout fallback",
+                "Typecheck passes",
+                "Tests pass"
+            ],
+            "priority": 10,
+            "group": "D",
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-011",
+            "title": "Add a dedicated JFrame configuration action",
+            "description": "As a user, I want a dedicated JFrame configuration action so I can edit size, colors, and title in one place.",
+            "acceptanceCriteria": [
+                "The toolbar or equivalent primary action surface exposes a dedicated JFrame configuration action",
+                "The configuration UI allows editing width, height, background color, and title",
+                "Changes update the canvas state and are reflected in generated code",
+                "Validation prevents invalid size or color values from being applied",
+                "Tests cover the state update and validation behavior",
+                "Typecheck passes"
+            ],
+            "priority": 11,
+            "group": "E",
+            "passes": false,
+            "notes": ""
+        }
+    ]
+}

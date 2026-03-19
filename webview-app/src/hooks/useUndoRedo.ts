@@ -12,7 +12,13 @@ interface HistoryState<T> {
 
 export interface UseUndoRedoResult<T> {
   state: T;
-  set: (next: T | ((current: T) => T)) => void;
+  set: (
+    next: T | ((current: T) => T),
+    options?: {
+      mode?: "push" | "replace" | "pushFrom";
+      from?: T;
+    },
+  ) => void;
   undo: () => void;
   redo: () => void;
   reset: (nextState: T) => void;
@@ -37,10 +43,43 @@ export function useUndoRedo<T>(
   });
 
   const set = useCallback(
-    (next: T | ((current: T) => T)) => {
+    (
+      next: T | ((current: T) => T),
+      options: { mode?: "push" | "replace" | "pushFrom"; from?: T } = {},
+    ) => {
+      const mode = options.mode ?? "push";
       setHistoryState((currentState) => {
         const nextValue =
           typeof next === "function" ? (next as (current: T) => T)(currentState.present) : next;
+        const historyFrom = options.from ?? currentState.present;
+
+        if (mode === "replace") {
+          if (Object.is(currentState.present, nextValue)) {
+            return currentState;
+          }
+
+          return {
+            past: currentState.past,
+            present: nextValue,
+            future: [],
+          };
+        }
+
+        if (mode === "pushFrom") {
+          if (Object.is(historyFrom, nextValue)) {
+            return currentState;
+          }
+
+          const nextPast = [...currentState.past, historyFrom];
+          return {
+            past:
+              nextPast.length > historyLimit
+                ? nextPast.slice(nextPast.length - historyLimit)
+                : nextPast,
+            present: nextValue,
+            future: [],
+          };
+        }
 
         if (Object.is(currentState.present, nextValue)) {
           return currentState;
