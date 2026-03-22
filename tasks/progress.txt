@@ -7,6 +7,8 @@ Started: sáb 21 mar 2026 21:33:03 -03
 - Coverage reports output to `coverage/` directory with JSON summaries
 - Extension uses vitest with v8 coverage provider
 - Webview-app has lower coverage expectations due to UI components - consider 80% target instead of 100%
+- Vitest requires `resolve.alias` config for `@/*` path aliases - add to vitest.config.ts: `resolve: { alias: { "@": path.resolve(__dirname, "./src") } }`
+- For VS Code API mocking, use `vi.hoisted()` to create mock functions that can be referenced in both mock definitions and test code
 
 ---
 
@@ -22,4 +24,17 @@ Started: sáb 21 mar 2026 21:33:03 -03
   - Webview coverage is low (58%) - many UI components need tests but some may be hard to unit test
   - The `coverage/coverage-summary.json` contains per-file coverage data in JSON format
   - Files not appearing in coverage report are either excluded or have no tests importing them
+---
+
+## 2026-03-22 14:23 - US-002
+- Fixed vitest.config.ts to support `@/*` path aliases (was missing resolve.alias config)
+- Fixed tests/canvas/CanvasPanel.test.ts - all 37 tests now passing
+- CanvasPanel.ts now at 100% coverage (statements, branches, functions, lines)
+- Tests cover: createOrShow, getCanvasState, loadState, postPreviewCode, handleMessage, dispose, HTML generation, HTML rewriting, config defaults, escapeHtml, getNonce
+- Files changed: vitest.config.ts, tests/canvas/CanvasPanel.test.ts, prd.json
+- **Learnings for future iterations:**
+  - When using `@/` path aliases in source files, vitest needs explicit `resolve.alias` configuration
+  - For complex mocks with interdependencies, use `vi.hoisted()` to create mock functions before mock definitions
+  - When mocking vscode API, mock getters/setters for mutable properties like `activeTextEditor`
+  - For HTML rewriting tests, cover edge cases: empty paths, query strings, hash fragments, protocol-relative URLs
 ---
