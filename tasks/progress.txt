@@ -1,3 +1,25 @@
 # Ralph Progress Log
 Started: sáb 21 mar 2026 21:33:03 -03
 ---
+
+## Codebase Patterns
+- Run `pnpm run test:coverage` for extension coverage, `pnpm --filter webview-app test:coverage` for webview
+- Coverage reports output to `coverage/` directory with JSON summaries
+- Extension uses vitest with v8 coverage provider
+- Webview-app has lower coverage expectations due to UI components - consider 80% target instead of 100%
+
+---
+
+## 2026-03-21 21:38 - US-001
+- Measured baseline coverage for extension (99.61% statements, 97.61% branches, 100% functions, 99.79% lines)
+- Measured baseline coverage for webview-app (58.17% statements, 48.75% branches, 47.66% functions, 58.65% lines)
+- Created coverage-gaps.md with detailed analysis of uncovered files, lines, and branches
+- Identified 8 extension files not tracked by coverage: CanvasPanel.ts, extension.ts, initConfigCommand.ts, newWindowCommand.ts, ComponentModel.ts, ConfigReader.ts, config/initConfigCommand.ts, JavaProjectDetector.ts
+- Identified 2 webview files at 0%: CanvasComponent.tsx, componentView.tsx
+- Files changed: coverage-gaps.md (new), prd.json (updated passes: true), progress.txt (created)
+- **Learnings for future iterations:**
+  - Extension coverage is already very high (99.61%) - remaining work is mostly covering excluded files and branches
+  - Webview coverage is low (58%) - many UI components need tests but some may be hard to unit test
+  - The `coverage/coverage-summary.json` contains per-file coverage data in JSON format
+  - Files not appearing in coverage report are either excluded or have no tests importing them
+---
