@@ -14,8 +14,8 @@
                 "Baseline report shows current percentage per module"
             ],
             "priority": 1,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Coverage report created at coverage-gaps.md. Extension: 99.61% statements, 97.61% branches. Webview: 58.17% statements, 48.75% branches."
         },
         {
             "id": "US-002",
