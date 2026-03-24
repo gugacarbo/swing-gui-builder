@@ -1,0 +1,169 @@
+{
+    "project": "Java File Round-Trip",
+    "branchName": "ralph/java-file-roundtrip",
+    "description": "Implement bidirectional synchronization between .java files and the visual canvas editor. Users can open existing Java GUI files in the visual canvas, edit them visually, and save changes back while preserving all non-GUI code (method bodies, imports, custom logic).",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Parse Java file to extract GUI components",
+            "description": "As a developer, I want the system to automatically detect Swing/AWT GUI components in a Java file so I can open it for visual editing.",
+            "acceptanceCriteria": [
+                "Parse .java file content using java-parser",
+                "Detect GUI components by analyzing class inheritance (extends JFrame, JPanel, etc.)",
+                "Build variable symbol table mapping variable names to their types",
+                "Extract component properties: bounds (x, y, width, height), text, layout",
+                "Detect parent-child relationships via add() calls",
+                "Typecheck passes"
+            ],
+            "priority": 1,
+            "passes": false,
+            "group": "A",
+            "notes": ""
+        },
+        {
+            "id": "US-002",
+            "title": "Convert parsed data to CanvasState",
+            "description": "As a developer, I need the parsed Java data to be converted to CanvasState format so the visual editor can display the GUI.",
+            "acceptanceCriteria": [
+                "Map Swing types to component types (JButton → button, JLabel → label, etc.)",
+                "Extract frame title and dimensions from constructor or class definition",
+                "Preserve variable names as component IDs",
+                "Handle nested components (panels containing other components)",
+                "Typecheck passes"
+            ],
+            "priority": 2,
+            "passes": false,
+            "group": "A",
+            "notes": ""
+        },
+        {
+            "id": "US-003",
+            "title": "Implement marker-based code preservation system",
+            "description": "As a developer, I need a marker system to identify which code sections are generated vs. user code so preservation works correctly.",
+            "acceptanceCriteria": [
+                "Define marker format: // @swingbuilder:generated:{section} begin/end",
+                "Implement MarkerManager to detect existing markers in files",
+                "Implement MarkerManager to insert markers around generated sections",
+                "Support sections: fields, constructor, methods",
+                "Typecheck passes"
+            ],
+            "priority": 3,
+            "passes": false,
+            "group": "A",
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Modify JavaGenerator to emit markers",
+            "description": "As a developer, I need the code generator to emit markers so round-trip files can be identified and properly merged.",
+            "acceptanceCriteria": [
+                "Wrap field declarations with field markers",
+                "Wrap constructor body with constructor markers",
+                "Wrap method stubs with method markers",
+                "Maintain valid Java syntax with properly nested markers",
+                "Typecheck passes"
+            ],
+            "priority": 4,
+            "passes": false,
+            "group": "B",
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Implement JavaFileMerger for round-trip save",
+            "description": "As a user, I want my non-GUI code (method bodies, imports, custom logic) to be preserved when saving so I don't lose my work.",
+            "acceptanceCriteria": [
+                "For files with markers: replace only content between matching markers",
+                "For files without markers: use heuristic detection to find GUI code regions",
+                "Preserve all code outside GUI-related statements",
+                "Create .bak backup before overwriting",
+                "Report which sections were preserved in merge result",
+                "Typecheck passes"
+            ],
+            "priority": 5,
+            "passes": false,
+            "group": "B",
+            "notes": ""
+        },
+        {
+            "id": "US-006",
+            "title": "Create Open from Java File command",
+            "description": "As a user, I want to open a .java file in the canvas editor with a single command so I can start editing visually.",
+            "acceptanceCriteria": [
+                "Register VS Code command swingGuiBuilder.openFromJava",
+                "Show file picker filtered to .java files",
+                "Parse selected file and display on canvas",
+                "Track source file path for later merging",
+                "Display success/error in output channel",
+                "Typecheck passes"
+            ],
+            "priority": 6,
+            "passes": false,
+            "group": "B",
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Extend CanvasPanel to track source file",
+            "description": "As a developer, I need CanvasPanel to remember which file was opened so the save command can merge correctly.",
+            "acceptanceCriteria": [
+                "Add sourceFilePath property to CanvasPanel",
+                "Add setSourceFile(path) method",
+                "Add getSourceFile() method",
+                "Persist source path during session",
+                "Typecheck passes"
+            ],
+            "priority": 7,
+            "passes": false,
+            "group": "B",
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Modify generate command for round-trip mode",
+            "description": "As a user, I want saving to merge with the original file instead of overwriting it so my code is preserved.",
+            "acceptanceCriteria": [
+                "Detect when sourceFilePath is set (round-trip mode)",
+                "Use JavaFileMerger instead of file overwrite when in round-trip mode",
+                "Fall back to normal overwrite for new files",
+                "Show diff preview option after merge",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 8,
+            "passes": false,
+            "group": "C",
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Add visual indicator for round-trip files",
+            "description": "As a user, I want to know when I'm editing a file with preserved code so I understand the round-trip status.",
+            "acceptanceCriteria": [
+                "Show badge/indicator in webview when hasPreservedCode is true",
+                "Display source file name in panel title or status",
+                "Typecheck passes",
+                "Verify in browser using dev-browser skill"
+            ],
+            "priority": 9,
+            "passes": false,
+            "group": "C",
+            "notes": ""
+        },
+        {
+            "id": "US-010",
+            "title": "Add backup and restore system",
+            "description": "As a user, I want automatic backups before saves so I can recover if something goes wrong.",
+            "acceptanceCriteria": [
+                "Create .bak file before any merge operation",
+                "Implement restore from backup command",
+                "Offer to restore from backup on parse error",
+                "Typecheck passes"
+            ],
+            "priority": 10,
+            "passes": false,
+            "group": "C",
+            "notes": ""
+        }
+    ]
+}

@@ -352,4 +352,32 @@ describe("registerGenerateCommand branch coverage", () => {
       Buffer.from("public class CustomButton1 {}", "utf-8"),
     );
   });
+
+  it("shows folder picker when no project structure detected and using default output dir", async () => {
+    // This tests the branch where: !projectStructure && configuredDir === "swing/components/"
+    // Set up mocks for this specific test
+    mocks.workspaceFolders = [{ uri: { fsPath: "C:\\workspace" } }];
+    mocks.getOutputDirectory.mockReturnValue("swing/components/");
+    mocks.detectJavaProject.mockReturnValue(undefined);
+    mocks.resolveOutputDirectory.mockImplementation((configuredDir: string) => configuredDir);
+    mocks.showOpenDialog.mockResolvedValue([{ fsPath: "C:\\workspace\\custom\\output" }]);
+    mocks.generateJavaFiles.mockReturnValue([]);
+    mocks.createDirectory.mockResolvedValue(undefined);
+    mocks.showInputBox.mockResolvedValue(undefined); // Ensure input box returns undefined
+
+    // Register fresh handler
+    const outputChannel = { appendLine: vi.fn() };
+    registerGenerateCommand(outputChannel as never);
+    const handler = mocks.commandHandlers.get("swingGuiBuilder.generate");
+    if (!handler) throw new Error("Handler not registered");
+
+    await handler();
+
+    // Folder picker should be shown
+    expect(mocks.showOpenDialog).toHaveBeenCalled();
+    // Input box should NOT be shown since folder picker is used instead
+    expect(mocks.showInputBox).not.toHaveBeenCalled();
+    // Directory should be created
+    expect(mocks.createDirectory).toHaveBeenCalled();
+  });
 });

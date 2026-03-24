@@ -38,3 +38,17 @@ Started: sáb 21 mar 2026 21:33:03 -03
   - When mocking vscode API, mock getters/setters for mutable properties like `activeTextEditor`
   - For HTML rewriting tests, cover edge cases: empty paths, query strings, hash fragments, protocol-relative URLs
 ---
+
+## 2026-03-22 14:40 - US-003
+- Created tests/extension.test.ts with 12 comprehensive tests
+- extension.ts now at 100% coverage (statements, branches, functions, lines)
+- Tests cover: activate() output channel creation, all 6 command registrations, subscription management, deactivate() function
+- Used vi.hoisted() for mock definitions and vi.resetModules() for fresh imports
+- Mocked all command registration functions to test extension.ts in isolation
+- Files changed: tests/extension.test.ts (new), prd.json
+- **Learnings for future iterations:**
+  - When testing extension entry points, mock command registration functions to isolate tests
+  - Use `vi.resetModules()` in beforeEach to ensure fresh imports between tests
+  - For testing VS Code extension lifecycle, mock the vscode module's window.createOutputChannel
+  - Extension activate() is void-returning; test side effects (registrations, subscriptions) not return values
+---

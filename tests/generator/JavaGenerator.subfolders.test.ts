@@ -207,4 +207,37 @@ describe("JavaGenerator subfolder metadata", () => {
     // Nested component should use subfolder as package
     expect(innerCustomFile?.content).toContain("package containerPanel;");
   });
+
+  it("handles cyclic parent references and breaks to avoid infinite traversal", () => {
+    // A -> B -> C -> A (cyclic)
+    const componentA = createComponent({
+      id: "compA",
+      type: "Button",
+      variableName: "compA",
+      parentId: "compC",
+      text: "A",
+    });
+    const componentB = createComponent({
+      id: "compB",
+      type: "Button",
+      variableName: "compB",
+      parentId: "compA",
+      text: "B",
+    });
+    const componentC = createComponent({
+      id: "compC",
+      type: "Button",
+      variableName: "compC",
+      parentId: "compB",
+      text: "C",
+    });
+
+    // Should not throw and should handle cycle gracefully
+    expect(() => getParentFolder(componentA, [componentA, componentB, componentC])).not.toThrow();
+    const result = getParentFolder(componentA, [componentA, componentB, componentC]);
+    // Path may include cycle members but will eventually break due to visitedParentIds check
+    // The important thing is it doesn't loop forever
+    expect(result).toBeDefined();
+    expect(result).not.toBe("compA/compB/compC/compA/compB/compC"); // No infinite repetition
+  });
 });
