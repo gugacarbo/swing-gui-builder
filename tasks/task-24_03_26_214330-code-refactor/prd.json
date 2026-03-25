@@ -34,8 +34,8 @@
             ],
             "priority": 2,
             "group": "A",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Completed 2026-03-24. Created MenuCodeGenerator.ts (94 lines) with generateMenuBar, generateMenuChildrenCode, and getOrderedChildren. Reduced componentGenerators.ts from 359 to 285 lines (-74 lines). Added 13 unit tests."
         },
         {
             "id": "US-003",

@@ -1,35 +1,17 @@
 import type { ComponentModel } from "../components/ComponentModel";
 import {
   isMenuBarComponent,
-  isMenuComponent,
-  isMenuItemComponent,
   isPanelComponent,
   isToolBarComponent,
 } from "../utils/ComponentPredicates";
 import {
   applyInlineStyleCode,
-  escapeJava,
   getComponentInitCode,
   getComponentPropsCode,
   getListenerCode,
 } from "./codeHelpers";
+import { generateMenuBar, getOrderedChildren } from "./MenuCodeGenerator";
 import { getComponentSwingType } from "./swingMappings";
-
-function getOrderedChildren(
-  parent: ComponentModel,
-  componentMap: Map<string, ComponentModel>,
-  allComponents: ComponentModel[],
-): ComponentModel[] {
-  const orderedByParent = (parent.children ?? [])
-    .map((childId) => componentMap.get(childId))
-    .filter((comp): comp is ComponentModel => Boolean(comp));
-
-  if (orderedByParent.length > 0) {
-    return orderedByParent;
-  }
-
-  return allComponents.filter((comp) => comp.parentId === parent.id);
-}
 
 function collectDescendantIds(
   parent: ComponentModel,
@@ -107,62 +89,6 @@ function sortRegularComponentsForGeneration(regularComponents: ComponentModel[])
   }
 
   return ordered;
-}
-
-function generateMenuChildrenCode(
-  parent: ComponentModel,
-  componentMap: Map<string, ComponentModel>,
-  allComponents: ComponentModel[],
-  methodNames: Map<string, string>,
-  generatedIds: Set<string>,
-  lines: string[],
-): void {
-  for (const child of getOrderedChildren(parent, componentMap, allComponents)) {
-    if (isMenuComponent(child)) {
-      if (!generatedIds.has(child.id)) {
-        lines.push(`    ${child.variableName} = new JMenu("${escapeJava(child.text)}");`);
-        generatedIds.add(child.id);
-      }
-      generateMenuChildrenCode(
-        child,
-        componentMap,
-        allComponents,
-        methodNames,
-        generatedIds,
-        lines,
-      );
-      lines.push(`    ${parent.variableName}.add(${child.variableName});`);
-      continue;
-    }
-
-    if (isMenuItemComponent(child)) {
-      if (!generatedIds.has(child.id)) {
-        lines.push(`    ${child.variableName} = new JMenuItem("${escapeJava(child.text)}");`);
-        const methodName = methodNames.get(child.id);
-        if (methodName) {
-          lines.push(`    ${child.variableName}.addActionListener(e -> ${methodName}());`);
-        }
-        generatedIds.add(child.id);
-      }
-      lines.push(`    ${parent.variableName}.add(${child.variableName});`);
-    }
-  }
-}
-
-function generateMenuBar(
-  menuBar: ComponentModel,
-  componentMap: Map<string, ComponentModel>,
-  allComponents: ComponentModel[],
-  methodNames: Map<string, string>,
-): string[] {
-  const lines: string[] = [`    ${menuBar.variableName} = new JMenuBar();`];
-  const generatedIds = new Set<string>([menuBar.id]);
-
-  generateMenuChildrenCode(menuBar, componentMap, allComponents, methodNames, generatedIds, lines);
-  lines.push(`    frame.setJMenuBar(${menuBar.variableName});`);
-  lines.push("");
-
-  return lines;
 }
 
 function generateToolBar(
