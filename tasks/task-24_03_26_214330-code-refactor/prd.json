@@ -86,7 +86,7 @@
             "priority": 5,
             "group": "B",
             "passes": true,
-            "notes": "Completed 2026-03-24. Extracted ComponentCodeGenerator.ts with 26 tests. componentGenerators.ts reduced to 104 lines."
+            "notes": "Completed 2026-03-24. Created WebviewHtmlBuilder.ts (162 lines) with testable constructor receiving extensionUri and WebviewContext. Reduced CanvasPanel.ts from 325 to 207 lines (-118 lines). Extracted methods: getHtmlForWebview, rewriteBundledHtml, getContentSecurityPolicy, isLocalResourcePath, toWebviewResourceUri, getMissingBuildHtml, escapeHtml, getNonce. Added 38 unit tests covering all public methods and utility functions. Also fixed type issues in OutputDirectoryResolver.ts (parallel worker US-008) to unblock build."
         },
         {
             "id": "US-006",

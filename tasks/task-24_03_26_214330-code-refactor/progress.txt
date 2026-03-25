@@ -274,3 +274,39 @@ Total new tests: 99 (48 + 13 + 12 + 26)
 
 ---
 
+## [2026-03-24T23:40:00Z] - US-005
+- **Story**: US-005 - Extrair WebviewHtmlBuilder de CanvasPanel.ts
+- **Status**: COMPLETE
+- **What was implemented**:
+  - Created `src/canvas/WebviewHtmlBuilder.ts` (162 lines) with testable constructor
+  - Extracted methods from CanvasPanel.ts: getHtmlForWebview, rewriteBundledHtml, getContentSecurityPolicy, isLocalResourcePath, toWebviewResourceUri, getMissingBuildHtml
+  - Extracted utility functions: escapeHtml, getNonce
+  - Created WebviewContext interface for dependency injection (enables testing without VS Code)
+  - Reduced CanvasPanel.ts from 325 to 207 lines (-118 lines)
+  - Fixed type issues in OutputDirectoryResolver.ts (parallel worker US-008 impact)
+- **Files changed**:
+  - `src/canvas/WebviewHtmlBuilder.ts` (new) - 162 lines
+  - `src/canvas/CanvasPanel.ts` (modified) - 325→207 lines
+  - `src/commands/OutputDirectoryResolver.ts` (modified) - fixed type issues
+  - `tests/canvas/WebviewHtmlBuilder.test.ts` (new) - 38 tests
+- **Test coverage**: 38 new tests for WebviewHtmlBuilder
+  - 3 tests for `getHtmlForWebview` (success, error, unknown error)
+  - 12 tests for `rewriteBundledHtml` (URI rewriting, nonce injection, CSP)
+  - 1 test for `getContentSecurityPolicy`
+  - 5 tests for `isLocalResourcePath`
+  - 4 tests for `toWebviewResourceUri`
+  - 3 tests for `getMissingBuildHtml`
+  - 8 tests for `escapeHtml` utility
+  - 3 tests for `getNonce` utility
+- **Build/Lint**: `pnpm run compile` passes, `pnpm lint:fix` passes
+- **Commit**: `refactor: US-005 - Extract WebviewHtmlBuilder`
+- **Acceptance Criteria Met**:
+  - ✅ Criar `src/canvas/WebviewHtmlBuilder.ts`
+  - ✅ Extrair `getHtmlForWebview` e `rewriteBundledHtml` do `CanvasPanel.ts`
+  - ✅ `CanvasPanel.ts` deve ter < 300 linhas (207 lines)
+  - ✅ `WebviewHtmlBuilder` recebe dependências via constructor (testável)
+  - ✅ Typecheck passa
+  - ✅ Criar testes unitários para `WebviewHtmlBuilder.ts` (38 tests)
+
+---
+
