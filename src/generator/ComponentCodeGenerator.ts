@@ -1,11 +1,7 @@
 import type { ComponentModel } from "../components/ComponentModel";
 import { isPanelComponent } from "../utils/ComponentPredicates";
-import {
-  applyInlineStyleCode,
-  getComponentInitCode,
-  getComponentPropsCode,
-  getListenerCode,
-} from "./codeHelpers";
+import { applyInlineStyleCode, getComponentInitCode, getComponentPropsCode } from "./codeHelpers";
+import { createListenerCode, isListenerTypeSupported } from "./ListenerFactory";
 import { getComponentSwingType } from "./swingMappings";
 
 /**
@@ -136,8 +132,8 @@ export function generateComponentCode(
   lines.push(...getComponentPropsCode(comp));
 
   const methodName = methodNames.get(comp.id);
-  if (methodName) {
-    const listenerCode = getListenerCode(comp, methodName);
+  if (methodName && isListenerTypeSupported(comp.type)) {
+    const listenerCode = createListenerCode(comp.type, comp.variableName, methodName);
     if (listenerCode) {
       lines.push(listenerCode);
     }

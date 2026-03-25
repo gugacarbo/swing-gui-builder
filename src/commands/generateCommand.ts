@@ -4,8 +4,14 @@ import { CanvasPanel } from "../canvas/CanvasPanel";
 import { getOutputDirectory } from "../config/ConfigReader";
 import { generateJavaFiles } from "../generator/JavaGenerator";
 import { mergeJavaFile } from "../merger/JavaFileMerger";
-import { inferJavaPackage, resolveOutputDirectory } from "../utils/JavaPackageInference";
+import { inferJavaPackage } from "../utils/JavaPackageInference";
 import { detectJavaProject } from "../utils/JavaProjectDetector";
+import {
+  DEFAULT_OUTPUT_DIRECTORY,
+  type OutputDirectoryConfig,
+  type OutputDirectoryContext,
+  resolveOutputDirectoryWithUI,
+} from "./OutputDirectoryResolver";
 
 function getFileName(filePath: string): string {
   const normalizedPath = filePath.replace(/\\/g, "/");
@@ -34,40 +40,41 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
       return;
     }
 
-    // Determine smart default directory
+    // Resolve output directory using OutputDirectoryResolver
     const workspaceRoot = workspaceFolders[0].uri.fsPath;
     const projectStructure = detectJavaProject(workspaceRoot);
     const configuredDir = getOutputDirectory();
 
-    // Use configured dir if non-default, otherwise use detected project structure
-    const defaultDir = resolveOutputDirectory(configuredDir, projectStructure);
+    const config: OutputDirectoryConfig = {
+      configuredDir,
+      projectStructure,
+      defaultDir: DEFAULT_OUTPUT_DIRECTORY,
+    };
 
-    let outputDir: string | undefined;
+    const ctx: OutputDirectoryContext = {
+      workspaceRoot,
+      workspaceUri: workspaceFolders[0].uri,
+      ui: {
+        showInputBox: (options) =>
+          vscode.window.showInputBox({
+            prompt: options.prompt,
+            value: options.value,
+          }),
+        showOpenDialog: (options) =>
+          vscode.window.showOpenDialog({
+            canSelectFolders: options.canSelectFolders,
+            canSelectFiles: options.canSelectFiles,
+            canSelectMany: options.canSelectMany,
+            openLabel: options.openLabel,
+            defaultUri: options.defaultUri as vscode.Uri | undefined,
+          }) as Thenable<readonly { fsPath: string }[] | undefined>,
+      },
+    };
 
-    if (!projectStructure && configuredDir === "swing/components/") {
-      // No structure detected, no config override — show folder picker
-      const pickerResult = await vscode.window.showOpenDialog({
-        canSelectFolders: true,
-        canSelectFiles: false,
-        canSelectMany: false,
-        openLabel: "Select output folder for Java files",
-        defaultUri: workspaceFolders[0].uri,
-      });
+    const result = await resolveOutputDirectoryWithUI(config, ctx);
+    if (result.cancelled) return;
 
-      if (!pickerResult || pickerResult.length === 0) return;
-
-      // Calculate relative path from workspace root
-      const selectedPath = pickerResult[0].fsPath;
-      const workspacePath = workspaceFolders[0].uri.fsPath;
-      outputDir = path.relative(workspacePath, selectedPath);
-    } else {
-      outputDir = await vscode.window.showInputBox({
-        prompt: "Output directory for generated Java files (relative to workspace)",
-        value: defaultDir,
-      });
-    }
-
-    if (!outputDir) return;
+    const outputDir = result.outputDir;
 
     const outputUri = vscode.Uri.joinPath(workspaceFolders[0].uri, outputDir);
 

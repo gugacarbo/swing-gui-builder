@@ -1,17 +1,17 @@
 === RALPH ORCHESTRATOR SESSION ===
 Task: task-24_03_26_214330-code-refactor
 Status: RUNNING
-Last Updated: 2026-03-24T00:15:00Z
-Current Group: A
-Current Story: US-004 - Dividir componentGenerators.ts em ComponentCodeGenerator.ts
-Parallel Stories: None (sequential due to shared file modifications)
+Last Updated: 2026-03-24T00:20:00Z
+Current Group: B
+Current Story: US-005, US-006, US-007, US-008 (parallel)
+Parallel Stories: US-005, US-006, US-007, US-008
 Attempts: 1/3
 Worker Timeout: 1800s
 
 Execution Summary:
-- Completed: 3 / 10
-- In Progress: US-004
-- Current Group: A (3/4 complete)
+- Completed: 4 / 10
+- In Progress: US-005, US-006, US-007, US-008
+- Current Group: B (0/4 complete)
 - Failed: 0
 - Blocked: 0
 === END HEADER ===
@@ -60,6 +60,24 @@ Files Changed:
 Commit: ca703dc
 Message: refactor: US-003 - Extract ToolBarCodeGenerator.ts
 Duration: ~5 minutes
+---
+
+## [2026-03-24T00:20:00Z] - US-004 Execution (FINAL GROUP A)
+Story: US-004 - Dividir componentGenerators.ts em ComponentCodeGenerator.ts
+Result: SUCCESS
+Files Changed:
+  - src/generator/ComponentCodeGenerator.ts (NEW) - 151 lines
+  - src/generator/componentGenerators.ts (MODIFIED) - 226→104 lines (-122)
+  - tests/generator/ComponentCodeGenerator.test.ts (NEW) - 26 tests
+Commit: 4aab57e
+Message: refactor: US-004 - Extract ComponentCodeGenerator.ts
+Duration: ~5 minutes
+
+**GROUP A COMPLETE** - componentGenerators.ts: 359→104 lines (71% reduction)
+---
+
+## [2026-03-24T00:20:00Z] - Group B Execution (PARALLEL)
+Stories: US-005, US-006, US-007, US-008 (parallel execution)
 ---
 
 ---
@@ -183,6 +201,41 @@ All Group A stories completed:
 
 componentGenerators.ts reduced from 359 lines to 104 lines (255 lines extracted, <200 target achieved)
 Total new tests: 99 (48 + 13 + 12 + 26)
+
+---
+
+## [2026-03-24T23:30:00Z] - US-006
+- **Status**: COMPLETE
+- **What was implemented**:
+  - Created `src/generator/ListenerFactory.ts` (94 lines) with functional exports
+  - Implemented `ListenerType` union type with 10 supported listener types
+  - Functions: `createListenerCode()`, `isListenerTypeSupported()`, `getSupportedListenerTypes()`
+  - Updated `ComponentCodeGenerator.ts` to use ListenerFactory instead of `getListenerCode` from codeHelpers
+  - Fixed pre-existing TypeScript error in `generateCommand.ts` (defaultUri type cast)
+  - Created comprehensive test suite with 39 tests
+- **Files changed**:
+  - `src/generator/ListenerFactory.ts` (new) - 94 lines
+  - `src/generator/ComponentCodeGenerator.ts` (modified) - updated imports, uses ListenerFactory
+  - `src/commands/generateCommand.ts` (modified) - fixed defaultUri type cast
+  - `tests/generator/ListenerFactory.test.ts` (new) - 39 tests
+- **Test coverage**: 39 new tests for ListenerFactory
+  - 10 tests for `createListenerCode` (one per listener type)
+  - 22 tests for `isListenerTypeSupported` (10 true, 12 false cases)
+  - 3 tests for `getSupportedListenerTypes`
+  - 4 tests for output format/indentation
+- **Build/Lint**: `pnpm run compile` passes, `pnpm lint:fix` passes
+- **Commit**: `refactor: US-006 - Create ListenerFactory with Factory Pattern`
+- **Learnings for future iterations**:
+  - Linter doesn't allow classes with only static members - use functional exports instead
+  - Factory pattern replaces switch statements with a lookup object for cleaner code
+  - Pre-existing compilation errors in unrelated files may block validation - fix them if needed
+- **Acceptance Criteria Met**:
+  - ✅ Criar `src/generator/ListenerFactory.ts`
+  - ✅ Implementar `create(type: ListenerType): string` que substitui switch em `getListenerCode`
+  - ✅ Criar `ListenerType` enum/string union para todos os tipos suportados
+  - ✅ Atualizar `ComponentCodeGenerator.ts` para usar `ListenerFactory`
+  - ✅ Typecheck passa
+  - ✅ Criar testes unitários para `ListenerFactory.ts` (39 tests)
 
 ---
 

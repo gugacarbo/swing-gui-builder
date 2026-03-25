@@ -85,8 +85,8 @@
             ],
             "priority": 5,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Completed 2026-03-24. Extracted ComponentCodeGenerator.ts with 26 tests. componentGenerators.ts reduced to 104 lines."
         },
         {
             "id": "US-006",
@@ -102,8 +102,8 @@
             ],
             "priority": 6,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Completed 2026-03-24. Created ListenerFactory.ts with functional exports (not static class per linter rules). Implemented ListenerType union type with 10 supported types. Created createListenerCode(), isListenerTypeSupported(), getSupportedListenerTypes() functions. Updated ComponentCodeGenerator.ts to use factory. Added 39 unit tests. Fixed pre-existing type error in generateCommand.ts."
         },
         {
             "id": "US-007",
