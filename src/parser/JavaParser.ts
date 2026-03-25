@@ -10,8 +10,6 @@ import {
   extractNodeText,
   extractPrimaryFromExpression,
   extractPrimaryPath,
-  extractTypeNameFromLocalVariableDeclaration,
-  extractTypeNameFromUnannType,
   extractVariableDeclarators,
   extractVariableNameFromDeclarator,
   extractVariableReference,
@@ -20,10 +18,14 @@ import {
   getFirstChildNode,
   getFirstTokenImage,
   getSimpleTypeName,
+  parseJavaStringLiteral,
+} from "./CstUtils";
+import {
+  extractTypeNameFromLocalVariableDeclaration,
+  extractTypeNameFromUnannType,
   isGuiRootType,
   isGuiType,
-  parseJavaStringLiteral,
-} from "./JavaParserUtils";
+} from "./JavaTypeUtils";
 import type {
   ParsedGuiComponent,
   ParsedJavaFile,
