@@ -310,3 +310,36 @@ Total new tests: 99 (48 + 13 + 12 + 26)
 
 ---
 
+
+---
+
+## [2026-03-24T23:45:00Z] - US-007
+- **Status**: COMPLETE
+- **What was implemented**:
+  - Created `src/merger/MergeStrategy.ts` (59 lines) with `MergeStrategy` interface
+  - Created `src/merger/MarkerMergeStrategy.ts` (94 lines) implementing marker-based merge
+  - Created `src/merger/HeuristicMergeStrategy.ts` (235 lines) implementing heuristic merge
+  - Refactored `JavaFileMerger.ts` to use Strategy pattern via dependency injection
+  - Reduced `JavaFileMerger.ts` from 410 to 206 lines (-204 lines)
+  - Fixed bug in `MarkerMergeStrategy.canMerge()` - was checking `undefined` instead of `null`
+  - Created comprehensive test suite with 11 tests for both strategies
+- **Files changed**:
+  - `src/merger/MergeStrategy.ts` (new) - 59 lines, interface definition
+  - `src/merger/MarkerMergeStrategy.ts` (new) - 94 lines
+  - `src/merger/HeuristicMergeStrategy.ts` (new) - 235 lines
+  - `src/merger/JavaFileMerger.ts` (modified) - 410→206 lines (-204 lines)
+  - `tests/merger/MergeStrategy.test.ts` (new) - 11 tests
+- **Test coverage**: 11 new tests for MergeStrategy (6 for MarkerMergeStrategy, 5 for HeuristicMergeStrategy)
+- **Build/Lint**: All checks pass (33 merger tests total)
+- **Commit**: `refactor: US-007 - Add MergeStrategy Interface with Strategy Pattern`
+- **Learnings for future iterations**:
+  - `detectMarkers()` returns `null` when no markers are found, not `undefined`
+  - Strategy pattern allows easy extension for new merge strategies
+  - Re-exporting from index file maintains backward compatibility
+- **Acceptance Criteria Met**:
+  - ✅ Criar `MergeStrategy` interface em `src/merger/MergeStrategy.ts`
+  - ✅ Extrair `mergeWithMarkers` e `mergeWithoutMarkers` para classes que implementam a interface
+  - ✅ `JavaFileMerger.ts` usa Strategy via injeção de dependência
+  - ✅ `JavaFileMerger.ts` < 300 linhas (206 lines)
+  - ✅ Typecheck passa
+  - ✅ Criar testes unitários para cada MergeStrategy (11 tests)
