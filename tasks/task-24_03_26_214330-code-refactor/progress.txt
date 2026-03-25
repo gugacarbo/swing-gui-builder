@@ -1,0 +1,58 @@
+=== RALPH ORCHESTRATOR SESSION ===
+Task: task-24_03_26_214330-code-refactor
+Status: RUNNING
+Last Updated: 2026-03-24T22:30:00Z
+Current Group: A
+Current Story: US-002 - Dividir componentGenerators.ts em MenuCodeGenerator.ts
+Parallel Stories: None (sequential due to shared file modifications)
+Attempts: 1/3
+Worker Timeout: 1800s
+
+Execution Summary:
+- Completed: 1 / 10
+- In Progress: US-002
+- Current Group: A (1/4 complete)
+- Failed: 0
+- Blocked: 0
+=== END HEADER ===
+
+## Iteration Log
+
+### Session Started: 2026-03-24T00:00:00Z
+- Task folder: task-24_03_26_214330-code-refactor
+- Total stories: 10
+- Groups: A (US-001..004), B (US-005..008), C (US-009..010)
+- Note: Group A stories modify shared file `componentGenerators.ts`, will run sequentially
+
+---
+
+## Codebase Patterns
+- Predicates extracted to `src/utils/ComponentPredicates.ts` - use this file for all `is*Component` type guards
+- `supportsTextConstructor` moved to ComponentPredicates.ts but re-exported from codeHelpers.ts for backward compatibility
+- All component type definitions come from `@shared/types/canvas` via `ComponentModel`
+
+---
+
+## [2026-03-24T22:27:00Z] - US-001
+- **Status**: COMPLETE
+- **What was implemented**:
+  - Created `src/utils/ComponentPredicates.ts` with all 21 type guard predicates
+  - Moved predicates: isButtonComponent, isTextFieldComponent, isLabelComponent, isComboBoxComponent, isListComponent, isTableComponent, isTreeComponent, isPanelComponent, isMenuComponent, isMenuItemComponent, isCheckBoxComponent, isRadioButtonComponent, isScrollPaneComponent, isToolBarComponent, isMenuBarComponent
+  - Added additional predicates for complete coverage: isPasswordFieldComponent, isTextAreaComponent, isProgressBarComponent, isSliderComponent, isSpinnerComponent, isSeparatorComponent
+  - Moved isHierarchicalMenuComponent and supportsTextConstructor to shared file
+  - Removed duplicates from componentGenerators.ts and codeHelpers.ts
+  - Updated imports in JavaGenerator.ts
+- **Files changed**:
+  - `src/utils/ComponentPredicates.ts` (new)
+  - `src/generator/componentGenerators.ts` (removed predicates, added import)
+  - `src/generator/codeHelpers.ts` (removed predicates, added import and re-export)
+  - `src/generator/JavaGenerator.ts` (updated import location)
+  - `tests/utils/ComponentPredicates.test.ts` (new)
+- **Test coverage**: 100% for ComponentPredicates.ts
+- **Commit**: `refactor: US-001 - Extract ComponentPredicates.ts`
+- **Learnings for future iterations**:
+  - When extracting shared utilities, check all files that import from the source to update imports
+  - Re-export from the original location for backward compatibility when the function is used in multiple places
+  - Test files may need import updates when moving functions to new locations
+
+---

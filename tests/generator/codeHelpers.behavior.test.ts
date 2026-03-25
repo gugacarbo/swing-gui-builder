@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentModel } from "../../src/components/ComponentModel";
 import {
+  applyInlineStyleCode,
+  capitalize,
   DEFAULT_BG,
   DEFAULT_FONT_FAMILY,
   DEFAULT_FONT_SIZE,
   DEFAULT_TEXT_COLOR,
-  applyInlineStyleCode,
-  capitalize,
   getComponentInitCode,
   getComponentPropsCode,
   getListenerCode,
@@ -237,7 +237,11 @@ describe("codeHelpers additional behavior coverage", () => {
 
     const components: Record<keyof typeof byType, ComponentModel> = {
       Button: createComponent({ id: "button", type: "Button", variableName: "button1" }),
-      TextField: createComponent({ id: "textField", type: "TextField", variableName: "textField1" }),
+      TextField: createComponent({
+        id: "textField",
+        type: "TextField",
+        variableName: "textField1",
+      }),
       PasswordField: createComponent({
         id: "password",
         type: "PasswordField",
@@ -252,9 +256,7 @@ describe("codeHelpers additional behavior coverage", () => {
       Spinner: createComponent({ id: "spinner", type: "Spinner", variableName: "spinner1" }),
     };
 
-    for (const [type, expected] of Object.entries(byType) as Array<
-      [keyof typeof byType, string]
-    >) {
+    for (const [type, expected] of Object.entries(byType) as Array<[keyof typeof byType, string]>) {
       expect(getListenerCode(components[type], "onAction")).toBe(expected);
     }
 

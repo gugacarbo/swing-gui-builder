@@ -94,6 +94,14 @@
         "title": "Swing GUI Builder: Open"
       },
       {
+        "command": "swingGuiBuilder.openFromJava",
+        "title": "Swing GUI Builder: Open from Java File"
+      },
+      {
+        "command": "swingGuiBuilder.restoreFromBackup",
+        "title": "Swing GUI Builder: Restore from Backup"
+      },
+      {
         "command": "swingGuiBuilder.initConfig",
         "title": "Swing GUI Builder: Init Project Config"
       }
@@ -234,5 +242,8 @@
         "url": "./schemas/swingbuilder.schema.json"
       }
     ]
+  },
+  "dependencies": {
+    "java-parser": "^3.0.1"
   }
 }

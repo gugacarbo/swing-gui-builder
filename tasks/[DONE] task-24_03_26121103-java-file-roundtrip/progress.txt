@@ -1,0 +1,358 @@
+=== RALPH ORCHESTRATOR SESSION ===
+Task: task-24_03_26121103-java-file-roundtrip
+Status: COMPLETED
+Last Updated: 2026-03-24T17:07:01Z
+Current Group: C
+Current Story: US-009 - Add visual indicator for round-trip files
+Parallel Stories: None
+Attempts: 1/3
+Worker Timeout: 1800
+
+Execution Summary:
+- Completed: 10 / 10
+- In Progress: None
+- Current Group: C (3/3 complete)
+- Failed: 0
+- Blocked: 0
+=== END HEADER ===
+
+## [2026-03-24T15:53:59Z] - US-003
+Story: US-003 - Implement marker-based code preservation system
+Status: COMPLETE
+
+Changed files:
+- src/merger/MarkerManager.ts
+- tests/merger/MarkerManager.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- npm run typecheck ✅
+- npm run test -- tests/merger/MarkerManager.test.ts ✅ (5 tests passed)
+- biome check src/merger/MarkerManager.ts tests/merger/MarkerManager.test.ts ✅
+
+Observable results:
+- Marker format implemented as `// @swingbuilder:generated:{section} begin/end`.
+- `MarkerManager` can detect existing marker regions via `detectMarkers(content)`.
+- `MarkerManager` can insert markers around provided generated ranges via `insertMarkers(content, ranges)`.
+- `MarkerManager` supports replacing section content between markers via `replaceBetweenMarkers(content, section, newContent)`.
+- Supported sections: `fields`, `constructor`, `methods`.
+
+Acceptance Criteria Status:
+- ✅ Define marker format: `// @swingbuilder:generated:{section} begin/end`
+- ✅ Implement MarkerManager to detect existing markers in files
+- ✅ Implement MarkerManager to insert markers around generated sections
+- ✅ Support sections: fields, constructor, methods
+- ✅ Typecheck passes
+---
+
+## [2026-03-24T16:18:59Z] - US-002
+Story: US-002 - Convert parsed data to CanvasState
+Status: COMPLETE
+
+Changed files:
+- src/parser/toCanvasState.ts
+- src/parser/JavaParserUtils.ts
+- src/parser/JavaParser.ts
+- tests/parser/toCanvasState.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- pnpm exec biome check src/parser/JavaParserUtils.ts src/parser/JavaParser.ts src/parser/toCanvasState.ts tests/parser/toCanvasState.test.ts ✅
+- pnpm run typecheck ✅
+- pnpm exec vitest run tests/parser/toCanvasState.test.ts ✅ (10 tests passed)
+
+Observable results:
+- Swing/AWT parsed types are mapped to Canvas component types (e.g., JButton→Button, JLabel→Label, JPanel→Panel).
+- Frame title and dimensions are extracted from parsed method calls (setTitle, setSize, setBounds/setPreferredSize fallback).
+- Component IDs preserve parsed Java variable names.
+- Nested relationships are converted to Canvas hierarchy (parentId + children + parentOffset).
+
+Acceptance Criteria Status:
+- ✅ Map Swing types to component types (JButton → button, JLabel → label, etc.)
+- ✅ Extract frame title and dimensions from constructor or class definition
+- ✅ Preserve variable names as component IDs
+- ✅ Handle nested components (panels containing other components)
+- ✅ Typecheck passes
+---
+
+## [2026-03-24T16:24:54Z] - US-001
+Story: US-001 - Parse Java file to extract GUI components
+Status: COMPLETE
+
+Changed files:
+- package.json
+- pnpm-lock.yaml
+- src/parser/types.ts
+- src/parser/JavaParserUtils.ts
+- src/parser/JavaParser.ts
+- tests/parser/JavaParser.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- npx biome check src/parser tests/parser ✅
+- npm run typecheck ✅
+- npm run test -- --run tests/parser/JavaParser.test.ts ✅ (4 tests passed)
+- npm run test ✅ (28 test files / 203 tests passed)
+
+Observable results:
+- `.java` source is parsed using `java-parser` CST (`parse()`), with parser module implemented in `src/parser/JavaParser.ts`.
+- GUI class detection is implemented via inheritance analysis (`extends JFrame`, `extends JPanel`, and other GUI roots).
+- Variable symbol table is built from field declarations, local declarations, and assignment-based instantiations.
+- Component properties are extracted from method invocations:
+  - `setBounds(x, y, width, height)` → bounds
+  - `setText(...)` / constructor literal → text
+  - `setLayout(...)` (including `null` and `new Layout(...)`) → layout
+- Parent-child relationships are detected via `add(...)` calls for variable containers, `this.add(...)`, and `getContentPane().add(...)`.
+
+Acceptance Criteria Status:
+- ✅ Parse .java file content using java-parser
+- ✅ Detect GUI components by analyzing class inheritance (extends JFrame, JPanel, etc.)
+- ✅ Build variable symbol table mapping variable names to their types
+- ✅ Extract component properties: bounds (x, y, width, height), text, layout
+- ✅ Detect parent-child relationships via add() calls
+- ✅ Typecheck passes
+---
+
+## [2026-03-24T16:32:27Z] - US-007
+Story: US-007 - Extend CanvasPanel to track source file
+Status: COMPLETE
+
+Changed files:
+- src/canvas/CanvasPanel.ts
+- tests/canvas/CanvasPanel.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- npm run typecheck ✅
+- npm run test -- tests/canvas/CanvasPanel.test.ts ✅ (39 tests passed)
+- npm run test ✅ (29 test files / 208 tests passed)
+
+Observable results:
+- CanvasPanel now has a private `sourceFilePath` session property.
+- Added `setSourceFile(path)` to update tracked source file path.
+- Added `getSourceFile()` to read tracked source file path.
+- Source file path remains available after `loadState(...)`, preserving it for session round-trip flows.
+
+Acceptance Criteria Status:
+- ✅ Add sourceFilePath property to CanvasPanel
+- ✅ Add setSourceFile(path) method
+- ✅ Add getSourceFile() method
+- ✅ Persist source path during session
+- ✅ Typecheck passes
+---
+
+## [2026-03-24T16:34:48Z] - US-004
+Story: US-004 - Modify JavaGenerator to emit markers
+Status: COMPLETE
+
+Changed files:
+- src/generator/JavaGenerator.ts
+- tests/generator/JavaGenerator.markers.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- npx biome check --write src/generator/JavaGenerator.ts tests/generator/JavaGenerator.markers.test.ts ✅
+- npm run typecheck ✅
+- npm run test -- tests/generator/JavaGenerator.markers.test.ts tests/generator ✅ (13 test files / 92 tests passed)
+- npm run build ✅
+
+Observable results:
+- Main frame generation now emits `// @swingbuilder:generated:fields begin/end` around field declarations.
+- Constructor body statements are wrapped by `// @swingbuilder:generated:constructor begin/end` inside constructor braces, preserving valid Java structure.
+- Method stub section is wrapped by `// @swingbuilder:generated:methods begin/end` before the `main` method.
+- Added marker-focused tests validating marker ordering/nesting and Java parseability via `java-parser`.
+
+Acceptance Criteria Status:
+- ✅ Wrap field declarations with field markers
+- ✅ Wrap constructor body with constructor markers
+- ✅ Wrap method stubs with method markers
+- ✅ Maintain valid Java syntax with properly nested markers
+- ✅ Typecheck passes
+---
+
+## [2026-03-24T16:39:30Z] - US-005
+Story: US-005 - Implement JavaFileMerger for round-trip save
+Status: COMPLETE
+
+Changed files:
+- src/merger/JavaFileMerger.ts
+- tests/merger/JavaFileMerger.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- pnpm exec biome check --write src/merger/JavaFileMerger.ts tests/merger/JavaFileMerger.test.ts ✅
+- npm run typecheck ✅
+- npm run test -- tests/merger/JavaFileMerger.test.ts ✅ (6 tests passed)
+- npm run test ✅ (31 test files / 218 tests passed)
+- npm run build ✅
+
+Observable results:
+- Implemented `mergeWithPreservation()` in `src/merger/JavaFileMerger.ts` with marker-first behavior using `MarkerManager.detectMarkers` and `replaceBetweenMarkers`, replacing only matching marker sections.
+- Added heuristic GUI detection (`detectGuiCodeRegions`) for non-marked files based on Swing fields/instantiation, `setBounds`, `add(...)`, and layout/frame setup calls.
+- Heuristic merge path now replaces only detected GUI regions and preserves code outside those regions.
+- `mergeJavaFile()` now writes a timestamped `.bak` backup before overwriting merged content.
+- Merge result includes explicit `preservedSections` and `replacedSections` reporting for traceability.
+
+Acceptance Criteria Status:
+- ✅ For files with markers: replace only content between matching markers
+- ✅ For files without markers: use heuristic detection to find GUI code regions
+- ✅ Preserve all code outside GUI-related statements
+- ✅ Create `.bak` backup before overwriting
+- ✅ Report which sections were preserved in merge result
+- ✅ Typecheck passes
+---
+## [2026-03-24T16:40:25Z] - US-006
+Story: US-006 - Create Open from Java File command
+Status: COMPLETE
+
+Changed files:
+- src/commands/openFromJavaCommand.ts
+- src/extension.ts
+- package.json
+- tests/commands/openFromJavaCommand.test.ts
+- tests/extension.test.ts
+- README.md
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- npx biome check src/commands/openFromJavaCommand.ts src/extension.ts tests/commands/openFromJavaCommand.test.ts tests/extension.test.ts package.json ✅
+- npm run typecheck ✅
+- npm run test -- tests/commands/openFromJavaCommand.test.ts tests/extension.test.ts ✅ (16 tests passed)
+- npm run test ✅ (31 test files / 218 tests passed)
+- npm run build ✅
+
+Observable results:
+- Added command registration for `swingGuiBuilder.openFromJava` in extension activation and contributes commands.
+- New command opens a file picker restricted to `.java`, reads selected file, parses it with `parseJavaFile`, converts with `parsedToCanvasState`, and loads the canvas state.
+- Command tracks source path for round-trip save by calling `CanvasPanel.currentPanel.setSourceFile(selectedFile.fsPath)`.
+- Output channel now logs both successful Java file opens and parse/open errors.
+- Added focused unit tests covering command registration/filtering, success flow (parse+load+source tracking), and error handling.
+
+Acceptance Criteria Status:
+- ✅ Register VS Code command swingGuiBuilder.openFromJava
+- ✅ Show file picker filtered to .java files
+- ✅ Parse selected file and display on canvas
+- ✅ Track source file path for later merging
+- ✅ Display success/error in output channel
+- ✅ Typecheck passes
+---
+## [2026-03-24T17:01:10Z] - US-008
+Story: US-008 - Modify generate command for round-trip mode
+Status: COMPLETE
+
+Changed files:
+- src/commands/generateCommand.ts
+- tests/commands/generateCommand.branches.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- npx biome check src/commands/generateCommand.ts tests/commands/generateCommand.branches.test.ts ✅
+- npm run typecheck ✅
+- npm run test -- tests/commands/generateCommand.branches.test.ts tests/commands/generateCommand.test.ts ✅ (15 tests passed)
+- npm run test ✅ (31 test files / 220 tests passed)
+- npm run build ✅
+- npm run lint ⚠️ (pre-existing formatter issue in src/generator/codeHelpers.ts)
+
+Observable results:
+- Generate command now detects round-trip mode via `CanvasPanel.currentPanel.getSourceFile()`.
+- In round-trip mode, main frame output merges through `mergeJavaFile(sourceFilePath, generatedContent)` instead of overwrite.
+- If tracked source file is missing, command falls back to creating/writing the new file directly.
+- After successful merge, command prompts `Preview Diff` and opens `vscode.diff` using backup and merged file URIs.
+- Output summary includes merged-file count suffix, e.g. `(1 merged with round-trip mode)`.
+- Added branch tests for merge path + diff preview and missing-source fallback path.
+
+Browser verification (dev-browser skill):
+- Started dev-browser server and webview dev server, loaded `http://127.0.0.1:4173/`.
+- Injected `acquireVsCodeApi` stub and clicked toolbar Generate.
+- Captured posted message evidence: `{ type: "toolbarCommand", command: "generate" }`.
+- Additional evidence: Preview click also emitted `{ type: "toolbarCommand", command: "previewCode" }`.
+- Screenshots captured: `.agents/skills/dev-browser/tmp/us008-generate-before.png` and `.agents/skills/dev-browser/tmp/us008-generate-after.png`.
+
+Acceptance Criteria Status:
+- ✅ Detect when sourceFilePath is set (round-trip mode)
+- ✅ Use JavaFileMerger instead of file overwrite when in round-trip mode
+- ✅ Fall back to normal overwrite for new files
+- ✅ Show diff preview option after merge
+- ✅ Typecheck passes
+- ✅ Verify in browser using dev-browser skill
+---
+## [2026-03-24T17:05:40Z] - US-010
+Story: US-010 - Add backup and restore system
+Status: COMPLETE
+
+Changed files:
+- src/commands/restoreFromBackupCommand.ts
+- src/commands/openFromJavaCommand.ts
+- src/merger/JavaFileMerger.ts
+- src/extension.ts
+- package.json
+- README.md
+- tests/commands/restoreFromBackupCommand.test.ts
+- tests/commands/openFromJavaCommand.test.ts
+- tests/extension.test.ts
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- pnpm exec biome check src/commands/openFromJavaCommand.ts src/commands/restoreFromBackupCommand.ts src/merger/JavaFileMerger.ts src/extension.ts tests/commands/openFromJavaCommand.test.ts tests/commands/restoreFromBackupCommand.test.ts tests/extension.test.ts README.md package.json ✅
+- npm run typecheck ✅
+- npm run test -- tests/commands/openFromJavaCommand.test.ts tests/commands/restoreFromBackupCommand.test.ts tests/extension.test.ts tests/merger/JavaFileMerger.test.ts tests/commands/generateCommand.branches.test.ts ✅ (45 tests passed)
+- npm run build ✅
+- npm run lint ⚠️ (pre-existing formatter issue in src/generator/codeHelpers.ts)
+
+Observable results:
+- Added `swingGuiBuilder.restoreFromBackup` command with two flows: restore latest backup for tracked round-trip source, or pick a `.bak` file and infer source path for manual restore.
+- Reused backup naming semantics from `JavaFileMerger` via exported helpers (`DEFAULT_BACKUP_EXTENSION`, `isBackupFileNameForSource`, `extractBackupTimestampToken`) to discover correct backup candidates.
+- `openFromJava` parse-error path now offers `Restore Backup` and executes restore flow with output channel logging and graceful fallback to existing error message.
+- Restore flow follows existing output/error handling patterns (appendLine diagnostics + VS Code info/warn/error messages).
+
+Acceptance Criteria Status:
+- ✅ Create `.bak` file before any merge operation (existing `mergeJavaFile` backup flow retained and reused)
+- ✅ Implement restore from backup command
+- ✅ Offer to restore from backup on parse error
+- ✅ Typecheck passes
+---
+## [2026-03-24T17:07:01Z] - US-009
+Story: US-009 - Add visual indicator for round-trip files
+Status: COMPLETE
+
+Changed files:
+- shared/types/canvas.ts
+- src/canvas/CanvasPanel.ts
+- src/commands/openFromJavaCommand.ts
+- webview-app/src/App.tsx
+- webview-app/src/hooks/useExtensionListener.ts
+- webview-app/src/schemas/messages.ts
+- webview-app/src/schemas/parsers.ts
+- webview-app/src/types/messages.ts
+- tests/canvas/CanvasPanel.test.ts
+- tests/commands/openFromJavaCommand.test.ts
+- webview-app/tests/schemas/parsers.test.ts
+- webview-app/tests/components/App.frame-config.test.tsx
+- tasks/task-24_03_26121103-java-file-roundtrip/prd.json
+
+Commands run:
+- npx biome check src/canvas/CanvasPanel.ts src/commands/openFromJavaCommand.ts tests/canvas/CanvasPanel.test.ts tests/commands/openFromJavaCommand.test.ts ✅
+- cd webview-app && npx biome check src/App.tsx src/hooks/useExtensionListener.ts src/schemas/messages.ts src/schemas/parsers.ts src/types/messages.ts tests/components/App.frame-config.test.tsx tests/schemas/parsers.test.ts ✅
+- npm run typecheck ✅
+- npm run test -- --run tests/canvas/CanvasPanel.test.ts tests/commands/openFromJavaCommand.test.ts ✅ (47 tests passed)
+- cd webview-app && npm run test -- tests/schemas/parsers.test.ts tests/components/App.frame-config.test.tsx ✅ (36 tests passed)
+- npm run lint ⚠️ (pre-existing formatter issue in src/generator/codeHelpers.ts)
+
+Observable results:
+- CanvasPanel now carries round-trip metadata (`hasPreservedCode`, `sourceFilePath`) in CanvasState, sends `roundTripStatus` to webview, and updates panel title with source file name.
+- Open-from-Java flow now explicitly sets round-trip preserved status after source file tracking.
+- Webview listener/schema/types now accept `roundTripStatus` and App renders unobtrusive round-trip badge + source file name in toolbar header area.
+- Added tests validating extension message handling, title/status state propagation, and round-trip UI rendering.
+
+Browser verification (dev-browser skill):
+- Started dev-browser (headless) and loaded `http://127.0.0.1:4173/`.
+- Before dispatching status message: no round-trip badge and no source filename in page text.
+- After dispatching `{type:"roundTripStatus", hasPreservedCode:true, sourceFileName:"MainWindow.java"}`: page text includes `ROUND-TRIP` and `MainWindow.java`.
+- Evidence screenshots: `.agents/skills/dev-browser/tmp/us009-roundtrip-before.png` and `.agents/skills/dev-browser/tmp/us009-roundtrip-after.png`.
+
+Acceptance Criteria Status:
+- ✅ Show badge/indicator in webview when hasPreservedCode is true
+- ✅ Display source file name in panel title or status
+- ✅ Typecheck passes
+- ✅ Verify in browser using dev-browser skill
+---

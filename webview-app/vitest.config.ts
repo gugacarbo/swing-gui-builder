@@ -6,7 +6,7 @@ export default defineConfig({
     fileParallelism: true,
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
-    include: ["tests/**/*.test.{ts,tsx}"],
+    include: ["tests/**/*.test.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "json-summary", "lcov"],

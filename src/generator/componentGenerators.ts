@@ -1,5 +1,12 @@
 import type { ComponentModel } from "../components/ComponentModel";
 import {
+  isMenuBarComponent,
+  isMenuComponent,
+  isMenuItemComponent,
+  isPanelComponent,
+  isToolBarComponent,
+} from "../utils/ComponentPredicates";
+import {
   applyInlineStyleCode,
   escapeJava,
   getComponentInitCode,
@@ -7,30 +14,6 @@ import {
   getListenerCode,
 } from "./codeHelpers";
 import { getComponentSwingType } from "./swingMappings";
-
-function getComponentType(comp: ComponentModel): string {
-  return comp.type as string;
-}
-
-function isMenuBarComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "MenuBar";
-}
-
-function isMenuComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "Menu";
-}
-
-function isMenuItemComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "MenuItem";
-}
-
-function isToolBarComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "ToolBar";
-}
-
-function isPanelComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "Panel";
-}
 
 function getOrderedChildren(
   parent: ComponentModel,

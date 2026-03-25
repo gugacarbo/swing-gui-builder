@@ -56,6 +56,8 @@ Search for **Swing GUI Builder** in the VS Code Extensions view (`Ctrl+Shift+X`)
 | `Swing GUI Builder: Generate`            | Generates Java source files from the current canvas layout       |
 | `Swing GUI Builder: Save`                | Saves the canvas state to a `.swingbuilder-layout.json` file     |
 | `Swing GUI Builder: Open`                | Loads a previously saved canvas from `.swingbuilder-layout.json` |
+| `Swing GUI Builder: Open from Java File` | Parses a `.java` GUI file and opens it directly on the canvas    |
+| `Swing GUI Builder: Restore from Backup` | Restores a `.java` file from the latest `.bak` backup            |
 | `Swing GUI Builder: Init Project Config` | Creates a `.swingbuilder.json` template in the workspace root    |
 
 ## Configuration

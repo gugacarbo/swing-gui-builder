@@ -418,7 +418,9 @@ export function moveComponentInHierarchy(
   const reorderedTargetChildren = [...targetChildrenBeforeInsert];
   reorderedTargetChildren.splice(insertionIndex, 0, componentId);
 
-  const currentOrder = currentParentId ? currentChildren : getOrderedRootIds(components, componentsById);
+  const currentOrder = currentParentId
+    ? currentChildren
+    : getOrderedRootIds(components, componentsById);
   const noReorderChange = sameParent && areEqualLists(currentOrder, reorderedTargetChildren);
   if (noReorderChange && isAssignedToParent(component, nextParentId)) {
     return components;
@@ -496,12 +498,17 @@ export function moveComponentInHierarchy(
     .map((id) => updatedComponents.find((candidate) => candidate.id === id))
     .filter((candidate): candidate is CanvasComponent => candidate !== undefined);
   const reorderedRootIds = new Set(reorderedRootComponents.map((candidate) => candidate.id));
-  const nonRootComponents = updatedComponents.filter((candidate) => !reorderedRootIds.has(candidate.id));
-  const updatedComponentsById = new Map(updatedComponents.map((candidate) => [candidate.id, candidate]));
+  const nonRootComponents = updatedComponents.filter(
+    (candidate) => !reorderedRootIds.has(candidate.id),
+  );
+  const updatedComponentsById = new Map(
+    updatedComponents.map((candidate) => [candidate.id, candidate]),
+  );
   const rootInsertionIndexes = updatedComponents
     .map((candidate, index) => ({ candidate, index }))
     .filter(
-      ({ candidate }) => resolveParentId(candidate.id, updatedComponents, updatedComponentsById) === null,
+      ({ candidate }) =>
+        resolveParentId(candidate.id, updatedComponents, updatedComponentsById) === null,
     )
     .map(({ index }) => index);
 

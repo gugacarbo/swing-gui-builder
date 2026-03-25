@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   workspaceFolders: [{ uri: { fsPath: "C:\\workspace" } }] as
     | Array<{ uri: { fsPath: string } }>
     | undefined,
+  executeCommand: vi.fn<(command: string, ...args: unknown[]) => Promise<void>>(async () => {}),
   createDirectory: vi.fn<(uri: { fsPath: string }) => Promise<void>>(async () => {}),
   stat: vi.fn<(uri: { fsPath: string }) => Promise<void>>(async () => {
     throw new Error("File not found");
@@ -19,7 +20,9 @@ const mocks = vi.hoisted(() => ({
   showWarningMessage: vi.fn<(message: string, ...items: string[]) => Promise<string | undefined>>(
     async () => undefined,
   ),
-  showInformationMessage: vi.fn(),
+  showInformationMessage: vi.fn<
+    (message: string, ...items: string[]) => Promise<string | undefined>
+  >(async () => undefined),
   showInputBox: vi.fn(async () => "src/main/java"),
   showOpenDialog: vi.fn<(options: unknown) => Promise<Array<{ fsPath: string }> | undefined>>(
     async () => undefined,
@@ -36,6 +39,29 @@ const mocks = vi.hoisted(() => ({
   >(() => [
     { fileName: "MainFrame.java", content: "public class MainFrame {}", subfolder: undefined },
   ]),
+  mergeJavaFile: vi.fn<
+    (
+      filePath: string,
+      generatedContent: string,
+    ) => Promise<{
+      success: boolean;
+      mergedContent: string;
+      hadMarkers: boolean;
+      replacedSections: string[];
+      preservedSections: string[];
+      detectedGuiRegions: Array<{ startLine: number; endLine: number; reasons: string[] }>;
+      backupPath?: string;
+      message?: string;
+    }>
+  >(async (_filePath: string, generatedContent: string) => ({
+    success: true,
+    mergedContent: generatedContent,
+    hadMarkers: true,
+    replacedSections: ["fields", "constructor", "methods"],
+    preservedSections: ["outside-markers"],
+    detectedGuiRegions: [],
+    backupPath: undefined,
+  })),
 }));
 
 vi.mock("vscode", () => ({
@@ -44,11 +70,13 @@ vi.mock("vscode", () => ({
       mocks.commandHandlers.set(commandId, callback);
       return { dispose: vi.fn() };
     }),
+    executeCommand: mocks.executeCommand,
   },
   Uri: {
     joinPath: (baseUri: { fsPath: string }, ...paths: string[]) => ({
       fsPath: path.join(baseUri.fsPath, ...paths),
     }),
+    file: (fsPath: string) => ({ fsPath }),
   },
   workspace: {
     get workspaceFolders() {
@@ -91,6 +119,10 @@ vi.mock("../../src/utils/JavaPackageInference", () => ({
 
 vi.mock("../../src/generator/JavaGenerator", () => ({
   generateJavaFiles: mocks.generateJavaFiles,
+}));
+
+vi.mock("../../src/merger/JavaFileMerger", () => ({
+  mergeJavaFile: mocks.mergeJavaFile,
 }));
 
 import { CanvasPanel } from "../../src/canvas/CanvasPanel";
@@ -157,6 +189,7 @@ describe("registerGenerateCommand branch coverage", () => {
     mocks.showInputBox.mockResolvedValue("src/main/java");
     mocks.showOpenDialog.mockResolvedValue(undefined);
     mocks.showWarningMessage.mockResolvedValue(undefined);
+    mocks.showInformationMessage.mockResolvedValue(undefined);
     mocks.getOutputDirectory.mockReturnValue("src/main/java");
     mocks.detectJavaProject.mockReturnValue(undefined);
     mocks.resolveOutputDirectory.mockImplementation((configuredDir: string) => configuredDir);
@@ -164,6 +197,16 @@ describe("registerGenerateCommand branch coverage", () => {
     mocks.generateJavaFiles.mockReturnValue([
       { fileName: "MainFrame.java", content: "public class MainFrame {}" },
     ]);
+    mocks.mergeJavaFile.mockResolvedValue({
+      success: true,
+      mergedContent: "public class MainFrame {}",
+      hadMarkers: true,
+      replacedSections: ["fields", "constructor", "methods"],
+      preservedSections: ["outside-markers"],
+      detectedGuiRegions: [],
+      backupPath: undefined,
+    });
+    mocks.executeCommand.mockResolvedValue(undefined);
 
     CanvasPanel.currentPanel = {
       getCanvasState: () =>
@@ -175,6 +218,7 @@ describe("registerGenerateCommand branch coverage", () => {
             text: "Generate",
           }),
         ]),
+      getSourceFile: () => undefined,
     } as never;
   });
 
@@ -379,5 +423,103 @@ describe("registerGenerateCommand branch coverage", () => {
     expect(mocks.showInputBox).not.toHaveBeenCalled();
     // Directory should be created
     expect(mocks.createDirectory).toHaveBeenCalled();
+  });
+
+  it("uses JavaFileMerger in round-trip mode and offers diff preview", async () => {
+    const sourcePath = "C:\\workspace\\src\\ui\\BranchCoverageFrame.java";
+    const backupPath = `${sourcePath}.2026-03-24T10-20-30-400Z.bak`;
+    CanvasPanel.currentPanel = {
+      getCanvasState: () =>
+        createState([
+          createComponent({
+            id: "button-1",
+            type: "Button",
+            variableName: "button1",
+            text: "Generate",
+          }),
+        ]),
+      getSourceFile: () => sourcePath,
+    } as never;
+
+    mocks.generateJavaFiles.mockReturnValue([
+      {
+        fileName: "BranchCoverageFrame.java",
+        content: "public class BranchCoverageFrame {}",
+      },
+    ]);
+    mocks.stat.mockResolvedValue(undefined);
+    mocks.mergeJavaFile.mockResolvedValue({
+      success: true,
+      mergedContent: "public class BranchCoverageFrame {}",
+      hadMarkers: true,
+      replacedSections: ["fields", "constructor", "methods"],
+      preservedSections: ["outside-markers"],
+      detectedGuiRegions: [],
+      backupPath,
+    });
+    mocks.showInformationMessage.mockResolvedValue(undefined);
+    mocks.showInformationMessage.mockResolvedValueOnce("Preview Diff");
+    const { handler } = registerAndGetHandler();
+
+    await handler();
+
+    expect(mocks.mergeJavaFile).toHaveBeenCalledWith(
+      sourcePath,
+      "public class BranchCoverageFrame {}",
+    );
+    expect(mocks.executeCommand).toHaveBeenCalledWith(
+      "vscode.diff",
+      { fsPath: backupPath },
+      { fsPath: sourcePath },
+      "Round-trip merge: BranchCoverageFrame.java",
+    );
+    expect(mocks.writeFile).not.toHaveBeenCalled();
+    expect(mocks.showInformationMessage).toHaveBeenCalledWith(
+      "Merged generated code into BranchCoverageFrame.java.",
+      "Preview Diff",
+      "Continue",
+    );
+    expect(mocks.showInformationMessage).toHaveBeenCalledWith(
+      "Generated 1 Java file(s) in src/main/java (1 merged with round-trip mode)",
+    );
+  });
+
+  it("falls back to writing new file when round-trip source file does not exist", async () => {
+    const sourcePath = "C:\\workspace\\src\\ui\\BranchCoverageFrame.java";
+    CanvasPanel.currentPanel = {
+      getCanvasState: () =>
+        createState([
+          createComponent({
+            id: "button-1",
+            type: "Button",
+            variableName: "button1",
+            text: "Generate",
+          }),
+        ]),
+      getSourceFile: () => sourcePath,
+    } as never;
+
+    mocks.generateJavaFiles.mockReturnValue([
+      {
+        fileName: "BranchCoverageFrame.java",
+        content: "public class BranchCoverageFrame {}",
+      },
+    ]);
+    mocks.stat.mockRejectedValue(new Error("File not found"));
+    const { handler, outputChannel } = registerAndGetHandler();
+
+    await handler();
+
+    expect(mocks.mergeJavaFile).not.toHaveBeenCalled();
+    expect(mocks.createDirectory).toHaveBeenCalledWith({
+      fsPath: path.dirname(sourcePath),
+    });
+    expect(mocks.writeFile).toHaveBeenCalledWith(
+      { fsPath: sourcePath },
+      Buffer.from("public class BranchCoverageFrame {}", "utf-8"),
+    );
+    expect(outputChannel.appendLine).toHaveBeenCalledWith(
+      `Round-trip source file not found. Created new file: ${sourcePath}`,
+    );
   });
 });

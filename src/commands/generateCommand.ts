@@ -3,8 +3,15 @@ import * as vscode from "vscode";
 import { CanvasPanel } from "../canvas/CanvasPanel";
 import { getOutputDirectory } from "../config/ConfigReader";
 import { generateJavaFiles } from "../generator/JavaGenerator";
+import { mergeJavaFile } from "../merger/JavaFileMerger";
 import { inferJavaPackage, resolveOutputDirectory } from "../utils/JavaPackageInference";
 import { detectJavaProject } from "../utils/JavaProjectDetector";
+
+function getFileName(filePath: string): string {
+  const normalizedPath = filePath.replace(/\\/g, "/");
+  const segments = normalizedPath.split("/").filter(Boolean);
+  return segments.length > 0 ? segments[segments.length - 1] : filePath;
+}
 
 export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vscode.Disposable {
   return vscode.commands.registerCommand("swingGuiBuilder.generate", async () => {
@@ -74,9 +81,75 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
     const javaPackage = inferJavaPackage(outputDir, projectStructure);
 
     const generatedFiles = generateJavaFiles(state, javaPackage);
+    const sourceFilePath = CanvasPanel.currentPanel.getSourceFile?.();
+    const roundTripMainFileName = `${state.className}.java`;
     let overwriteAll = false;
+    let mergedFiles = 0;
 
     for (const file of generatedFiles) {
+      if (sourceFilePath && file.fileName === roundTripMainFileName && !file.subfolder) {
+        const sourceFileUri = vscode.Uri.file(sourceFilePath);
+        const sourceFileName = getFileName(sourceFilePath);
+        let sourceFileExists = false;
+
+        try {
+          await vscode.workspace.fs.stat(sourceFileUri);
+          sourceFileExists = true;
+        } catch (_) {
+          sourceFileExists = false;
+        }
+
+        if (sourceFileExists) {
+          const mergeResult = await mergeJavaFile(sourceFilePath, file.content);
+          if (!mergeResult.success) {
+            const mergeMessage = mergeResult.message ?? "No mergeable sections were detected.";
+            outputChannel.appendLine(
+              `Warning: Could not merge round-trip file ${sourceFilePath}: ${mergeMessage}`,
+            );
+            vscode.window.showWarningMessage(
+              `Could not merge generated code into ${sourceFileName}: ${mergeMessage}`,
+            );
+            continue;
+          }
+
+          mergedFiles += 1;
+          outputChannel.appendLine(`Merged generated code into ${sourceFilePath}`);
+          if (mergeResult.backupPath) {
+            outputChannel.appendLine(`Created backup: ${mergeResult.backupPath}`);
+          }
+
+          const previewChoice = await vscode.window.showInformationMessage(
+            `Merged generated code into ${sourceFileName}.`,
+            "Preview Diff",
+            "Continue",
+          );
+
+          if (previewChoice === "Preview Diff") {
+            if (!mergeResult.backupPath) {
+              vscode.window.showWarningMessage(
+                "Diff preview unavailable because no backup was created for this merge.",
+              );
+            } else {
+              await vscode.commands.executeCommand(
+                "vscode.diff",
+                vscode.Uri.file(mergeResult.backupPath),
+                sourceFileUri,
+                `Round-trip merge: ${sourceFileName}`,
+              );
+            }
+          }
+
+          continue;
+        }
+
+        await vscode.workspace.fs.createDirectory(vscode.Uri.file(path.dirname(sourceFilePath)));
+        await vscode.workspace.fs.writeFile(sourceFileUri, Buffer.from(file.content, "utf-8"));
+        outputChannel.appendLine(
+          `Round-trip source file not found. Created new file: ${sourceFilePath}`,
+        );
+        continue;
+      }
+
       const targetDirUri = file.subfolder
         ? vscode.Uri.joinPath(outputUri, file.subfolder)
         : outputUri;
@@ -158,8 +231,9 @@ export function registerGenerateCommand(outputChannel: vscode.OutputChannel): vs
       await vscode.workspace.fs.writeFile(fileUri, Buffer.from(file.content, "utf-8"));
     }
 
+    const mergedLabel = mergedFiles > 0 ? ` (${mergedFiles} merged with round-trip mode)` : "";
     vscode.window.showInformationMessage(
-      `Generated ${generatedFiles.length} Java file(s) in ${outputDir}`,
+      `Generated ${generatedFiles.length} Java file(s) in ${outputDir}${mergedLabel}`,
     );
   });
 }

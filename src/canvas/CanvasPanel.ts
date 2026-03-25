@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import * as path from "node:path";
 import * as vscode from "vscode";
 import type { CanvasState } from "@/components/ComponentModel";
 import { getConfig } from "@/config/ConfigReader";
@@ -8,12 +9,20 @@ export interface PreviewCodeFile {
   content: string;
 }
 
+interface RoundTripStatusMessage {
+  type: "roundTripStatus";
+  hasPreservedCode: boolean;
+  sourceFilePath?: string;
+  sourceFileName?: string;
+}
+
 export class CanvasPanel {
   public static currentPanel: CanvasPanel | undefined;
   private readonly panel: vscode.WebviewPanel;
   private readonly extensionUri: vscode.Uri;
-  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: use Later for future features
-  private readonly className: string;
+  private className: string;
+  private sourceFilePath: string | undefined;
+  private hasPreservedCode = false;
   private canvasState: CanvasState;
   private disposables: vscode.Disposable[] = [];
 
@@ -23,6 +32,8 @@ export class CanvasPanel {
 
     if (CanvasPanel.currentPanel) {
       CanvasPanel.currentPanel.panel.reveal(column);
+      CanvasPanel.currentPanel.className = className;
+      CanvasPanel.currentPanel.updatePanelTitle();
       return;
     }
 
@@ -50,10 +61,12 @@ export class CanvasPanel {
       frameWidth: 800,
       frameHeight: 600,
       components: [],
+      hasPreservedCode: false,
     };
 
     this.update();
     this.sendConfigDefaults();
+    this.sendRoundTripStatus();
 
     this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
     this.panel.webview.onDidReceiveMessage(
@@ -67,7 +80,18 @@ export class CanvasPanel {
     switch (message.type) {
       case "stateChanged":
         if (message.state) {
-          this.canvasState = message.state;
+          this.className = message.state.className;
+          const sourceFilePath = message.state.sourceFilePath ?? this.sourceFilePath;
+          const hasPreservedCode = message.state.hasPreservedCode ?? this.hasPreservedCode;
+          this.canvasState = {
+            ...message.state,
+            sourceFilePath,
+            hasPreservedCode,
+          };
+          this.sourceFilePath = sourceFilePath;
+          this.hasPreservedCode = hasPreservedCode;
+          this.updatePanelTitle();
+          this.sendRoundTripStatus();
         }
         break;
       case "toolbarCommand":
@@ -82,9 +106,51 @@ export class CanvasPanel {
     return this.canvasState;
   }
 
+  public setSourceFile(filePath: string) {
+    this.sourceFilePath = filePath;
+    this.hasPreservedCode = true;
+    this.canvasState = {
+      ...this.canvasState,
+      sourceFilePath: filePath,
+      hasPreservedCode: true,
+    };
+    this.updatePanelTitle();
+    this.sendRoundTripStatus();
+  }
+
+  public getSourceFile(): string | undefined {
+    return this.sourceFilePath;
+  }
+
+  public setRoundTripStatus(hasPreservedCode: boolean) {
+    this.hasPreservedCode = hasPreservedCode;
+    this.canvasState = {
+      ...this.canvasState,
+      hasPreservedCode,
+    };
+    this.sendRoundTripStatus();
+  }
+
+  public hasRoundTripPreservedCode(): boolean {
+    return this.hasPreservedCode;
+  }
+
   public loadState(state: CanvasState) {
-    this.canvasState = state;
-    this.panel.webview.postMessage({ type: "loadState", state });
+    const sourceFilePath = state.sourceFilePath ?? this.sourceFilePath;
+    const hasPreservedCode = state.hasPreservedCode ?? this.hasPreservedCode;
+
+    this.className = state.className;
+    this.sourceFilePath = sourceFilePath;
+    this.hasPreservedCode = hasPreservedCode;
+    this.canvasState = {
+      ...state,
+      sourceFilePath,
+      hasPreservedCode,
+    };
+
+    this.updatePanelTitle();
+    this.panel.webview.postMessage({ type: "loadState", state: this.canvasState });
+    this.sendRoundTripStatus();
     this.sendConfigDefaults();
   }
 
@@ -107,6 +173,23 @@ export class CanvasPanel {
         components: config.components,
       },
     });
+  }
+
+  private sendRoundTripStatus() {
+    const message: RoundTripStatusMessage = {
+      type: "roundTripStatus",
+      hasPreservedCode: this.hasPreservedCode,
+      sourceFilePath: this.sourceFilePath,
+      sourceFileName: this.sourceFilePath ? path.basename(this.sourceFilePath) : undefined,
+    };
+    this.panel.webview.postMessage(message);
+  }
+
+  private updatePanelTitle() {
+    const sourceFileName = this.sourceFilePath ? path.basename(this.sourceFilePath) : undefined;
+    this.panel.title = sourceFileName
+      ? `Swing GUI Builder - ${this.className} · ${sourceFileName}`
+      : `Swing GUI Builder - ${this.className}`;
   }
 
   private update() {

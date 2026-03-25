@@ -60,4 +60,6 @@ export interface CanvasState {
   frameHeight: number;
   backgroundColor?: string;
   components: CanvasComponent[];
+  hasPreservedCode?: boolean;
+  sourceFilePath?: string;
 }

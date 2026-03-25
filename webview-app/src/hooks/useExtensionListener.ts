@@ -8,10 +8,15 @@ export interface UseExtensionListenerOptions {
   onLoadState?: (state: CanvasState) => void;
   onConfigDefaults?: (config: ConfigDefaults) => void;
   onPreviewCodeResponse?: (files: PreviewCodeFile[]) => void;
+  onRoundTripStatus?: (status: {
+    hasPreservedCode: boolean;
+    sourceFilePath?: string;
+    sourceFileName?: string;
+  }) => void;
 }
 
 export function useExtensionListener(options: UseExtensionListenerOptions): void {
-  const { onLoadState, onConfigDefaults, onPreviewCodeResponse } = options;
+  const { onLoadState, onConfigDefaults, onPreviewCodeResponse, onRoundTripStatus } = options;
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent<unknown>) => {
@@ -31,6 +36,13 @@ export function useExtensionListener(options: UseExtensionListenerOptions): void
         case "previewCodeResponse":
           onPreviewCodeResponse?.(message.files);
           break;
+        case "roundTripStatus":
+          onRoundTripStatus?.({
+            hasPreservedCode: message.hasPreservedCode,
+            sourceFilePath: message.sourceFilePath,
+            sourceFileName: message.sourceFileName,
+          });
+          break;
         default:
           console.warn("[useExtensionListener] Ignoring unsupported incoming message", {
             type: message.type,
@@ -44,5 +56,5 @@ export function useExtensionListener(options: UseExtensionListenerOptions): void
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, [onLoadState, onConfigDefaults, onPreviewCodeResponse]);
+  }, [onLoadState, onConfigDefaults, onPreviewCodeResponse, onRoundTripStatus]);
 }

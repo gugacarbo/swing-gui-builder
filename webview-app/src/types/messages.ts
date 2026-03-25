@@ -48,9 +48,17 @@ export interface PreviewCodeResponseMessage {
   files: PreviewCodeFile[];
 }
 
+export interface RoundTripStatusMessage {
+  type: "roundTripStatus";
+  hasPreservedCode: boolean;
+  sourceFilePath?: string;
+  sourceFileName?: string;
+}
+
 export type OutgoingExtensionMessage = StateChangedMessage | ToolbarCommandMessage;
 export type IncomingExtensionMessage =
   | LoadStateMessage
   | ConfigDefaultsMessage
-  | PreviewCodeResponseMessage;
+  | PreviewCodeResponseMessage
+  | RoundTripStatusMessage;
 export type Message = OutgoingExtensionMessage | IncomingExtensionMessage;

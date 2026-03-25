@@ -1,33 +1,17 @@
-import type { ComponentModel, ComponentType } from "../components/ComponentModel";
+import type { ComponentModel } from "../components/ComponentModel";
+import {
+  isHierarchicalMenuComponent,
+  isToolBarComponent,
+  supportsTextConstructor,
+} from "../utils/ComponentPredicates";
+
+// Re-export supportsTextConstructor for backward compatibility
+export { supportsTextConstructor };
 
 export const DEFAULT_BG = "#FFFFFF";
 export const DEFAULT_TEXT_COLOR = "#000000";
 export const DEFAULT_FONT_FAMILY = "Arial";
 export const DEFAULT_FONT_SIZE = 12;
-
-function getComponentType(comp: ComponentModel): string {
-  return comp.type as string;
-}
-
-function isMenuBarComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "MenuBar";
-}
-
-function isMenuComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "Menu";
-}
-
-function isMenuItemComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "MenuItem";
-}
-
-function isToolBarComponent(comp: ComponentModel): boolean {
-  return getComponentType(comp) === "ToolBar";
-}
-
-function isHierarchicalMenuComponent(comp: ComponentModel): boolean {
-  return isMenuBarComponent(comp) || isMenuComponent(comp) || isMenuItemComponent(comp);
-}
 
 export function hexToRgb(hex: string): { r: number; g: number; b: number } {
   if (!/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(hex)) {
@@ -35,7 +19,12 @@ export function hexToRgb(hex: string): { r: number; g: number; b: number } {
   }
   const raw = hex.replace("#", "");
   const clean =
-    raw.length === 3 ? raw.split("").map((channel) => `${channel}${channel}`).join("") : raw;
+    raw.length === 3
+      ? raw
+          .split("")
+          .map((channel) => `${channel}${channel}`)
+          .join("")
+      : raw;
   return {
     r: Number.parseInt(clean.substring(0, 2), 16),
     g: Number.parseInt(clean.substring(2, 4), 16),
@@ -67,18 +56,6 @@ export function escapeJava(s: string): string {
     .replace(/\n/g, "\\n")
     .replace(/\r/g, "\\r")
     .replace(/\t/g, "\\t");
-}
-
-export function supportsTextConstructor(type: ComponentType): boolean {
-  return (
-    type === "Button" ||
-    type === "Label" ||
-    type === "TextField" ||
-    type === "PasswordField" ||
-    type === "TextArea" ||
-    type === "CheckBox" ||
-    type === "RadioButton"
-  );
 }
 
 export function getComponentInitCode(comp: ComponentModel, swingClass: string): string {

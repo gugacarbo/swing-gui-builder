@@ -245,6 +245,18 @@ describe("parseMessage", () => {
     expect(result).toBeNull();
   });
 
+  it("parses valid roundTripStatus message", () => {
+    const message = {
+      type: "roundTripStatus",
+      hasPreservedCode: true,
+      sourceFilePath: "/workspace/src/MainWindow.java",
+      sourceFileName: "MainWindow.java",
+    };
+
+    const result = parseMessage(message);
+    expect(result).toEqual(message);
+  });
+
   it("returns null for non-object input", () => {
     expect(parseMessage(null)).toBeNull();
     expect(parseMessage("string")).toBeNull();

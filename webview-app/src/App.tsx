@@ -133,6 +133,8 @@ function App() {
   const [previewFiles, setPreviewFiles] = useState<PreviewCodeFile[]>([]);
   const [selectedPreviewFileName, setSelectedPreviewFileName] = useState<string | null>(null);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const [hasPreservedCode, setHasPreservedCode] = useState(false);
+  const [sourceFileName, setSourceFileName] = useState<string | null>(null);
   const interactionHistoryStartRef = useRef<CanvasComponent[] | null>(null);
 
   const {
@@ -384,6 +386,14 @@ function App() {
     setIsPreviewModalOpen(true);
   }, []);
 
+  const handleRoundTripStatus = useCallback(
+    (status: { hasPreservedCode: boolean; sourceFileName?: string }) => {
+      setHasPreservedCode(status.hasPreservedCode);
+      setSourceFileName(status.sourceFileName ?? null);
+    },
+    [],
+  );
+
   useKeyboardShortcuts({
     onUndo: handleUndo,
     onRedo: handleRedo,
@@ -426,9 +436,13 @@ function App() {
       });
       setFrameTitle(state.frameTitle ?? state.className);
       setFrameBackgroundColor(state.backgroundColor ?? INITIAL_CANVAS_STATE.backgroundColor);
+      setHasPreservedCode(Boolean(state.hasPreservedCode));
+      const fromStatePath = state.sourceFilePath?.split(/[\\/]/).at(-1) ?? null;
+      setSourceFileName(fromStatePath);
       selectComponent(null);
     },
     onPreviewCodeResponse: handlePreviewCodeResponse,
+    onRoundTripStatus: handleRoundTripStatus,
   });
 
   return (
@@ -447,6 +461,16 @@ function App() {
           onGenerate={handleGenerate}
           onPreviewCode={handlePreviewCode}
         />
+        {hasPreservedCode ? (
+          <div className="mt-2 flex items-center gap-2 text-[11px] text-muted-foreground">
+            <span className="rounded-full border border-vscode-panel-border bg-vscode-background/60 px-2 py-0.5 font-semibold uppercase tracking-wide text-vscode-focusBorder">
+              Round-trip
+            </span>
+            <span className="truncate">
+              Preserving existing code{sourceFileName ? ` • ${sourceFileName}` : ""}
+            </span>
+          </div>
+        ) : null}
       </header>
 
       <section className="flex min-h-0 flex-1 overflow-hidden">

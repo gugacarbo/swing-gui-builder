@@ -71,6 +71,7 @@ export function parseMessage(data: unknown): ExtensionMessage | null {
         "loadState",
         "configDefaults",
         "previewCodeResponse",
+        "roundTripStatus",
       ].includes(candidateType)
     ) {
       console.warn("[zod] Unknown extension message type ignored", {

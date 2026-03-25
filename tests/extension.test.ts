@@ -14,6 +14,8 @@ const mocks = vi.hoisted(() => ({
   registerPreviewCodeCommand: vi.fn(() => ({ dispose: vi.fn() })),
   registerSaveCommand: vi.fn(() => ({ dispose: vi.fn() })),
   registerOpenCommand: vi.fn(() => ({ dispose: vi.fn() })),
+  registerOpenFromJavaCommand: vi.fn(() => ({ dispose: vi.fn() })),
+  registerRestoreFromBackupCommand: vi.fn(() => ({ dispose: vi.fn() })),
   registerInitConfigCommand: vi.fn(() => ({ dispose: vi.fn() })),
 }));
 
@@ -44,6 +46,14 @@ vi.mock("../src/commands/saveCommand", () => ({
 
 vi.mock("../src/commands/openCommand", () => ({
   registerOpenCommand: mocks.registerOpenCommand,
+}));
+
+vi.mock("../src/commands/openFromJavaCommand", () => ({
+  registerOpenFromJavaCommand: mocks.registerOpenFromJavaCommand,
+}));
+
+vi.mock("../src/commands/restoreFromBackupCommand", () => ({
+  registerRestoreFromBackupCommand: mocks.registerRestoreFromBackupCommand,
 }));
 
 vi.mock("../src/commands/initConfigCommand", () => ({
@@ -133,10 +143,7 @@ describe("extension", () => {
 
       extension.activate(context);
 
-      expect(mocks.registerOpenCommand).toHaveBeenCalledWith(
-        context,
-        expect.anything(),
-      );
+      expect(mocks.registerOpenCommand).toHaveBeenCalledWith(context, expect.anything());
     });
 
     it("registers initConfigCommand", () => {
@@ -150,6 +157,28 @@ describe("extension", () => {
       expect(mocks.registerInitConfigCommand).toHaveBeenCalled();
     });
 
+    it("registers openFromJavaCommand with context and output channel", () => {
+      const context = {
+        subscriptions: mocks.subscriptions,
+        extensionUri: { fsPath: "/test/extension" },
+      } as unknown as Parameters<typeof extension.activate>[0];
+
+      extension.activate(context);
+
+      expect(mocks.registerOpenFromJavaCommand).toHaveBeenCalledWith(context, expect.anything());
+    });
+
+    it("registers restoreFromBackupCommand with output channel", () => {
+      const context = {
+        subscriptions: mocks.subscriptions,
+        extensionUri: { fsPath: "/test/extension" },
+      } as unknown as Parameters<typeof extension.activate>[0];
+
+      extension.activate(context);
+
+      expect(mocks.registerRestoreFromBackupCommand).toHaveBeenCalledWith(expect.anything());
+    });
+
     it("adds all command disposables to context subscriptions", () => {
       const context = {
         subscriptions: mocks.subscriptions,
@@ -158,8 +187,8 @@ describe("extension", () => {
 
       extension.activate(context);
 
-      // Should have 6 commands registered
-      expect(mocks.subscriptions.length).toBe(6);
+      // Should have 8 commands registered
+      expect(mocks.subscriptions.length).toBe(8);
     });
 
     it("returns nothing (void)", () => {

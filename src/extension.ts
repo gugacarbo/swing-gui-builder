@@ -3,7 +3,9 @@ import { registerGenerateCommand } from "./commands/generateCommand";
 import { registerInitConfigCommand } from "./commands/initConfigCommand";
 import { registerNewWindowCommand } from "./commands/newWindowCommand";
 import { registerOpenCommand } from "./commands/openCommand";
+import { registerOpenFromJavaCommand } from "./commands/openFromJavaCommand";
 import { registerPreviewCodeCommand } from "./commands/previewCodeCommand";
+import { registerRestoreFromBackupCommand } from "./commands/restoreFromBackupCommand";
 import { registerSaveCommand } from "./commands/saveCommand";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -14,6 +16,8 @@ export function activate(context: vscode.ExtensionContext) {
   const previewCodeCmd = registerPreviewCodeCommand();
   const saveCmd = registerSaveCommand();
   const openCmd = registerOpenCommand(context, outputChannel);
+  const openFromJavaCmd = registerOpenFromJavaCommand(context, outputChannel);
+  const restoreFromBackupCmd = registerRestoreFromBackupCommand(outputChannel);
   const initConfigCmd = registerInitConfigCommand();
 
   context.subscriptions.push(
@@ -22,6 +26,8 @@ export function activate(context: vscode.ExtensionContext) {
     previewCodeCmd,
     saveCmd,
     openCmd,
+    openFromJavaCmd,
+    restoreFromBackupCmd,
     initConfigCmd,
   );
 }

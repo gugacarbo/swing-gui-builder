@@ -59,18 +59,27 @@ export const PreviewCodeResponseMessageSchema = z.object({
   files: z.array(PreviewCodeFileSchema),
 });
 
+export const RoundTripStatusMessageSchema = z.object({
+  type: z.literal("roundTripStatus"),
+  hasPreservedCode: z.boolean(),
+  sourceFilePath: z.string().optional(),
+  sourceFileName: z.string().optional(),
+});
+
 export const MessageSchema = z.discriminatedUnion("type", [
   StateChangedMessageSchema,
   ToolbarCommandMessageSchema,
   LoadStateMessageSchema,
   ConfigDefaultsMessageSchema,
   PreviewCodeResponseMessageSchema,
+  RoundTripStatusMessageSchema,
 ]);
 
 export const IncomingExtensionMessageSchema = z.discriminatedUnion("type", [
   LoadStateMessageSchema,
   ConfigDefaultsMessageSchema,
   PreviewCodeResponseMessageSchema,
+  RoundTripStatusMessageSchema,
 ]);
 
 export const OutgoingExtensionMessageSchema = z.discriminatedUnion("type", [
@@ -85,6 +94,7 @@ export type LoadStateMessage = z.infer<typeof LoadStateMessageSchema>;
 export type ConfigDefaultsMessage = z.infer<typeof ConfigDefaultsMessageSchema>;
 export type PreviewCodeFile = z.infer<typeof PreviewCodeFileSchema>;
 export type PreviewCodeResponseMessage = z.infer<typeof PreviewCodeResponseMessageSchema>;
+export type RoundTripStatusMessage = z.infer<typeof RoundTripStatusMessageSchema>;
 export type ExtensionMessage = z.infer<typeof MessageSchema>;
 export type IncomingExtensionMessage = z.infer<typeof IncomingExtensionMessageSchema>;
 export type OutgoingExtensionMessage = z.infer<typeof OutgoingExtensionMessageSchema>;

@@ -41,7 +41,9 @@ export function FrameConfigModal({
   const [frameWidth, setFrameWidth] = useState(initialWidth);
   const [frameHeight, setFrameHeight] = useState(initialHeight);
   const [frameTitle, setFrameTitle] = useState(initialTitle);
-  const [useCustomBackground, setUseCustomBackground] = useState(initialBackgroundColor !== undefined);
+  const [useCustomBackground, setUseCustomBackground] = useState(
+    initialBackgroundColor !== undefined,
+  );
   const [frameBackgroundColor, setFrameBackgroundColor] = useState(
     initialBackgroundColor ?? "#ffffff",
   );

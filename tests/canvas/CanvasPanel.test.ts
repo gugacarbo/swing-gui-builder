@@ -92,6 +92,7 @@ describe("CanvasPanel", () => {
         cspSource: mocks.cspSource,
         html: "",
       },
+      title: "Swing GUI Builder - TestWindow",
       reveal: mocks.panelReveal,
       dispose: mocks.panelDispose,
       onDidDispose: mocks.onDidDispose,
@@ -196,7 +197,65 @@ describe("CanvasPanel", () => {
         frameWidth: 800,
         frameHeight: 600,
         components: [],
+        hasPreservedCode: false,
       });
+    });
+  });
+
+  describe("source file tracking", () => {
+    it("returns undefined source file by default", () => {
+      const extensionUri = { fsPath: "/extension" };
+      CanvasPanel.createOrShow(extensionUri, "TestWindow");
+
+      expect(CanvasPanel.currentPanel?.getSourceFile()).toBeUndefined();
+    });
+
+    it("stores and returns source file path during session", () => {
+      const extensionUri = { fsPath: "/extension" };
+      CanvasPanel.createOrShow(extensionUri, "TestWindow");
+
+      CanvasPanel.currentPanel?.setSourceFile("/workspace/src/ui/MainWindow.java");
+
+      expect(CanvasPanel.currentPanel?.getSourceFile()).toBe("/workspace/src/ui/MainWindow.java");
+    });
+
+    it("keeps source file path after loading canvas state", () => {
+      const extensionUri = { fsPath: "/extension" };
+      CanvasPanel.createOrShow(extensionUri, "TestWindow");
+      CanvasPanel.currentPanel?.setSourceFile("/workspace/src/ui/MainWindow.java");
+
+      CanvasPanel.currentPanel?.loadState({
+        className: "LoadedWindow",
+        frameTitle: "Loaded Window",
+        frameWidth: 900,
+        frameHeight: 700,
+        components: [],
+      });
+
+      expect(CanvasPanel.currentPanel?.getSourceFile()).toBe("/workspace/src/ui/MainWindow.java");
+    });
+
+    it("marks preserved code when source file is set", () => {
+      const extensionUri = { fsPath: "/extension" };
+      CanvasPanel.createOrShow(extensionUri, "TestWindow");
+
+      CanvasPanel.currentPanel?.setSourceFile("/workspace/src/ui/MainWindow.java");
+
+      expect(CanvasPanel.currentPanel?.hasRoundTripPreservedCode()).toBe(true);
+      expect(CanvasPanel.currentPanel?.getCanvasState().hasPreservedCode).toBe(true);
+      expect(CanvasPanel.currentPanel?.getCanvasState().sourceFilePath).toBe(
+        "/workspace/src/ui/MainWindow.java",
+      );
+    });
+
+    it("updates panel title with source file name when source file is set", () => {
+      const extensionUri = { fsPath: "/extension" };
+      CanvasPanel.createOrShow(extensionUri, "TestWindow");
+      const panel = mocks.createWebviewPanel.mock.results[0].value;
+
+      CanvasPanel.currentPanel?.setSourceFile("/workspace/src/ui/MainWindow.java");
+
+      expect(panel.title).toBe("Swing GUI Builder - TestWindow · MainWindow.java");
     });
   });
 
@@ -225,11 +284,17 @@ describe("CanvasPanel", () => {
 
       CanvasPanel.currentPanel?.loadState(newState);
 
-      expect(CanvasPanel.currentPanel?.getCanvasState()).toEqual(newState);
+      expect(CanvasPanel.currentPanel?.getCanvasState()).toEqual({
+        ...newState,
+        hasPreservedCode: false,
+      });
       expect(mockPostMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           type: "loadState",
-          state: newState,
+          state: {
+            ...newState,
+            hasPreservedCode: false,
+          },
         }),
       );
     });
@@ -258,6 +323,11 @@ describe("CanvasPanel", () => {
       expect(mockPostMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           type: "configDefaults",
+        }),
+      );
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "roundTripStatus",
         }),
       );
     });
@@ -300,7 +370,34 @@ describe("CanvasPanel", () => {
 
       messageHandler({ type: "stateChanged", state: newState });
 
-      expect(CanvasPanel.currentPanel?.getCanvasState()).toEqual(newState);
+      expect(CanvasPanel.currentPanel?.getCanvasState()).toEqual({
+        ...newState,
+        hasPreservedCode: false,
+      });
+    });
+
+    it("handles stateChanged message that includes round-trip metadata", async () => {
+      const extensionUri = { fsPath: "/extension" };
+      CanvasPanel.createOrShow(extensionUri, "TestWindow");
+
+      const messageHandler = mockOnDidReceiveMessage.mock.calls[0][0];
+      const stateWithRoundTrip: CanvasState = {
+        className: "UpdatedWindow",
+        frameTitle: "Updated",
+        frameWidth: 500,
+        frameHeight: 400,
+        components: [],
+        hasPreservedCode: true,
+        sourceFilePath: "/workspace/src/ui/UpdatedWindow.java",
+      };
+
+      messageHandler({ type: "stateChanged", state: stateWithRoundTrip });
+
+      expect(CanvasPanel.currentPanel?.hasRoundTripPreservedCode()).toBe(true);
+      expect(CanvasPanel.currentPanel?.getSourceFile()).toBe(
+        "/workspace/src/ui/UpdatedWindow.java",
+      );
+      expect(CanvasPanel.currentPanel?.getCanvasState()).toEqual(stateWithRoundTrip);
     });
 
     it("ignores stateChanged message without state", async () => {
@@ -676,8 +773,6 @@ describe("CanvasPanel", () => {
       const extensionUri = { fsPath: "/extension" };
       CanvasPanel.createOrShow(extensionUri, "TestWindow");
 
-      const panel = mocks.createWebviewPanel.mock.results[0].value;
-
       // Should rewrite the path (./ prefix removed)
       expect(mockAsWebviewUri).toHaveBeenCalled();
     });
@@ -755,7 +850,7 @@ describe("escapeHtml", () => {
   it("escapes HTML special characters", async () => {
     // Access the internal escapeHtml function through the error HTML path
     mocks.readFileSync.mockImplementation(() => {
-      throw new Error('<>&"\'');
+      throw new Error("<>&\"'");
     });
 
     // Set up webview panel mock for this test
@@ -789,7 +884,9 @@ describe("escapeHtml", () => {
 
 describe("getNonce", () => {
   it("generates a 32-character nonce", async () => {
-    mocks.readFileSync.mockReturnValue('<html><head></head><body><script>test</script></body></html>');
+    mocks.readFileSync.mockReturnValue(
+      "<html><head></head><body><script>test</script></body></html>",
+    );
 
     // Set up webview panel mock for this test
     const testPanel = {

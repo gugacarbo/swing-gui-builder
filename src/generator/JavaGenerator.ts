@@ -1,4 +1,6 @@
 import type { CanvasState, ComponentModel } from "../components/ComponentModel";
+import { getBeginMarker, getEndMarker } from "../merger/MarkerManager";
+import { supportsTextConstructor } from "../utils/ComponentPredicates";
 import {
   DEFAULT_BG,
   DEFAULT_FONT_FAMILY,
@@ -7,7 +9,6 @@ import {
   escapeJava,
   hexToRgb,
   isCustomComponent,
-  supportsTextConstructor,
 } from "./codeHelpers";
 import { generateComponentCode, generateHierarchicalCode } from "./componentGenerators";
 import { getComponentSwingType, getSwingClass } from "./swingMappings";
@@ -250,6 +251,7 @@ function generateMainFrameFile(
   lines.push("");
 
   // Field declarations
+  lines.push(`  ${getBeginMarker("fields")}`);
   for (const comp of state.components) {
     const isCustom = customIds.has(comp.id);
     const typeName = isCustom
@@ -257,9 +259,11 @@ function generateMainFrameFile(
       : getComponentSwingType(comp);
     lines.push(`  private ${typeName} ${comp.variableName};`);
   }
+  lines.push(`  ${getEndMarker("fields")}`);
 
   lines.push("");
   lines.push(`  public ${state.className}() {`);
+  lines.push(`    ${getBeginMarker("constructor")}`);
   lines.push(`    setTitle("${escapeJava(frameTitle)}");`);
   lines.push(`    setSize(${state.frameWidth}, ${state.frameHeight});`);
   lines.push("    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);");
@@ -299,16 +303,20 @@ function generateMainFrameFile(
   lines.push(...toolBarLines);
 
   lines.push("    setLocationRelativeTo(null);");
+  lines.push(`    ${getEndMarker("constructor")}`);
   lines.push("  }");
 
   // Method stubs
-  if (methodStubs.length > 0) {
-    lines.push("");
-    for (const stub of methodStubs) {
-      lines.push(stub);
+  lines.push("");
+  lines.push(`  ${getBeginMarker("methods")}`);
+  for (const [index, stub] of methodStubs.entries()) {
+    lines.push(stub);
+    if (index < methodStubs.length - 1) {
       lines.push("");
     }
   }
+  lines.push(`  ${getEndMarker("methods")}`);
+  lines.push("");
 
   // Main method
   lines.push("  public static void main(String[] args) {");
