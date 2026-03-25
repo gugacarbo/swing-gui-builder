@@ -68,8 +68,8 @@
             ],
             "priority": 4,
             "group": "A",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Completed 2026-03-24. Created ComponentCodeGenerator.ts (151 lines) with generateComponentCode and sortRegularComponentsForGeneration. Also extracted helper functions hasPanelChildren and resolvePanelParent. Reduced componentGenerators.ts from 226 to 104 lines (-122 lines). Added 26 unit tests for sortRegularComponentsForGeneration (8 tests) and generateComponentCode (18 tests). All 335 tests pass. All Group A stories complete."
         },
         {
             "id": "US-005",

@@ -1,18 +1,11 @@
 import type { ComponentModel } from "../components/ComponentModel";
-import {
-  isMenuBarComponent,
-  isPanelComponent,
-  isToolBarComponent,
-} from "../utils/ComponentPredicates";
-import {
-  applyInlineStyleCode,
-  getComponentInitCode,
-  getComponentPropsCode,
-  getListenerCode,
-} from "./codeHelpers";
+import { isMenuBarComponent, isToolBarComponent } from "../utils/ComponentPredicates";
+import { sortRegularComponentsForGeneration } from "./ComponentCodeGenerator";
 import { generateMenuBar, getOrderedChildren } from "./MenuCodeGenerator";
-import { getComponentSwingType } from "./swingMappings";
 import { generateToolBar } from "./ToolBarCodeGenerator";
+
+// Re-export for backward compatibility
+export { generateComponentCode } from "./ComponentCodeGenerator";
 
 function collectDescendantIds(
   parent: ComponentModel,
@@ -29,54 +22,6 @@ function collectDescendantIds(
   for (const child of getOrderedChildren(parent, componentMap, allComponents)) {
     collectDescendantIds(child, componentMap, allComponents, visited);
   }
-}
-
-function hasPanelChildren(panel: ComponentModel, allComponents: ComponentModel[]): boolean {
-  if (!isPanelComponent(panel)) {
-    return false;
-  }
-
-  if ((panel.children?.length ?? 0) > 0) {
-    return true;
-  }
-
-  return allComponents.some((candidate) => candidate.parentId === panel.id);
-}
-
-function sortRegularComponentsForGeneration(regularComponents: ComponentModel[]): ComponentModel[] {
-  const componentMap = new Map(regularComponents.map((component) => [component.id, component]));
-  const visiting = new Set<string>();
-  const visited = new Set<string>();
-  const ordered: ComponentModel[] = [];
-
-  const visit = (component: ComponentModel): void => {
-    if (visited.has(component.id)) {
-      return;
-    }
-
-    if (visiting.has(component.id)) {
-      return;
-    }
-
-    visiting.add(component.id);
-
-    if (component.parentId) {
-      const parent = componentMap.get(component.parentId);
-      if (parent) {
-        visit(parent);
-      }
-    }
-
-    visiting.delete(component.id);
-    visited.add(component.id);
-    ordered.push(component);
-  };
-
-  for (const component of regularComponents) {
-    visit(component);
-  }
-
-  return ordered;
 }
 
 function partitionComponentsByGenerationPhase(
@@ -156,71 +101,4 @@ export function generateHierarchicalCode(
     menuBarLines,
     toolBarLines,
   };
-}
-
-function resolvePanelParent(
-  comp: ComponentModel,
-  componentMap: Map<string, ComponentModel>,
-): ComponentModel | undefined {
-  if (!comp.parentId) {
-    return undefined;
-  }
-
-  const parent = componentMap.get(comp.parentId);
-  if (!parent || parent.id === comp.id || !isPanelComponent(parent)) {
-    return undefined;
-  }
-
-  return parent;
-}
-
-export function generateComponentCode(
-  comp: ComponentModel,
-  customIds: Set<string>,
-  customClassNames: Map<string, string>,
-  methodNames: Map<string, string>,
-  hasToolBars: boolean,
-  componentMap: Map<string, ComponentModel>,
-  allComponents: ComponentModel[],
-): string[] {
-  const lines: string[] = [];
-  const isCustom = customIds.has(comp.id);
-  const panelParent = resolvePanelParent(comp, componentMap);
-  const boundsX = panelParent && comp.parentOffset ? comp.parentOffset.x : comp.x;
-  const boundsY = panelParent && comp.parentOffset ? comp.parentOffset.y : comp.y;
-
-  if (isCustom) {
-    const customClassName = customClassNames.get(comp.id) as string;
-    lines.push(`    ${comp.variableName} = new ${customClassName}();`);
-  } else {
-    lines.push(getComponentInitCode(comp, getComponentSwingType(comp)));
-  }
-
-  lines.push(
-    `    ${comp.variableName}.setBounds(${boundsX}, ${boundsY}, ${comp.width}, ${comp.height});`,
-  );
-
-  if (hasPanelChildren(comp, allComponents)) {
-    lines.push(`    ${comp.variableName}.setLayout(null);`);
-  }
-
-  if (!isCustom) {
-    applyInlineStyleCode(lines, comp);
-  }
-
-  lines.push(...getComponentPropsCode(comp));
-
-  const methodName = methodNames.get(comp.id);
-  if (methodName) {
-    const listenerCode = getListenerCode(comp, methodName);
-    if (listenerCode) {
-      lines.push(listenerCode);
-    }
-  }
-
-  const addTarget = panelParent?.variableName ?? (hasToolBars ? "canvasPanel" : "this");
-  lines.push(`    ${addTarget}.add(${comp.variableName});`);
-  lines.push("");
-
-  return lines;
 }

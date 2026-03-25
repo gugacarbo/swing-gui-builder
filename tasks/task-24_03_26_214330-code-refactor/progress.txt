@@ -1,17 +1,17 @@
 === RALPH ORCHESTRATOR SESSION ===
 Task: task-24_03_26_214330-code-refactor
 Status: RUNNING
-Last Updated: 2026-03-24T00:10:00Z
+Last Updated: 2026-03-24T00:15:00Z
 Current Group: A
-Current Story: US-003 - Dividir componentGenerators.ts em ToolBarCodeGenerator.ts
+Current Story: US-004 - Dividir componentGenerators.ts em ComponentCodeGenerator.ts
 Parallel Stories: None (sequential due to shared file modifications)
 Attempts: 1/3
 Worker Timeout: 1800s
 
 Execution Summary:
-- Completed: 2 / 10
-- In Progress: US-003
-- Current Group: A (2/4 complete)
+- Completed: 3 / 10
+- In Progress: US-004
+- Current Group: A (3/4 complete)
 - Failed: 0
 - Blocked: 0
 === END HEADER ===
@@ -47,6 +47,18 @@ Files Changed:
   - tests/generator/MenuCodeGenerator.test.ts (NEW) - 13 tests
 Commit: 9f20638
 Message: refactor: US-002 - Extract MenuCodeGenerator.ts
+Duration: ~5 minutes
+---
+
+## [2026-03-24T00:15:00Z] - US-003 Execution
+Story: US-003 - Dividir componentGenerators.ts em ToolBarCodeGenerator.ts
+Result: SUCCESS
+Files Changed:
+  - src/generator/ToolBarCodeGenerator.ts (NEW) - 84 lines
+  - src/generator/componentGenerators.ts (MODIFIED) - 285→226 lines (-59)
+  - tests/generator/ToolBarCodeGenerator.test.ts (NEW) - 12 tests
+Commit: ca703dc
+Message: refactor: US-003 - Extract ToolBarCodeGenerator.ts
 Duration: ~5 minutes
 ---
 
@@ -129,3 +141,48 @@ Duration: ~5 minutes
   - ✅ Criar testes unitários para `MenuCodeGenerator.ts`
 
 ---
+
+## [2026-03-24T23:12:00Z] - US-004
+- **Status**: COMPLETE
+- **What was implemented**:
+  - Created `src/generator/ComponentCodeGenerator.ts` (151 lines)
+  - Extracted functions: `generateComponentCode`, `sortRegularComponentsForGeneration`
+  - Extracted helper functions: `hasPanelChildren`, `resolvePanelParent`
+  - Updated `componentGenerators.ts` to import from `ComponentCodeGenerator.ts`
+  - Re-exported `generateComponentCode` from `componentGenerators.ts` for backward compatibility
+  - Removed extracted code from `componentGenerators.ts`
+  - Created comprehensive test suite with 26 tests
+- **Files changed**:
+  - `src/generator/ComponentCodeGenerator.ts` (new) - 151 lines
+  - `src/generator/componentGenerators.ts` (modified) - reduced from 226 to 104 lines (-122 lines)
+  - `tests/generator/ComponentCodeGenerator.test.ts` (new) - 26 tests
+- **Test coverage**: 26 new tests for ComponentCodeGenerator (8 for sortRegularComponentsForGeneration, 18 for generateComponentCode)
+- **Build/Lint**: All checks pass (335 tests total)
+- **Commit**: `refactor: US-004 - Extract ComponentCodeGenerator.ts`
+- **Learnings for future iterations**:
+  - ComponentCodeGenerator uses `getComponentPropsCode` from codeHelpers.ts for type-specific property code
+  - The `supportsTextConstructor` predicate determines if a component type uses text constructor
+  - `sortRegularComponentsForGeneration` implements topological sort ensuring parents are generated before children
+  - Panel parents are detected via `resolvePanelParent` which affects `addTarget` in the generated code
+- **Acceptance Criteria Met**:
+  - ✅ Criar `src/generator/ComponentCodeGenerator.ts`
+  - ✅ Extrair `generateComponentCode` e `sortRegularComponentsForGeneration` do `componentGenerators.ts`
+  - ✅ `componentGenerators.ts` deve ter < 200 linhas após extração (104 lines)
+  - ✅ Atualizar imports em `generateCommand.ts` (backward compatible re-export)
+  - ✅ Typecheck passa
+  - ✅ Criar testes unitários para `ComponentCodeGenerator.ts` (26 tests)
+
+---
+
+## Group A Summary
+All Group A stories completed:
+- US-001: Extracted ComponentPredicates.ts (180 lines, 48 tests)
+- US-002: Extracted MenuCodeGenerator.ts (94 lines, 13 tests)
+- US-003: Extracted ToolBarCodeGenerator.ts (84 lines, 12 tests)
+- US-004: Extracted ComponentCodeGenerator.ts (151 lines, 26 tests)
+
+componentGenerators.ts reduced from 359 lines to 104 lines (255 lines extracted, <200 target achieved)
+Total new tests: 99 (48 + 13 + 12 + 26)
+
+---
+
