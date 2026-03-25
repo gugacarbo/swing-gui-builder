@@ -136,8 +136,8 @@
             ],
             "priority": 8,
             "group": "B",
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Completed 2026-03-24. Created OutputDirectoryResolver.ts with pure functions for testability: calculateDefaultOutputDirectory, shouldShowFolderPicker, resolveRelativePath, resolveOutputDirectoryWithUI. Updated generateCommand.ts to use new resolver. Added 21 unit tests with comprehensive coverage. generateCommand.ts reduced from 239 to 246 lines (still under 300)."
         },
         {
             "id": "US-009",

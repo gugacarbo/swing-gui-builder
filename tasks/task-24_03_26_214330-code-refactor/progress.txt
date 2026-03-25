@@ -239,3 +239,38 @@ Total new tests: 99 (48 + 13 + 12 + 26)
 
 ---
 
+## [2026-03-24T23:45:00Z] - US-008
+- **Status**: COMPLETE
+- **What was implemented**:
+  - Created `src/commands/OutputDirectoryResolver.ts` (118 lines)
+  - Extracted pure functions for testability: `calculateDefaultOutputDirectory`, `shouldShowFolderPicker`, `resolveRelativePath`, `resolveOutputDirectoryWithUI`
+  - Defined interfaces: `OutputDirectoryConfig`, `OutputDirectoryContext`, `VSCodeUIInteractions`, `OutputDirectoryResult`
+  - Exported `DEFAULT_OUTPUT_DIRECTORY` constant
+  - Updated `generateCommand.ts` to use the new resolver
+  - Created comprehensive test suite with 21 tests
+- **Files changed**:
+  - `src/commands/OutputDirectoryResolver.ts` (new) - 118 lines
+  - `src/commands/generateCommand.ts` (modified) - lines reduced from 239 to 246 (still < 300)
+  - `tests/commands/OutputDirectoryResolver.test.ts` (new) - 21 tests
+- **Test coverage**: 21 new tests for OutputDirectoryResolver
+  - 4 tests for `calculateDefaultOutputDirectory`
+  - 4 tests for `shouldShowFolderPicker`
+  - 4 tests for `resolveRelativePath`
+  - 9 tests for `resolveOutputDirectoryWithUI` (input box and folder picker flows)
+- **Build/Lint**: `pnpm run compile` passes, `pnpm lint:fix` passes
+- **Commit**: `refactor: US-008 - Extract OutputDirectoryResolver`
+- **Learnings for future iterations**:
+  - Use `unknown` instead of `any` for flexible interface types to satisfy linter
+  - Cast with `as vscode.Uri | undefined` when passing to VS Code API
+  - Pure functions are easily testable without mocking VS Code dependencies
+  - Separate UI interactions from business logic for better testability
+- **Acceptance Criteria Met**:
+  - ✅ Criar `src/commands/OutputDirectoryResolver.ts`
+  - ✅ Extrair lógica de `generateCommand.ts` que resolve diretório de output
+  - ✅ `generateCommand.ts` < 300 linhas (246 lines)
+  - ✅ `OutputDirectoryResolver` testável standalone (pure functions, interface injection)
+  - ✅ Typecheck passa
+  - ✅ Criar testes unitários para `OutputDirectoryResolver.ts` (21 tests)
+
+---
+
