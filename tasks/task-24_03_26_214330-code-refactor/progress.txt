@@ -1,17 +1,17 @@
 === RALPH ORCHESTRATOR SESSION ===
 Task: task-24_03_26_214330-code-refactor
 Status: RUNNING
-Last Updated: 2026-03-24T00:05:00Z
+Last Updated: 2026-03-24T00:10:00Z
 Current Group: A
-Current Story: US-002 - Dividir componentGenerators.ts em MenuCodeGenerator.ts
+Current Story: US-003 - Dividir componentGenerators.ts em ToolBarCodeGenerator.ts
 Parallel Stories: None (sequential due to shared file modifications)
 Attempts: 1/3
 Worker Timeout: 1800s
 
 Execution Summary:
-- Completed: 1 / 10
-- In Progress: US-002
-- Current Group: A (1/4 complete)
+- Completed: 2 / 10
+- In Progress: US-003
+- Current Group: A (2/4 complete)
 - Failed: 0
 - Blocked: 0
 === END HEADER ===
@@ -35,6 +35,18 @@ Files Changed:
   - tests/utils/ComponentPredicates.test.ts (NEW) - 48 tests, 100% coverage
 Commit: b432d536929f21541bc553615c2b37c13c3380b4
 Message: refactor: US-001 - Extract ComponentPredicates.ts
+Duration: ~5 minutes
+---
+
+## [2026-03-24T00:10:00Z] - US-002 Execution
+Story: US-002 - Dividir componentGenerators.ts em MenuCodeGenerator.ts
+Result: SUCCESS
+Files Changed:
+  - src/generator/MenuCodeGenerator.ts (NEW) - 94 lines
+  - src/generator/componentGenerators.ts (MODIFIED) - 359→285 lines (-74)
+  - tests/generator/MenuCodeGenerator.test.ts (NEW) - 13 tests
+Commit: 9f20638
+Message: refactor: US-002 - Extract MenuCodeGenerator.ts
 Duration: ~5 minutes
 ---
 
@@ -86,6 +98,28 @@ Duration: ~5 minutes
 - **Test coverage**: 13 new tests for MenuCodeGenerator, all passing
 - **Build/Lint**: All checks pass
 - **Commit**: `refactor: US-002 - Extract MenuCodeGenerator.ts`
+
+---
+
+## [2026-03-24T22:50:00Z] - US-003
+- **Status**: COMPLETE
+- **What was implemented**:
+  - Created `src/generator/ToolBarCodeGenerator.ts` (84 lines)
+  - Extracted functions: `generateToolBar`, `getToolBarBorderPosition`
+  - Updated `componentGenerators.ts` to import from `ToolBarCodeGenerator.ts`
+  - Removed extracted code from `componentGenerators.ts`
+  - Created comprehensive test suite with 12 tests
+- **Files changed**:
+  - `src/generator/ToolBarCodeGenerator.ts` (new) - 84 lines
+  - `src/generator/componentGenerators.ts` (modified) - reduced from 285 to 226 lines (-59 lines)
+  - `tests/generator/ToolBarCodeGenerator.test.ts` (new) - 12 tests
+- **Test coverage**: 12 new tests for ToolBarCodeGenerator (5 for getToolBarBorderPosition, 7 for generateToolBar)
+- **Build/Lint**: All checks pass (305 tests total)
+- **Commit**: `refactor: US-003 - Extract ToolBarCodeGenerator.ts`
+- **Learnings for future iterations**:
+  - ToolBar generation depends on MenuCodeGenerator's `getOrderedChildren` for child ordering
+  - ToolBar children use custom class names via `customClassNames` map when `customIds` contains the child's ID
+  - The file follows same pattern as MenuCodeGenerator with exported functions and JSDoc comments
 - **Acceptance Criteria Met**:
   - ✅ Criar `src/generator/MenuCodeGenerator.ts`
   - ✅ Extrair `generateMenuBar` e `generateMenuChildrenCode` do `componentGenerators.ts`

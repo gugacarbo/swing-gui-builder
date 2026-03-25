@@ -12,6 +12,7 @@ import {
 } from "./codeHelpers";
 import { generateMenuBar, getOrderedChildren } from "./MenuCodeGenerator";
 import { getComponentSwingType } from "./swingMappings";
+import { generateToolBar } from "./ToolBarCodeGenerator";
 
 function collectDescendantIds(
   parent: ComponentModel,
@@ -27,19 +28,6 @@ function collectDescendantIds(
 
   for (const child of getOrderedChildren(parent, componentMap, allComponents)) {
     collectDescendantIds(child, componentMap, allComponents, visited);
-  }
-}
-
-function getToolBarBorderPosition(comp: ComponentModel): string {
-  switch (comp.position) {
-    case "bottom":
-      return "BorderLayout.SOUTH";
-    case "left":
-      return "BorderLayout.WEST";
-    case "right":
-      return "BorderLayout.EAST";
-    default:
-      return "BorderLayout.NORTH";
   }
 }
 
@@ -89,53 +77,6 @@ function sortRegularComponentsForGeneration(regularComponents: ComponentModel[])
   }
 
   return ordered;
-}
-
-function generateToolBar(
-  toolBar: ComponentModel,
-  componentMap: Map<string, ComponentModel>,
-  allComponents: ComponentModel[],
-  customIds: Set<string>,
-  customClassNames: Map<string, string>,
-  methodNames: Map<string, string>,
-): string[] {
-  const orientation =
-    toolBar.orientation === "vertical" ? "JToolBar.VERTICAL" : "JToolBar.HORIZONTAL";
-  const lines: string[] = [
-    `    ${toolBar.variableName} = new JToolBar();`,
-    `    ${toolBar.variableName}.setOrientation(${orientation});`,
-  ];
-  applyInlineStyleCode(lines, toolBar);
-
-  for (const child of getOrderedChildren(toolBar, componentMap, allComponents)) {
-    const isCustom = customIds.has(child.id);
-    if (isCustom) {
-      const customClassName = customClassNames.get(child.id) as string;
-      lines.push(`    ${child.variableName} = new ${customClassName}();`);
-    } else {
-      lines.push(getComponentInitCode(child, getComponentSwingType(child)));
-      applyInlineStyleCode(lines, child);
-    }
-
-    lines.push(...getComponentPropsCode(child));
-
-    const methodName = methodNames.get(child.id);
-    if (methodName) {
-      const listenerCode = getListenerCode(child, methodName);
-      if (listenerCode) {
-        lines.push(listenerCode);
-      }
-    }
-
-    lines.push(`    ${toolBar.variableName}.add(${child.variableName});`);
-  }
-
-  lines.push(
-    `    getContentPane().add(${toolBar.variableName}, ${getToolBarBorderPosition(toolBar)});`,
-  );
-  lines.push("");
-
-  return lines;
 }
 
 function partitionComponentsByGenerationPhase(
