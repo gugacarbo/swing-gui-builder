@@ -1,0 +1,17 @@
+# .aider.conf.yml
+# Aider configuration for swing-gui-builder
+
+# Run typecheck and tests before committing
+test-cmd: "pnpm run typecheck && pnpm test"
+
+# Lint after editing
+lint-cmd: "pnpm exec biome check --apply ."
+
+# Auto commit when tests pass
+auto-commits: true
+
+# Keep a clean git history
+commit-prompt: "Write a concise conventional commit message for these changes."
+
+# Use conventions file for context
+message: "Always follow the architecture described in CONVENTIONS.md."
