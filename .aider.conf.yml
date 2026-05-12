@@ -1,3 +1,8 @@
+# LLM Provider Configuration
+openai-api-base: "http://127.0.0.1:4000/v1/"
+openai-api-key: "sk-123456789"
+model: "openai/claude-3-5-sonnet" # Ou o nome do modelo configurado no seu LiteLLM
+
 # .aider.conf.yml
 # Aider configuration for swing-gui-builder
 
