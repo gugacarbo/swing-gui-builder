@@ -47,7 +47,8 @@ describe("WebviewHtmlBuilder", () => {
 
   describe("getHtmlForWebview", () => {
     it("should return rewritten HTML when bundled file exists", () => {
-      const bundledHtml = '<!DOCTYPE html><html><head></head><body><script src="main.js"></script></body></html>';
+      const bundledHtml =
+        '<!DOCTYPE html><html><head></head><body><script src="main.js"></script></body></html>';
       mocks.readFileSync.mockReturnValue(bundledHtml);
 
       const result = builder.getHtmlForWebview();
@@ -154,7 +155,8 @@ describe("WebviewHtmlBuilder", () => {
     });
 
     it("should replace existing CSP meta tag", () => {
-      const html = '<html><head><meta http-equiv="Content-Security-Policy" content="default-src *"></head></html>';
+      const html =
+        '<html><head><meta http-equiv="Content-Security-Policy" content="default-src *"></head></html>';
       const webviewRoot = { fsPath: "/extension/root/out/webview" } as never;
 
       const result = builder.rewriteBundledHtml(html, webviewRoot, "test-nonce");
@@ -303,7 +305,9 @@ describe("escapeHtml", () => {
   });
 
   it("should escape all special characters together", () => {
-    expect(escapeHtml('<div class="test">&</div>')).toBe("&lt;div class=&quot;test&quot;&gt;&amp;&lt;/div&gt;");
+    expect(escapeHtml('<div class="test">&</div>')).toBe(
+      "&lt;div class=&quot;test&quot;&gt;&amp;&lt;/div&gt;",
+    );
   });
 
   it("should return empty string unchanged", () => {

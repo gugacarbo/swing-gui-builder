@@ -12,3 +12,7 @@ temp
 
 # Aider
 .aider*
+
+.weave/*
+!.weave/plans/
+!.weave/designs/

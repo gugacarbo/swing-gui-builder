@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentModel } from "../../src/components/ComponentModel";
-import { generateToolBar, getToolBarBorderPosition } from "../../src/generator/ToolBarCodeGenerator";
+import {
+  generateToolBar,
+  getToolBarBorderPosition,
+} from "../../src/generator/ToolBarCodeGenerator";
 
 type ComponentOverrides = Partial<Omit<ComponentModel, "id" | "type" | "variableName">> & {
   id: string;

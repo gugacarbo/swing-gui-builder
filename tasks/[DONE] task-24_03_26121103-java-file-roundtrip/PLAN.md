@@ -16,16 +16,16 @@ This plan details the implementation of Java file round-trip editing for Swing G
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  OPEN (Java → CanvasState):                                                 │
-│  ┌──────────┐    ┌─────────────┐    ┌──────────────┐    ┌───────────────┐ │
-│  │ .java    │───▶│ JavaParser  │───▶│ CanvasState   │───▶│ Visual Editor │ │
-│  │ file     │    │ (CST→Model) │    │ (normalized)  │    │ (CanvasPanel) │ │
-│  └──────────┘    └─────────────┘    └──────────────┘    └───────────────┘ │
+│  ┌──────────┐    ┌─────────────┐    ┌──────────────┐    ┌───────────────┐   │
+│  │ .java    │───▶│ JavaParser  │───▶│ CanvasState   │───▶│ Visual Editor│   │
+│  │ file     │    │ (CST→Model) │    │ (normalized)  │    │ (CanvasPanel)│   │
+│  └──────────┘    └─────────────┘    └──────────────┘    └───────────────┘   │
 │                                                                             │
 │  SAVE (CanvasState → Java):                                                 │
-│  ┌───────────────┐    ┌─────────────────┐    ┌──────────────────────────┐ │
-│  │ Visual Editor │───▶│ JavaGenerator   │───▶│ JavaFileMerger           │ │
-│  │ (CanvasState) │    │ (with markers)  │    │ (preserves non-GUI code) │ │
-│  └───────────────┘    └─────────────────┘    └──────────────────────────┘ │
+│  ┌───────────────┐    ┌─────────────────┐    ┌──────────────────────────┐   │
+│  │ Visual Editor │───▶│ JavaGenerator   │───▶│ JavaFileMerger           │   │
+│  │ (CanvasState) │    │ (with markers)  │    │ (preserves non-GUI code) │   │
+│  └───────────────┘    └─────────────────┘    └──────────────────────────┘   │
 │                                                             │               │
 │                                                             ▼               │
 │                                                    ┌──────────────┐         │
@@ -469,36 +469,36 @@ vscode.commands.executeCommand('vscode.diff', backupUri, editedUri, 'Preview Cha
 ## Implementation Sequence
 
 ### Week 1: Parser Foundation
-| Step | Task | File |
-|------|------|------|
-| 1.1 | Install java-parser | package.json |
-| 1.2 | Create parser types | src/parser/types.ts |
-| 1.3 | Create JavaParserUtils | src/parser/JavaParserUtils.ts |
-| 1.4 | Implement JavaParser main class | src/parser/JavaParser.ts |
-| 1.5 | Implement CanvasState converter | src/parser/toCanvasState.ts |
+| Step | Task                            | File                          |
+| ---- | ------------------------------- | ----------------------------- |
+| 1.1  | Install java-parser             | package.json                  |
+| 1.2  | Create parser types             | src/parser/types.ts           |
+| 1.3  | Create JavaParserUtils          | src/parser/JavaParserUtils.ts |
+| 1.4  | Implement JavaParser main class | src/parser/JavaParser.ts      |
+| 1.5  | Implement CanvasState converter | src/parser/toCanvasState.ts   |
 
 ### Week 2: Marker System
-| Step | Task | File |
-|------|------|------|
-| 2.1 | Define marker format | (document only) |
-| 2.2 | Implement MarkerManager | src/merger/MarkerManager.ts |
-| 2.3 | Modify JavaGenerator to emit markers | src/generator/JavaGenerator.ts |
+| Step | Task                                 | File                           |
+| ---- | ------------------------------------ | ------------------------------ |
+| 2.1  | Define marker format                 | (document only)                |
+| 2.2  | Implement MarkerManager              | src/merger/MarkerManager.ts    |
+| 2.3  | Modify JavaGenerator to emit markers | src/generator/JavaGenerator.ts |
 
 ### Week 3: Merger & Integration
-| Step | Task | File |
-|------|------|------|
-| 3.1 | Implement JavaFileMerger | src/merger/JavaFileMerger.ts |
-| 3.2 | Create openFromJavaCommand | src/commands/openFromJavaCommand.ts |
-| 3.3 | Extend CanvasPanel for source tracking | src/canvas/CanvasPanel.ts |
-| 3.4 | Modify generateCommand for round-trip | src/commands/generateCommand.ts |
+| Step | Task                                   | File                                |
+| ---- | -------------------------------------- | ----------------------------------- |
+| 3.1  | Implement JavaFileMerger               | src/merger/JavaFileMerger.ts        |
+| 3.2  | Create openFromJavaCommand             | src/commands/openFromJavaCommand.ts |
+| 3.3  | Extend CanvasPanel for source tracking | src/canvas/CanvasPanel.ts           |
+| 3.4  | Modify generateCommand for round-trip  | src/commands/generateCommand.ts     |
 
 ### Week 4: Testing & Polish
-| Step | Task |
-|------|------|
-| 4.1 | Write unit tests for JavaParser |
-| 4.2 | Write integration tests for round-trip |
-| 4.3 | Test with real Java files |
-| 4.4 | Add visual indicator for preserved files |
+| Step | Task                                     |
+| ---- | ---------------------------------------- |
+| 4.1  | Write unit tests for JavaParser          |
+| 4.2  | Write integration tests for round-trip   |
+| 4.3  | Test with real Java files                |
+| 4.4  | Add visual indicator for preserved files |
 
 ---
 

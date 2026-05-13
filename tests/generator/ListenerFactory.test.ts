@@ -70,11 +70,7 @@ describe("ListenerFactory", () => {
 
     it("returns empty string for unsupported type (TypeScript prevents but runtime safety)", () => {
       // This test ensures runtime safety even though TypeScript would prevent this
-      const result = createListenerCode(
-        "Button" as ListenerType,
-        "testButton",
-        "handleTest",
-      );
+      const result = createListenerCode("Button" as ListenerType, "testButton", "handleTest");
       expect(result).toBe("    testButton.addActionListener(e -> handleTest());");
     });
   });
@@ -213,11 +209,11 @@ describe("ListenerFactory", () => {
       const result = createListenerCode("TextArea", "area", "onChange");
       const lines = result.split("\n");
       expect(lines).toHaveLength(5);
-      expect(lines[0]).toMatch(/^    /); // First line: 4 spaces
-      expect(lines[1]).toMatch(/^      /); // Second line: 6 spaces
-      expect(lines[2]).toMatch(/^      /); // Third line: 6 spaces
-      expect(lines[3]).toMatch(/^      /); // Fourth line: 6 spaces
-      expect(lines[4]).toMatch(/^    /); // Last line: 4 spaces
+      expect(lines[0]).toMatch(/^ {4}/); // First line: 4 spaces
+      expect(lines[1]).toMatch(/^ {6}/); // Second line: 6 spaces
+      expect(lines[2]).toMatch(/^ {6}/); // Third line: 6 spaces
+      expect(lines[3]).toMatch(/^ {6}/); // Fourth line: 6 spaces
+      expect(lines[4]).toMatch(/^ {4}/); // Last line: 4 spaces
     });
   });
 });

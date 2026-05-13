@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { JavaProjectStructure } from "../../src/utils/JavaProjectDetector";
 import {
   calculateDefaultOutputDirectory,
   DEFAULT_OUTPUT_DIRECTORY,
+  type OutputDirectoryConfig,
+  type OutputDirectoryContext,
   resolveOutputDirectoryWithUI,
   resolveRelativePath,
   shouldShowFolderPicker,
-  type OutputDirectoryConfig,
-  type OutputDirectoryContext,
 } from "../../src/commands/OutputDirectoryResolver";
+import type { JavaProjectStructure } from "../../src/utils/JavaProjectDetector";
 
 describe("OutputDirectoryResolver", () => {
   describe("DEFAULT_OUTPUT_DIRECTORY constant", () => {
@@ -92,7 +92,11 @@ describe("OutputDirectoryResolver", () => {
 
   describe("shouldShowFolderPicker", () => {
     it("should return true when no project structure and configured dir is default", () => {
-      const result = shouldShowFolderPicker(undefined, DEFAULT_OUTPUT_DIRECTORY, DEFAULT_OUTPUT_DIRECTORY);
+      const result = shouldShowFolderPicker(
+        undefined,
+        DEFAULT_OUTPUT_DIRECTORY,
+        DEFAULT_OUTPUT_DIRECTORY,
+      );
       expect(result).toBe(true);
     });
 
@@ -103,7 +107,11 @@ describe("OutputDirectoryResolver", () => {
         suggestedOutputFolder: "src/main/java/components",
       };
 
-      const result = shouldShowFolderPicker(projectStructure, DEFAULT_OUTPUT_DIRECTORY, DEFAULT_OUTPUT_DIRECTORY);
+      const result = shouldShowFolderPicker(
+        projectStructure,
+        DEFAULT_OUTPUT_DIRECTORY,
+        DEFAULT_OUTPUT_DIRECTORY,
+      );
       expect(result).toBe(false);
     });
 
@@ -119,7 +127,11 @@ describe("OutputDirectoryResolver", () => {
         suggestedOutputFolder: "src/components",
       };
 
-      const result = shouldShowFolderPicker(projectStructure, "custom/path", DEFAULT_OUTPUT_DIRECTORY);
+      const result = shouldShowFolderPicker(
+        projectStructure,
+        "custom/path",
+        DEFAULT_OUTPUT_DIRECTORY,
+      );
       expect(result).toBe(false);
     });
   });
