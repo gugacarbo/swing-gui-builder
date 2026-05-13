@@ -1,0 +1,43 @@
+# OpenHands — Autonomous coding agent with web dashboard
+# 
+# Quick start:  ./scripts/start-openhands.sh
+# Quick stop:   ./scripts/stop-openhands.sh
+#
+# Or via podman-compose (requires podman API service running):
+#   podman-compose -f docker-compose.openhands.yml up -d
+
+services:
+  openhands:
+    image: docker.openhands.dev/openhands/openhands:latest
+    container_name: openhands-app
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Docker socket (Podman)
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      # LLM Configuration — usando LiteLLM proxy local
+      - LLM_API_KEY=${OPENHANDS_LLM_API_KEY:-sk-123456789}
+      - LLM_BASE_URL=${OPENHANDS_LLM_BASE_URL:-http://host.containers.internal:4000/v1}
+      - LLM_MODEL=${OPENHANDS_LLM_MODEL:-gpt-5.3-chat-latest}
+      # GitHub integration
+      - GITHUB_TOKEN=${OPENHANDS_GITHUB_TOKEN:-}
+      # Agent server (sandbox runtime)
+      - AGENT_SERVER_IMAGE_REPOSITORY=ghcr.io/openhands/agent-server
+      - AGENT_SERVER_IMAGE_TAG=1.19.1-python
+      - LOG_ALL_EVENTS=true
+      # Workspace
+      - WORKSPACE_MOUNT_PATH=/opt/workspace_base
+    volumes:
+      # Podman socket persistente (Docker-compatible mount)
+      - /home/gustavo/.local/share/containers/podman.sock:/var/run/docker.sock
+      # Persistir conversas e configurações
+      - openhands-state:/.openhands
+      # Montar o projeto
+      - ${PWD}:/opt/workspace_base
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  openhands-state:

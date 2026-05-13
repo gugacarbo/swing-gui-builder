@@ -10,9 +10,9 @@ coverage
 coverage/*
 temp
 
-# Aider
-.aider*
-
 .weave/*
 !.weave/plans/
 !.weave/designs/
+
+# OpenHands local overrides
+.env.openhands.local
